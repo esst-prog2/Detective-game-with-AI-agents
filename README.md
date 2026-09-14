@@ -1,12 +1,43 @@
 # Advanced-programming-project
 
-- *problem and project brief:* I'd wanna create a game, I just don't know what level of difficulty fits the semester. I like detective games so for now, I was thinking that the AI agents are NPCs and one of them committed a murder and the player has to talk to them and find out which one. They could have different personalities, goals, different relationships with the other characters, memories, they could use tools, beliefs, etc. I'd wanna somehow add ML into it so maybe I could use ML to predict the player's game style (aggressive, peaceful, etc) and then the Game Master agent could adjust the NPCs behaviour accordingly
-- *specification:* I should come up with the game requirements (NPCs, locations, evidences, etc) and within that the NPC requirements (goals, personalities, etc) and the ML question which could be related to predicting the player's behaviour
-- *technical spike:* a simple interface, I don't know if graphics should be needed
-- *walking skeleton:* for now I'd say: input --> agent --> decision --> game-state change --> output
-- *tests:* testing game-state changes, like if an agent tells something to another agent, that agent should remember that; they shouldn't hallucinate and magically know facts they weren't given
-- *first useful version:* a smaller version of the final game; only a few NPCs, fewer locations, not as many actions yet but NPC personalities, goals, relationships should exist already
-- *integration and debugging:*
-- *review and refactoring:*
-- *reproducible release:* providing a readme, requirements, the trained ML model and the dataset used for training
-- *presentation and defence:* playing it or letting someone play it
+## 1. The demo
+I open the game and start a new murder mystery. I am told that one of the three suspects committed the murder, and I can talk to each of them by typing questions. Each has access to different information, so they answer based on only what they know. For instance, one suspect knows that they saw another character near the crime scene, while another one doesn't. I can ask questions, inspect pieces of evidence, and then type the name of the person I think could be the murderer. The game tells me whether my accusation is correct and the investigation ends.
+
+## 2. The shape
+in            a new game containing three suspects, a murder, a small number of locations and pieces of evidence
+out           an accusation by the player and a result whether it was correct or not
+in between    the player gets to investigate the crime by talking to NPC agents, asking questions, receiving info based on NPC's knowledge and memories, and examining evidence
+
+## 3. The size
+### First useful version: small but playable already
+- 3 NPC suspects
+- 2-3 locations
+- 1 murderer
+- a small set of evidence
+- being able to converse with NPCs
+- different info, knowledge, and memories for each NPC
+- a final accusation
+- a simple interface (I'd say command-line only)
+- LLM agents controlling the NPCs' responses and decisions
+
+### What it does NOT do this term
+- sophisticated graphical game
+- dozens of NPCs
+- a large map with tens of locations
+- complex animations
+- voice interaction
+- fully open-ended NPC actions
+- long-term memory accross separate runs
+- a large neural network
+
+## 4. How we would know it works
+- I think the most telling is this: given an NPC who has not been told a particular fact, it should not be able to use that fact in its decisions or responses.
+- Given an information is shared between NPCs, for example, NPC A tells NPC B something, then NPC B's knowledge state should only have the information after telling.
+- Given that the killer is known by the game engine, the player should receive either the correct result (if the accusation is correct) or an incorrect one if they accuse an innocent NPC.
+
+## 5. What could stop this
+It is a project I have not done before; I haven't tried making a game yet.
+The LLM/agent architecture is also a risk, in my opinion, because I have to test and see early whether an LLM can reliably return the required actions or not (I mean no hallucation).
+API access and response time could be another risk, so the game should always have a fallback version.
+
+Also, the game uses fictional characters and artificially generated game data, so no personal or sensitive data is required. Both the game and sample datasets can be shown during presentation and shared in the repository.
