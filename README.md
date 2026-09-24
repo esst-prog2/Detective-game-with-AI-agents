@@ -1,5 +1,24 @@
 # Advanced-programming-project
 
+## Running the MVP
+
+Requires Node.js LTS.
+
+```powershell
+npm install
+npm start
+```
+
+The game works entirely with its prewritten dialogue by default. To enable optional OpenAI dialogue delivery phrases, set both environment variables before running:
+
+```powershell
+$env:OPENAI_API_KEY="your_api_key"
+$env:OPENAI_MODEL="your_model"
+npm start
+```
+
+Never commit API keys. Copy the variable names from `.env.example`; the game automatically falls back to prewritten dialogue if either setting is missing or the API call fails.
+
 ## 1. The demo
 I open the game and start a new murder mystery. I am told that one of the three suspects committed the murder, and I can talk to each of them by typing questions. Each has access to different information, so they answer based on only what they know. For instance, one suspect knows that they saw another character near the crime scene, while another one doesn't. I can ask questions, inspect pieces of evidence, and then type the name of the person I think could be the murderer. The game tells me whether my accusation is correct and the investigation ends.
 
