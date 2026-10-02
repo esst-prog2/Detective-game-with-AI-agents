@@ -79,6 +79,21 @@ test('OpenAI adapter validates output and configured adapter falls back when no 
   if (previousModel === undefined) delete process.env.OPENAI_MODEL; else process.env.OPENAI_MODEL = previousModel;
 });
 
+test('OpenAI adapter passes the abort signal in request options and aborts on timeout', async () => {
+  let requestSignal;
+  const client = { responses: { create: (body, options) => {
+    assert.equal(Object.hasOwn(body, 'signal'), false);
+    assert.ok(options.signal instanceof AbortSignal);
+    requestSignal = options.signal;
+    return new Promise((resolve, reject) => {
+      requestSignal.addEventListener('abort', () => reject(new Error('Request aborted')), { once: true });
+    });
+  } } };
+  const phraser = createOpenAIDialoguePhraser({ client, model: 'test-model', timeoutMs: 10 });
+  await assert.rejects(phraser.phrase({ approvedContent: 'I was home.', personality: 'nervous' }), /Request aborted/);
+  assert.equal(requestSignal.aborted, true);
+});
+
 test('scripted CLI session shows help, evidence, cancellation, and a final accusation', async () => {
   const answers = ['3', '2', '1', '4', '3', 'no', '4', '3', 'yes'];
   let output = '';

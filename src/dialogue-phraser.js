@@ -11,10 +11,9 @@ export function createOpenAIDialoguePhraser({ client, model, timeoutMs = 8_000 }
       try {
         const response = await client.responses.create({
           model,
-          signal: controller.signal,
           instructions: 'Return exactly one short delivery phrase (2-8 words) followed by a colon and then repeat the approved content verbatim. Do not add, remove, or change any factual content.',
           input: `Personality: ${personality}\nApproved content: ${approvedContent}`,
-        });
+        }, { signal: controller.signal });
         const output = response?.output_text?.trim();
         const suffix = `: ${approvedContent}`;
         if (!output || output.length > 500 || !output.endsWith(suffix)) throw new Error('Invalid dialogue phrasing.');
