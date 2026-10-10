@@ -19,6 +19,8 @@ export function createOpenAIDialoguePhraser({ client, model, timeoutMs = 8_000 }
         if (!output || output.length > 500 || !output.endsWith(suffix)) throw new Error('Invalid dialogue phrasing.');
         const leadIn = output.slice(0, -suffix.length);
         if (!/^[A-Za-z ,'-]{2,80}$/.test(leadIn)) throw new Error('Invalid dialogue lead-in.');
+        // Target known immersion breaks; this cannot guarantee against hallucinations or secret leaks.
+        if (/\b(?:approved statement|approved text|my statement is)\b/i.test(leadIn)) throw new Error('Invalid dialogue lead-in.');
         return output;
       } finally {
         clearTimeout(timeout);
