@@ -46,6 +46,61 @@ Overview, lifecycle, suspect identities and evidence summaries remain readable a
 
 CLI evidence inspection now uses the guarded engine method. An already-ended investigation displays its stored final text and requests no gameplay input. Quitting the CLI without accusation remains a UI-only exit with no fabricated outcome. Start a separate investigation for a new playthrough; persistence and resetting an existing instance are outside this milestone.
 
+## Local investigation HTTP API
+
+Run `npm.cmd run start:api` to start the API at `http://127.0.0.1:3001`; `npm.cmd start` still launches the CLI. Set `API_PORT` to a number from 1 to 65535 to change the local port. The server binds only to loopback. Existing `OPENAI_API_KEY` and `OPENAI_MODEL` settings optionally enable server-side dialogue; without them the full case works offline. No client can choose model settings, case truth or private NPC information.
+
+Start with `POST /api/investigations`, `Content-Type: application/json`, body `{}`. Its 201 response is:
+
+```json
+{
+  "ok": true,
+  "data": {
+    "sessionId": "<64 lowercase hex characters>",
+    "revision": 0,
+    "state": { "title": "The Ashcroft Manor Murder", "victim": {}, "locations": [], "suspects": [], "evidence": [], "lifecycle": { "status": "active", "finalResult": null } }
+  },
+  "error": null
+}
+```
+
+The example abbreviates the state collections and victim; actual state is the complete approved public view described above. Keep the returned session ID private: it is a bearer credential granting control of that investigation. Do not place it in a browser address bar, analytics or logs. The service does not log request URLs/bodies or include IDs in error details.
+
+| Method/path | Exact request body |
+| --- | --- |
+| `GET /api/investigations/:id` | No body |
+| `POST /api/investigations/:id/questions` | `{"suspectId":"ben-carter","question":"Where were you?","expectedRevision":0}` |
+| `POST /api/investigations/:id/evidence/inspect` | `{"evidenceId":"muddy-footprints","expectedRevision":1}` |
+| `POST /api/investigations/:id/accusations` | `{"suspectId":"clara-voss","confirmed":false,"expectedRevision":2}` |
+
+Successful commands return 200 with `{ "ok": true, "data": { "sessionId": "...", "revision": 1, "state": {}, "result": {} }, "error": null }`. `state` is the current public view. Question results contain `kind`, `text`, and topic/cache flags when present; unsupported wording returns guidance. Inspection results contain only ID/name/description. Accusations contain `ended`, `result`, `text`: cancellation is a successful command leaving play active; `confirmed: true` resolves the case. Correct and incorrect accusations are both successful game actions. After ending, commands return 409, while GET still exposes the stable final public result.
+
+Every successful command advances revision once, even a cached answer, inspection, guidance or cancellation. Supply the last observed revision in the next command. Only one command per session runs at a time: overlaps get `409 session_busy`, outdated revisions get `409 stale_revision`, and invalid async completions get `409 stale_response` or `investigation_ended`. Other sessions operate independently. GET during pending work returns the last committed revision. After a lost response, GET before deciding whether to retry; ignore lower-revision network deliveries for the same session and never blindly replay a final accusation. A disconnected accepted command retains its reservation and settles once; disconnect does not roll it back or cancel provider charges.
+
+Errors have a fixed shape, with no raw exception or bearer ID:
+
+```json
+{"ok":false,"data":null,"error":{"code":"stale_revision","message":"Refresh state before retrying.","session":{"revision":1}}}
+```
+
+`error.session` is null before a session is resolved. Status/code groups: 400 (`invalid_request`, `invalid_json`, `invalid_id`, `invalid_session_id`, `invalid_route`); 403 (`forbidden_host`, `forbidden_origin`); 404 (`route_not_found`, `session_not_found`, `suspect_not_found`, `evidence_not_found`); 405 (`method_not_allowed`, with Allow); 409 (the conflicts above); 413 (`request_too_large`); 415 (`unsupported_media_type`, `unsupported_encoding`); 429 (`question_capacity`); 503 (`session_capacity`); 500 (`internal_error`). Well-formed post-game commands get `investigation_ended` before entity/revision checks; malformed requests still fail validation. Unknown suspects in canceled HTTP accusations are rejected, a stricter input rule than the trusted engine's cancellation shortcut.
+
+Limits: 16 KiB per streamed request body, 1-1000 Unicode characters per trimmed question, strict typed exact-key JSON objects, lowercase slug entity IDs up to 64 characters, 100 sessions, 30-minute idle expiry and four concurrent question operations. No query parameters, compressed requests, arbitrary engine commands or GET bodies are accepted. Headers are limited to 8 KiB, with five-second header/keep-alive and ten-second request-receipt timeouts. Incomplete or malformed transport can close before JSON is deliverable. Sessions in flight are pinned until settlement, and idle expiry restarts then.
+
+Sessions and caches live in one process: restarting or expiring a session loses progress. There are no accounts, persistence, multi-worker coordination or public-hosting guarantees. A token holder can control its session. Exact local Host/Origin checks, no permissive CORS, and no-store/nosniff/no-referrer response headers protect the local browser boundary; they do not protect against malicious local software. Model output still uses the existing deterministic validator/fallback and has its documented semantic limitations; this milestone does not resolve issue #3 or add a critic.
+
+For the future Vite client, use relative `/api/...` fetch URLs. A future Vite development configuration can contain:
+
+```js
+server: {
+  proxy: {
+    '/api': { target: 'http://127.0.0.1:3001', changeOrigin: true }
+  }
+}
+```
+
+The API accepts exact `http://localhost:5173` and `http://127.0.0.1:5173` origins through that proxy, plus its own local origins. Foreign/null origins, cross-site fetch metadata and nonlocal Host headers are rejected. This is documentation only: no React/Vite application or dependencies are included.
+
 ## HW4 real-model phrasing spike
 
 Verified result (2026-10-02): `gpt-6-luna`, **30/30 passed (100.00%)**, **p50 2249.9 ms**, **p95 4300.6 ms**. Evidence: [phrasing-2026-10-02T13-49-19-290Z-17052.jsonl](spikes/results/phrasing-2026-10-02T13-49-19-290Z-17052.jsonl). All 18 suspect/topic pairs plus 12 predetermined repeats are present, with zero validation failures, API errors, or timeouts. The current real-model phrasing path remains in the design because this run exceeds issue #4's approximately 70% viability threshold; 30 successful attempts do not guarantee future success. Metrics were independently recomputed from the evidence without rerunning the API experiment.

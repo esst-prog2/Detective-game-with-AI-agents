@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
+    "start:api": "node src/server.js",
     "test": "node --test"
   },
   "dependencies": {
