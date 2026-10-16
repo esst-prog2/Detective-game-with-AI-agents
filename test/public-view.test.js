@@ -5,6 +5,7 @@ import { caseData } from '../src/data/case.js';
 
 // Independently specified public contract, rather than a copy of a raw case record.
 const expectedView = {
+  lifecycle: { status: 'active', finalResult: null },
   title: 'The Ashcroft Manor Murder',
   victim: {
     name: 'Victor Hale',
@@ -59,7 +60,10 @@ test('private fields planted at every record level stay out of serialized public
       suspect[field] = { secret };
     }
   }
-  for (const evidence of data.evidence) evidence.solutionMetadata = { secret };
+  for (const evidence of data.evidence) {
+    evidence.solutionMetadata = { secret };
+    evidence.code = 'investigation_ended'; // Private metadata is not a lifecycle signal.
+  }
   const game = createInvestigation({ data });
   assert.deepEqual(game.getPublicView(), expectedView);
   const results = [game.getPublicView(), game.listEvidence(),
@@ -89,12 +93,15 @@ test('mutating public results cannot change case data, later reads or gameplay',
   const summaries = game.listEvidence();
   assert.notStrictEqual(view, game.getPublicView());
   assert.notStrictEqual(view.victim, game.getPublicView().victim);
+  assert.notStrictEqual(view.lifecycle, game.getPublicView().lifecycle);
   assert.notStrictEqual(view.locations, data.locations);
   assert.notStrictEqual(view.suspects[0], game.getPublicView().suspects[0]);
   assert.notStrictEqual(view.evidence[0], game.getPublicView().evidence[0]);
   assert.notStrictEqual(identity, game.getPublicSuspect('clara-voss'));
   assert.notStrictEqual(inspection, game.inspectPublicEvidence('muddy-footprints'));
   view.title = 'Changed';
+  view.lifecycle.status = 'ended';
+  view.lifecycle.finalResult = { ended: true, result: 'incorrect', text: 'Changed' };
   view.victim.name = 'Changed';
   view.victim.description = 'Changed';
   view.locations[0] = 'Changed';
@@ -139,6 +146,7 @@ test('public projections use injected case identities and collection sizes', () 
   };
   const game = createInvestigation({ data });
   assert.deepEqual(game.getPublicView(), {
+    lifecycle: { status: 'active', finalResult: null },
     title: 'Another case', victim: { name: 'Robin', description: 'An authored introduction.' },
     locations: ['Atrium', 'Dock', 'Attic', 'Courtyard'],
     suspects: Array.from({ length: 8 }, (_, i) => ({ id: `suspect-${i}`, name: `Guest ${i}` })),

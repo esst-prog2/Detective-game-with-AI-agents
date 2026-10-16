@@ -12,10 +12,20 @@ export const exampleQuestions = [
 
 export async function runCli(io, { game = null } = {}) {
   const investigation = game ?? createInvestigation({ phraser: await createConfiguredOpenAIPhraser() });
+  const lifecycle = investigation.getLifecycle();
+  if (lifecycle.status === 'ended') {
+    io.write(`${lifecycle.finalResult.text}\n`);
+    return;
+  }
   io.write(`\n${investigation.data.title}\n${investigation.data.victim.description}\n`);
   io.write('One of the three suspects is the murderer. Inspect evidence, ask questions, then make one final accusation.\n');
   let running = true;
   while (running) {
+    const currentLifecycle = investigation.getLifecycle();
+    if (currentLifecycle.status === 'ended') {
+      io.write(`${currentLifecycle.finalResult.text}\n`);
+      return;
+    }
     io.write('\n1. Question a suspect\n2. Inspect evidence\n3. Show example questions\n4. Make an accusation\n5. Quit\n');
     const action = (await io.ask('Choose an action: ')).trim();
     if (action === '1') await questionSuspect(io, investigation);
@@ -42,9 +52,12 @@ async function questionSuspect(io, investigation) {
 }
 
 async function inspectEvidence(io, investigation) {
-  investigation.listEvidence().forEach((evidence, index) => io.write(`${index + 1}. ${evidence.name}\n`));
+  const choices = investigation.listEvidence();
+  choices.forEach((evidence, index) => io.write(`${index + 1}. ${evidence.name}\n`));
   const value = Number((await io.ask('Choose evidence to inspect: ')).trim());
-  const evidence = investigation.data.evidence[value - 1];
+  const selected = choices[value - 1];
+  const evidence = selected ? investigation.inspectEvidence(selected.id) : null;
+  if (evidence?.kind === 'error') return io.write(`${evidence.text}\n`);
   io.write(evidence ? `${evidence.name}: ${evidence.description}\n` : 'Please choose a valid evidence number.\n');
 }
 

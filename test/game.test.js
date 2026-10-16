@@ -60,8 +60,11 @@ test('evidence is inspectable and named evidence questions remain general catego
 test('accusations can be cancelled and resolve correct or incorrect outcomes', () => {
   const game = createInvestigation();
   assert.equal(game.resolveAccusation('clara-voss', false).ended, false);
-  assert.equal(game.resolveAccusation('clara-voss', true).result, 'correct');
-  assert.equal(game.resolveAccusation('alice-mercer', true).result, 'incorrect');
+  const finalResult = game.resolveAccusation('clara-voss', true);
+  assert.equal(finalResult.result, 'correct');
+  assert.equal(game.resolveAccusation('alice-mercer', true).code, 'investigation_ended');
+  assert.deepEqual(game.getLifecycle().finalResult, finalResult);
+  assert.equal(createInvestigation().resolveAccusation('alice-mercer', true).result, 'incorrect');
 });
 
 test('OpenAI adapter validates output and configured adapter falls back when no credentials exist', async () => {
@@ -98,7 +101,10 @@ test('scripted CLI session shows help, evidence, cancellation, and a final accus
   const answers = ['3', '2', '1', '4', '3', 'no', '4', '3', 'yes'];
   let output = '';
   const io = {
-    ask: async () => answers.shift() ?? '5',
+    ask: async () => {
+      assert.ok(answers.length, 'CLI must not request input after the final accusation');
+      return answers.shift();
+    },
     write: (text) => { output += text; },
   };
   await runCli(io, { game: createInvestigation() });
@@ -106,4 +112,5 @@ test('scripted CLI session shows help, evidence, cancellation, and a final accus
   assert.match(output, /Muddy footprints/);
   assert.match(output, /accusation was cancelled/i);
   assert.match(output, /Correct\. Clara Voss murdered Victor Hale/);
+  assert.equal(answers.length, 0);
 });

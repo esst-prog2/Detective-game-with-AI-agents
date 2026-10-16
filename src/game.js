@@ -20,6 +20,19 @@ export function validateCase(data = caseData) {
 
 export function createInvestigation({ data = caseData, phraser = null } = {}) {
   const cachedResponses = new Map();
+  let status = 'active';
+  let finalResult = null;
+
+  function getLifecycle() {
+    return {
+      status,
+      finalResult: finalResult ? { ended: finalResult.ended, result: finalResult.result, text: finalResult.text } : null,
+    };
+  }
+
+  function endedError() {
+    return { kind: 'error', code: 'investigation_ended', text: 'The investigation has ended.' };
+  }
 
   function findSuspect(suspectId) {
     return data.suspects.find((suspect) => suspect.id === suspectId) ?? null;
@@ -38,10 +51,12 @@ export function createInvestigation({ data = caseData, phraser = null } = {}) {
       locations: [...data.locations],
       suspects: data.suspects.map(({ id, name }) => ({ id, name })),
       evidence: listEvidence(),
+      lifecycle: getLifecycle(),
     };
   }
 
   async function askSuspect(suspectId, question) {
+    if (status === 'ended') return endedError();
     const suspect = findSuspect(suspectId);
     if (!suspect) return { kind: 'error', text: 'That suspect is not available.' };
     const topic = classifyQuestion(question);
@@ -60,6 +75,8 @@ export function createInvestigation({ data = caseData, phraser = null } = {}) {
         // The approved local fallback is intentionally used for every adapter failure.
       }
     }
+    // An accusation may have ended play while the phraser was pending, even if it failed.
+    if (status === 'ended') return endedError();
     cachedResponses.set(cacheKey, text);
     return { kind: 'answer', topic, text, cached: false };
   }
@@ -69,29 +86,34 @@ export function createInvestigation({ data = caseData, phraser = null } = {}) {
   }
 
   function inspectEvidence(evidenceId) {
+    if (status === 'ended') return endedError();
     return data.evidence.find((evidence) => evidence.id === evidenceId) ?? null;
   }
 
   function inspectPublicEvidence(evidenceId) {
+    if (status === 'ended') return endedError();
     const evidence = inspectEvidence(evidenceId);
     return evidence ? { id: evidence.id, name: evidence.name, description: evidence.description } : null;
   }
 
   function resolveAccusation(suspectId, confirmed) {
-    if (!confirmed) return { ended: false, result: 'cancelled', text: 'The accusation was cancelled. Continue investigating.' };
+    if (status === 'ended') return { ...endedError(), ended: true, result: 'rejected' };
+    if (confirmed !== true) return { ended: false, result: 'cancelled', text: 'The accusation was cancelled. Continue investigating.' };
     const suspect = findSuspect(suspectId);
     if (!suspect) return { ended: false, result: 'invalid', text: 'That suspect is not available.' };
     const correct = suspect.id === data.murdererId;
-    return {
+    finalResult = {
       ended: true,
       result: correct ? 'correct' : 'incorrect',
       text: correct ? `Correct. ${suspect.name} murdered ${data.victim.name}.` : `Incorrect. ${suspect.name} is innocent. The investigation is over.`,
     };
+    status = 'ended';
+    return getLifecycle().finalResult;
   }
 
   // data, findSuspect and inspectEvidence remain trusted internal APIs for CLI compatibility.
   return {
     data, findSuspect, askSuspect, listEvidence, inspectEvidence, resolveAccusation,
-    getPublicView, getPublicSuspect, inspectPublicEvidence,
+    getPublicView, getPublicSuspect, inspectPublicEvidence, getLifecycle,
   };
 }

@@ -21,19 +21,30 @@ Never commit API keys. Copy the variable names from `.env.example`; the game aut
 
 ## Player-visible investigation data
 
-`createInvestigation()` in `src/game.js` provides three explicit public read methods for future interface adapters:
+`createInvestigation()` in `src/game.js` provides explicit public read methods for future interface adapters:
 
 | Method | Returned display fields |
 | --- | --- |
-| `getPublicView()` | `title`, `victim: { name, description }`, `locations: string[]`, `suspects: { id, name }[]`, `evidence: { id, name }[]` |
+| `getPublicView()` | `title`, `victim: { name, description }`, `locations: string[]`, `suspects: { id, name }[]`, `evidence: { id, name }[]`, `lifecycle: { status, finalResult }` |
 | `getPublicSuspect(id)` | `{ id, name }`, or `null` for an unknown ID |
-| `inspectPublicEvidence(id)` | `{ id, name, description }`, or `null` for an unknown ID |
+| `inspectPublicEvidence(id)` | While active: `{ id, name, description }`, or `null` for an unknown ID. After ending: the error below. |
+| `getLifecycle()` | `{ status: 'active' \| 'ended', finalResult }`; final result is `null` while active, then `{ ended: true, result: 'correct' \| 'incorrect', text }` |
 
-Every call constructs detached objects/arrays from the configured case and preserves case-data order. Changing a returned view cannot change the case or later results. Public reads make no model calls. Evidence remains immediately inspectable; this change adds no discovery gates or journal state.
+Every call constructs detached objects/arrays and preserves case-data order. Changing a returned view cannot change the case, stored result or later reads. Public reads make no model calls. Evidence remains immediately inspectable while active; this change adds no discovery gates or journal state. A wrong accusation's final text identifies only the accused innocent suspect, without revealing the actual murderer.
 
 The allowlist excludes the murderer designation, solution, private facts, motives, personality prompts, permitted lies, response tables and additional metadata. Existing introduction and evidence descriptions are authored player-visible text; they still require editorial review for spoilers. These methods assume the current case format, whose allowlisted leaf values and location names are strings. New structured fields require an explicit projection decision.
 
-The existing `data`, `findSuspect()` and `inspectEvidence()` contracts remain available to trusted internal callers, including the CLI. **Future network adapters must serialize public projections, never the investigation object or raw case records.** The game engine and case module belong on the server. This change adds no HTTP server or browser UI and does not resolve NPC dialogue knowledge leaks or implement investigation lifecycle enforcement.
+The existing `data`, `findSuspect()` and active `inspectEvidence()` contracts remain available to trusted internal callers, including the CLI. **Future network adapters must serialize public projections, never the investigation object or raw case records.** The game engine and case module belong on the server. Raw case references remain trusted internal access, not protection against malicious in-process code. This change adds no HTTP server or browser UI and does not resolve NPC dialogue knowledge leaks.
+
+## Investigation lifecycle
+
+Each investigation starts `active`. Only the first `resolveAccusation(suspectId, true)` for a valid suspect ends it and stores a final result. Cancellation (including non-Boolean confirmation) and unknown confirmed suspects leave active play unchanged. Only literal Boolean `true` confirms an accusation; the CLI still converts a trimmed, case-insensitive `yes` to that Boolean. Final results retain their original text and cannot be changed through returned resolution responses or lifecycle snapshots.
+
+After ending, `askSuspect()`, `inspectEvidence()` and `inspectPublicEvidence()` return `{ kind: 'error', code: 'investigation_ended', text: 'The investigation has ended.' }`, including for cached questions and unknown IDs. Further `resolveAccusation()` calls return that error plus `{ ended: true, result: 'rejected' }`, even if the new accusation is canceled. A rejected command is distinct from the stored final result; retrieve the original result through `getLifecycle().finalResult` or `getPublicView().lifecycle.finalResult`.
+
+Overview, lifecycle, suspect identities and evidence summaries remain readable after ending. Inspection descriptions and NPC answers cannot be retrieved through gameplay commands. A pending dialogue call that settles after ending is discarded before any cache write or answer return, including its fallback on failure. Already-running API requests are not canceled and may still incur cost; no late answer can reopen the investigation.
+
+CLI evidence inspection now uses the guarded engine method. An already-ended investigation displays its stored final text and requests no gameplay input. Quitting the CLI without accusation remains a UI-only exit with no fabricated outcome. Start a separate investigation for a new playthrough; persistence and resetting an existing instance are outside this milestone.
 
 ## HW4 real-model phrasing spike
 
