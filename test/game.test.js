@@ -30,7 +30,9 @@ test('keyword classifier recognizes all six categories and unsupported questions
 test('interrogation selects only the addressed suspect response and has safe fallback', async () => {
   const game = createInvestigation();
   const alice = await game.askSuspect('alice-mercer', 'Where were you?');
+  game.travelTo('library');
   const clara = await game.askSuspect('clara-voss', 'Where were you?');
+  game.travelTo('study');
   const unsupported = await game.askSuspect('alice-mercer', 'Tell me a joke');
   assert.equal(alice.text, caseData.suspects[0].responses.alibi.fallbackText);
   assert.equal(clara.text, caseData.suspects[2].responses.alibi.fallbackText);
@@ -50,6 +52,7 @@ test('a repeated topic response is cached as identical display text', async () =
 
 test('evidence is inspectable and named evidence questions remain general category questions', async () => {
   const game = createInvestigation();
+  game.travelTo('garden');
   assert.equal(game.listEvidence().length, 3);
   assert.match(game.inspectEvidence('muddy-footprints').description, /garden door/);
   const answer = await game.askSuspect('ben-carter', 'What about the cufflink?');
@@ -98,7 +101,7 @@ test('OpenAI adapter passes the abort signal in request options and aborts on ti
 });
 
 test('scripted CLI session shows help, evidence, cancellation, and a final accusation', async () => {
-  const answers = ['3', '2', '1', '4', '3', 'no', '4', '3', 'yes'];
+  const answers = ['3', '6', '3', '2', '1', '4', '3', 'no', '4', '3', 'yes'];
   let output = '';
   const io = {
     ask: async () => {

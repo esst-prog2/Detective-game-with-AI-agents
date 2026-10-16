@@ -1,0 +1,3 @@
+desktop: three real rooms/figures/dossiers; actual testimony/guidance/history and focus return; all clues inspected; cancel/Escape/correct/incorrect/reset; post-game travel disabled; 360/720px reflow, CSS zoom 200%, reduced motion passed.
+mobile: three real rooms/figures/dossiers; actual testimony/guidance/history and focus return; all clues inspected; cancel/Escape/correct/incorrect/reset; post-game travel disabled; 360/720px reflow, CSS zoom 200%, reduced motion passed.
+Actual API loss: draft retained, explicit refresh offered, no mutation replay, no bearer/stack in Vite proxy error log.

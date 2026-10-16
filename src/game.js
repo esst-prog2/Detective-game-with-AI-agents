@@ -1,8 +1,31 @@
 import { caseData, TOPICS } from './data/case.js';
 import { classifyQuestion, unsupportedQuestionText } from './question-classifier.js';
 
-export function validateCase(data = caseData) {
+export function validateSpatialData(data) {
+  const slug = (id) => typeof id === 'string' && id.length <= 64 && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id);
+  const text = (value) => typeof value === 'string' && value.trim().length > 0;
+  if (!Array.isArray(data.rooms) || !data.rooms.length || !Array.isArray(data.locations)
+    || !Array.isArray(data.suspects) || !Array.isArray(data.evidence)) return ['Missing spatial data.'];
+  const roomIds = data.rooms.map((room) => room.id);
+  const suspectIds = data.suspects.map((suspect) => suspect.id);
   const errors = [];
+  if (new Set(roomIds).size !== roomIds.length || data.rooms.some((room) => !slug(room.id) || !text(room.name))) errors.push('Invalid rooms.');
+  if (!roomIds.includes(data.initialLocationId) || data.locations.length !== data.rooms.length
+    || data.rooms.some((room, i) => room.name !== data.locations[i])) errors.push('Invalid room configuration.');
+  const entities = [...data.suspects, ...data.evidence];
+  if (new Set(entities.map((entity) => entity.id)).size !== entities.length
+    || entities.some((entity) => !slug(entity.id) || !roomIds.includes(entity.locationId))) errors.push('Invalid placements.');
+  for (const suspect of data.suspects) {
+    const dossier = suspect.publicDossier;
+    if (!dossier || !['role', 'relationshipToVictim', 'background'].every((field) => text(dossier[field]))
+      || !Array.isArray(dossier.relationships) || dossier.relationships.some((edge) => !edge || !suspectIds.includes(edge.targetSuspectId)
+        || edge.targetSuspectId === suspect.id || !['family', 'social'].includes(edge.kind) || !text(edge.label))) errors.push('Invalid public dossier.');
+  }
+  return errors;
+}
+
+export function validateCase(data = caseData) {
+  const errors = validateSpatialData(data);
   if (data.suspects.length !== 3) errors.push('The case must have exactly three suspects.');
   if (!data.suspects.some((suspect) => suspect.id === data.murdererId)) errors.push('The murderer must be a suspect.');
   if (data.locations.length < 2 || data.locations.length > 3) errors.push('The case must have two or three locations.');
@@ -19,9 +42,22 @@ export function validateCase(data = caseData) {
 }
 
 export function createInvestigation({ data = caseData, phraser = null } = {}) {
+  if (validateSpatialData(data).length) throw new Error('Invalid investigation configuration.');
   const cachedResponses = new Map();
   let status = 'active';
   let finalResult = null;
+  let currentLocationId = data.initialLocationId;
+  let locationEpoch = 0;
+  const getLocationContext = () => ({ locationId: currentLocationId, epoch: locationEpoch });
+  const rejected = (code, text) => ({ kind: 'error', code, text });
+
+  function travelTo(locationId) {
+    if (status === 'ended') return endedError();
+    if (!data.rooms.some((room) => room.id === locationId)) return rejected('location_not_found', 'That room is not available.');
+    const changed = currentLocationId !== locationId;
+    if (changed) { currentLocationId = locationId; locationEpoch += 1; }
+    return { kind: 'travel', locationId, changed };
+  }
 
   function getLifecycle() {
     return {
@@ -41,7 +77,12 @@ export function createInvestigation({ data = caseData, phraser = null } = {}) {
   // Explicit public projections: never spread authoritative records into these views.
   function getPublicSuspect(suspectId) {
     const suspect = findSuspect(suspectId);
-    return suspect ? { id: suspect.id, name: suspect.name } : null;
+    if (!suspect) return null;
+    const dossier = suspect.publicDossier;
+    return { id: suspect.id, name: suspect.name, locationId: suspect.locationId, dossier: {
+      role: dossier.role, relationshipToVictim: dossier.relationshipToVictim, background: dossier.background,
+      relationships: dossier.relationships.map((edge) => ({ targetSuspectId: edge.targetSuspectId, kind: edge.kind, label: edge.label })),
+    } };
   }
 
   function getPublicView() {
@@ -49,7 +90,9 @@ export function createInvestigation({ data = caseData, phraser = null } = {}) {
       title: data.title,
       victim: { name: data.victim.name, description: data.victim.description },
       locations: [...data.locations],
-      suspects: data.suspects.map(({ id, name }) => ({ id, name })),
+      rooms: data.rooms.map(({ id, name }) => ({ id, name })),
+      currentLocationId,
+      suspects: data.suspects.map(({ id }) => getPublicSuspect(id)),
       evidence: listEvidence(),
       lifecycle: getLifecycle(),
     };
@@ -59,6 +102,8 @@ export function createInvestigation({ data = caseData, phraser = null } = {}) {
     if (status === 'ended') return endedError();
     const suspect = findSuspect(suspectId);
     if (!suspect) return { kind: 'error', text: 'That suspect is not available.' };
+    if (suspect.locationId !== currentLocationId) return rejected('suspect_not_present', 'That suspect is in another room.');
+    const epoch = locationEpoch;
     const topic = classifyQuestion(question);
     if (topic === 'unsupported') return { kind: 'unsupported', topic, text: unsupportedQuestionText };
 
@@ -77,22 +122,30 @@ export function createInvestigation({ data = caseData, phraser = null } = {}) {
     }
     // An accusation may have ended play while the phraser was pending, even if it failed.
     if (status === 'ended') return endedError();
+    if (epoch !== locationEpoch || suspect.locationId !== currentLocationId) return rejected('stale_response', 'That reply is no longer current.');
     cachedResponses.set(cacheKey, text);
     return { kind: 'answer', topic, text, cached: false };
   }
 
   function listEvidence() {
-    return data.evidence.map(({ id, name }) => ({ id, name }));
+    return data.evidence.map(({ id, name, locationId }) => ({ id, name, locationId }));
+  }
+
+  function selectEvidence(evidenceId) {
+    if (status === 'ended') return { error: endedError() };
+    const evidence = data.evidence.find((evidence) => evidence.id === evidenceId) ?? null;
+    if (evidence && evidence.locationId !== currentLocationId) return { error: rejected('evidence_not_here', 'That evidence is in another room.') };
+    return { evidence };
   }
 
   function inspectEvidence(evidenceId) {
-    if (status === 'ended') return endedError();
-    return data.evidence.find((evidence) => evidence.id === evidenceId) ?? null;
+    const selection = selectEvidence(evidenceId);
+    return selection.error ?? selection.evidence;
   }
 
   function inspectPublicEvidence(evidenceId) {
-    if (status === 'ended') return endedError();
-    const evidence = inspectEvidence(evidenceId);
+    const { evidence, error } = selectEvidence(evidenceId);
+    if (error) return error;
     return evidence ? { id: evidence.id, name: evidence.name, description: evidence.description } : null;
   }
 
@@ -115,5 +168,6 @@ export function createInvestigation({ data = caseData, phraser = null } = {}) {
   return {
     data, findSuspect, askSuspect, listEvidence, inspectEvidence, resolveAccusation,
     getPublicView, getPublicSuspect, inspectPublicEvidence, getLifecycle,
+    travelTo, getLocationContext,
   };
 }

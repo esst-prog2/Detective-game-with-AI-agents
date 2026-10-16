@@ -1,5 +1,74 @@
 # Advanced-programming-project
 
+## Illustrated browser game
+
+The current case is playable offline through an illustrated React interface. Use Node 24 LTS (verified with 24.19); the isolated `web/` package uses React 19 and Vite 8. The CLI and API commands below continue to work.
+
+Install once, from PowerShell:
+
+```powershell
+Set-Location 'C:\Users\hajni\Documents\MA\3rd_advanced programming\Detective-game-with-AI-agents'
+npm.cmd ci
+npm.cmd --prefix web ci
+```
+
+Terminal 1 — offline API:
+
+```powershell
+Set-Location 'C:\Users\hajni\Documents\MA\3rd_advanced programming\Detective-game-with-AI-agents'
+Remove-Item Env:OPENAI_API_KEY, Env:OPENAI_MODEL -ErrorAction SilentlyContinue
+npm.cmd run start:api
+```
+
+Terminal 2 — browser application:
+
+```powershell
+Set-Location 'C:\Users\hajni\Documents\MA\3rd_advanced programming\Detective-game-with-AI-agents'
+npm.cmd run dev:web
+```
+
+Open **http://127.0.0.1:5173**. Keep both terminals running; Ctrl+C stops each. Ports 3001/5173 must be free. Vite uses a same-origin `/api` proxy; the browser never needs model credentials. If choosing another API port, set the same `API_PORT` in both terminals. Do not put secrets in `VITE_*` variables. Development and preview bind to loopback; these commands are for local play, not public hosting.
+
+Restart both servers after updating, then reload the page and start a new investigation. An old API process still has the previous contracts in memory.
+
+Start in the study. Select a present person for the large-figure cinematic conversation, with free-text questions, secondary history/dossier and Return to room. Inspect room objects or use exits. **Rooms** offers alternative navigation; **Investigation overview** and **Evidence journal** allow global public dossier/received-note review. Remote actions offer travel; the server rejects remote questioning/inspection and post-game travel.
+
+| Room | Present person | Evidence |
+| --- | --- | --- |
+| Study (start) | Alice Mercer | Torn contract, silver cufflink |
+| Library | Clara Voss | None |
+| Garden | Ben Carter | Muddy footprints |
+
+These are static interview positions, not murder-time alibis. All rooms are reachable without movement costs or discovery locks. The six dialogue topics and intentional lies are unchanged. Accusations remain available against any suspect from any active room; confirming ends the case, while received notes remain readable. In the CLI, actions 1–5 remain and **6** travels to another room.
+
+Playthrough tokens, drafts and received notes live only in page memory. Reloading loses them; there is no save/continue feature. API restart or 30 minutes of idle expiry can also invalidate a session. An explicit new investigation clears the old notes after creation succeeds. On uncertain receipt/conflict, use **Refresh investigation**, then deliberately retry; a lost reply cannot be recovered from the state endpoint. No accusation is automatically replayed. If a session expires, received notes stay readable until a new investigation is requested.
+
+Build and verification:
+
+```powershell
+npm.cmd test
+web/node_modules/.bin/playwright.cmd install chromium
+npm.cmd run test:web
+npm.cmd run build:web
+openspec.cmd validate add-room-based-investigation --strict
+git diff --check
+```
+
+The browser suite starts its own offline API/Vite processes, so stop existing servers first. `npm.cmd test` includes the original backend suite and pure client tests. The production build checks its module boundary, forbidden server markers and absence of source maps. `web/dist/` is generated and ignored. With the API running, `npm.cmd --prefix web run preview` serves the built application through the same local proxy on port 5173; production hosting/security is outside this milestone.
+
+[Room/cinematic playtest and visual review](docs/room-browser-playtest.md) records current verification; [the earlier browser review](docs/browser-playtest.md) preserves the prior milestone. Local SVG scenes, portrait cameos, clue icons and separate neutral standing-figure placeholders are replaceable through `web/src/presentation/asset-manifest.js`. Figures are temporary artwork; future expression slots do not imply emotional AI. Chromium is the verified browser; native dialog support is required. Larger/empty room collections use responsive layouts and generic fallbacks without adding real characters.
+
+If manual-play servers are running, tests can use a separate API port and IPv6 loopback listener without broadening the allowed browser origins:
+
+```powershell
+$env:E2E_API_PORT='3002'
+$env:E2E_ISOLATED='1'
+npm.cmd run test:web
+Remove-Item Env:E2E_API_PORT, Env:E2E_ISOLATED -ErrorAction SilentlyContinue
+```
+
+This requires IPv6 `localhost:5173` and API port 3002 to be free. After the suite stops, `node web/scripts/room-walkthrough.mjs` uses those isolated listeners and captures review images under `docs/room-screenshots/`. The earlier `visual-walkthrough.mjs` is retained as historical tooling for the previous UI.
+
 ## Running the MVP
 
 Requires Node.js LTS.
@@ -21,20 +90,20 @@ Never commit API keys. Copy the variable names from `.env.example`; the game aut
 
 ## Player-visible investigation data
 
-`createInvestigation()` in `src/game.js` provides explicit public read methods for future interface adapters:
+`createInvestigation()` in `src/game.js` provides explicit public read methods for interface adapters:
 
 | Method | Returned display fields |
 | --- | --- |
-| `getPublicView()` | `title`, `victim: { name, description }`, `locations: string[]`, `suspects: { id, name }[]`, `evidence: { id, name }[]`, `lifecycle: { status, finalResult }` |
-| `getPublicSuspect(id)` | `{ id, name }`, or `null` for an unknown ID |
-| `inspectPublicEvidence(id)` | While active: `{ id, name, description }`, or `null` for an unknown ID. After ending: the error below. |
+| `getPublicView()` | `title`, `victim: { name, description }`, `locations: string[]`, `rooms: { id, name }[]`, `currentLocationId`, `suspects: { id, name, locationId, dossier }[]`, `evidence: { id, name, locationId }[]`, `lifecycle: { status, finalResult }` |
+| `getPublicSuspect(id)` | `{ id, name, locationId, dossier }` or `null`; dossier contains reviewed role, relationshipToVictim, background and public relationship references |
+| `inspectPublicEvidence(id)` | Active and in-room: `{ id, name, description }`; unknown: `null`; remote: `evidence_not_here`; ended: the error below |
 | `getLifecycle()` | `{ status: 'active' \| 'ended', finalResult }`; final result is `null` while active, then `{ ended: true, result: 'correct' \| 'incorrect', text }` |
 
-Every call constructs detached objects/arrays and preserves case-data order. Changing a returned view cannot change the case, stored result or later reads. Public reads make no model calls. Evidence remains immediately inspectable while active; this change adds no discovery gates or journal state. A wrong accusation's final text identifies only the accused innocent suspect, without revealing the actual murderer.
+Every call constructs detached objects/arrays and preserves case-data order. Changing a view cannot change the case, position or stored result. Public reads make no model calls. Evidence requires presence in its room while active, with no further discovery gates or server journal state. A wrong final result does not reveal the actual murderer. Empty dossier relationship arrays mean no extra public links are recorded, not that someone has no family.
 
 The allowlist excludes the murderer designation, solution, private facts, motives, personality prompts, permitted lies, response tables and additional metadata. Existing introduction and evidence descriptions are authored player-visible text; they still require editorial review for spoilers. These methods assume the current case format, whose allowlisted leaf values and location names are strings. New structured fields require an explicit projection decision.
 
-The existing `data`, `findSuspect()` and active `inspectEvidence()` contracts remain available to trusted internal callers, including the CLI. **Future network adapters must serialize public projections, never the investigation object or raw case records.** The game engine and case module belong on the server. Raw case references remain trusted internal access, not protection against malicious in-process code. This change adds no HTTP server or browser UI and does not resolve NPC dialogue knowledge leaks.
+The existing `data`, `findSuspect()` and guarded `inspectEvidence()` remain trusted internal APIs. **Network adapters must serialize public projections, never the investigation object or raw case records.** The game engine/case module belong on the server. `travelTo(locationId)` changes active position; trusted `getLocationContext()` supplies an internal epoch for stale-reply commit guards, never public JSON. Raw references do not protect against malicious in-process code. This milestone does not resolve NPC dialogue knowledge leaks.
 
 ## Investigation lifecycle
 
@@ -66,16 +135,21 @@ Start with `POST /api/investigations`, `Content-Type: application/json`, body `{
 
 The example abbreviates the state collections and victim; actual state is the complete approved public view described above. Keep the returned session ID private: it is a bearer credential granting control of that investigation. Do not place it in a browser address bar, analytics or logs. The service does not log request URLs/bodies or include IDs in error details.
 
+State also includes `rooms`, `currentLocationId: "study"` at creation, and each suspect/clue's public room assignment as described above. Dossiers are authored public data; they are not copies of private character profiles.
+
 | Method/path | Exact request body |
 | --- | --- |
 | `GET /api/investigations/:id` | No body |
-| `POST /api/investigations/:id/questions` | `{"suspectId":"ben-carter","question":"Where were you?","expectedRevision":0}` |
-| `POST /api/investigations/:id/evidence/inspect` | `{"evidenceId":"muddy-footprints","expectedRevision":1}` |
-| `POST /api/investigations/:id/accusations` | `{"suspectId":"clara-voss","confirmed":false,"expectedRevision":2}` |
+| `POST /api/investigations/:id/questions` | `{"suspectId":"alice-mercer","question":"Where were you?","expectedRevision":0}` |
+| `POST /api/investigations/:id/evidence/inspect` | `{"evidenceId":"torn-contract","expectedRevision":1}` |
+| `POST /api/investigations/:id/travel` | `{"locationId":"garden","expectedRevision":2}` |
+| `POST /api/investigations/:id/accusations` | `{"suspectId":"clara-voss","confirmed":false,"expectedRevision":3}` |
 
 Successful commands return 200 with `{ "ok": true, "data": { "sessionId": "...", "revision": 1, "state": {}, "result": {} }, "error": null }`. `state` is the current public view. Question results contain `kind`, `text`, and topic/cache flags when present; unsupported wording returns guidance. Inspection results contain only ID/name/description. Accusations contain `ended`, `result`, `text`: cancellation is a successful command leaving play active; `confirmed: true` resolves the case. Correct and incorrect accusations are both successful game actions. After ending, commands return 409, while GET still exposes the stable final public result.
 
 Every successful command advances revision once, even a cached answer, inspection, guidance or cancellation. Supply the last observed revision in the next command. Only one command per session runs at a time: overlaps get `409 session_busy`, outdated revisions get `409 stale_revision`, and invalid async completions get `409 stale_response` or `investigation_ended`. Other sessions operate independently. GET during pending work returns the last committed revision. After a lost response, GET before deciding whether to retry; ignore lower-revision network deliveries for the same session and never blindly replay a final accusation. A disconnected accepted command retains its reservation and settles once; disconnect does not roll it back or cancel provider charges.
+
+Travel returns `{ "kind": "travel", "locationId": "garden", "changed": true }`. Same-room travel returns `changed:false` and still advances the adapter revision once. Remote questioning/inspection returns `409 suspect_not_present` / `409 evidence_not_here`; an unknown room returns `404 location_not_found`. These errors do not advance revision. Travel uses the same session reservation, takes no global question slot, and is rejected after ending. Location epochs discard pending dialogue invalidated by leaving and returning, even if HTTP revision and final room ID match the original context.
 
 Errors have a fixed shape, with no raw exception or bearer ID:
 
@@ -99,7 +173,7 @@ server: {
 }
 ```
 
-The API accepts exact `http://localhost:5173` and `http://127.0.0.1:5173` origins through that proxy, plus its own local origins. Foreign/null origins, cross-site fetch metadata and nonlocal Host headers are rejected. This is documentation only: no React/Vite application or dependencies are included.
+The API accepts exact `http://localhost:5173` and `http://127.0.0.1:5173` origins through the implemented Vite proxy, plus its own local origins. Foreign/null origins, cross-site fetch metadata and nonlocal Host headers are rejected.
 
 ## HW4 real-model phrasing spike
 

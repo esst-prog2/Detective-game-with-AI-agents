@@ -38,6 +38,7 @@ test('cancellation, non-Boolean confirmation and invalid active suspects do not 
     });
     assert.deepEqual(game.getLifecycle(), active);
   }
+  game.travelTo('garden');
   assert.equal((await game.askSuspect('ben-carter', 'Where were you?')).kind, 'answer');
   assert.match(game.inspectEvidence('muddy-footprints').description, /garden door/);
   assert.equal(game.inspectEvidence('unknown'), null);
@@ -67,6 +68,7 @@ for (const [suspectId, expected] of outcomes) {
 test('ended investigations reject cached, uncached, unsupported and invalid questions without generation', async () => {
   let calls = 0;
   const game = createInvestigation({ phraser: { async phrase() { calls += 1; return 'An active answer.'; } } });
+  game.travelTo('garden');
   assert.equal((await game.askSuspect('ben-carter', 'Where were you?')).kind, 'answer');
   const finalResult = game.resolveAccusation('alice-mercer', true);
   for (const [id, question] of [
@@ -89,7 +91,7 @@ test('both evidence inspection paths reject known and unknown post-game IDs whil
     assert.deepEqual(game.inspectPublicEvidence(id), endedError);
   }
   assert.deepEqual(game.listEvidence(), summaries);
-  assert.deepEqual(game.getPublicSuspect('alice-mercer'), { id: 'alice-mercer', name: 'Alice Mercer' });
+  assert.deepEqual(game.getPublicSuspect('alice-mercer'), { id: 'alice-mercer', name: 'Alice Mercer', locationId: 'study', dossier: { role: 'Housekeeper', relationshipToVictim: 'Employed by Victor Hale.', background: 'Alice Mercer works as the housekeeper at Ashcroft Manor.', relationships: [] } });
   assert.equal(game.getPublicSuspect('unknown'), null);
   assert.deepEqual(game.getPublicView().evidence, summaries);
   assert.deepEqual(game.getLifecycle(), { status: 'ended', finalResult });
@@ -110,7 +112,7 @@ test('safe public lifecycle snapshots are exact, detached and exclude private da
   assert.deepEqual(JSON.parse(JSON.stringify(view.lifecycle)), expected);
   assert.equal(JSON.stringify(view).includes('FORBIDDEN_LIFECYCLE_CANARY'), false);
   assert.equal(JSON.stringify(view.lifecycle).includes('Clara'), false);
-  assert.deepEqual(Object.keys(view).sort(), ['title', 'victim', 'locations', 'suspects', 'evidence', 'lifecycle'].sort());
+  assert.deepEqual(Object.keys(view).sort(), ['title', 'victim', 'locations', 'rooms', 'currentLocationId', 'suspects', 'evidence', 'lifecycle'].sort());
   assert.notStrictEqual(view.lifecycle.finalResult, snapshot.finalResult);
   resolution.result = 'correct';
   resolution.text = 'Changed';
@@ -130,6 +132,7 @@ for (const settle of ['success', 'failure']) {
     let calls = 0;
     const response = new Promise((resolve, reject) => { resolveResponse = resolve; rejectResponse = reject; });
     const game = createInvestigation({ phraser: { phrase() { calls += 1; return response; } } });
+    game.travelTo('garden');
     const pending = game.askSuspect('ben-carter', 'Where were you?');
     assert.equal(calls, 1, 'generation started while the investigation was active');
     const finalResult = game.resolveAccusation('clara-voss', true);
@@ -167,7 +170,7 @@ test('CLI preserves cancellation, guarded inspection, normalized confirmation an
     return { ...evidence, description: 'ENGINE_INSPECTION_DISPLAY' };
   };
   let checkedAfterCancel = false;
-  const output = await play(game, ['4', '3', 'no', '2', '1', '4', '3', ' YES '], (prompt) => {
+  const output = await play(game, ['4', '3', 'no', '6', '3', '2', '1', '4', '3', ' YES '], (prompt) => {
     if (prompt === 'Choose evidence to inspect: ') {
       assert.deepEqual(game.getLifecycle(), active);
       checkedAfterCancel = true;

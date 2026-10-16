@@ -12,15 +12,17 @@ const expectedView = {
     description: 'The owner of Ashcroft Manor, found dead in his study after a stormy dinner.',
   },
   locations: ['the study', 'the library', 'the garden'],
+  rooms: [{ id: 'study', name: 'the study' }, { id: 'library', name: 'the library' }, { id: 'garden', name: 'the garden' }],
+  currentLocationId: 'study',
   suspects: [
-    { id: 'alice-mercer', name: 'Alice Mercer' },
-    { id: 'ben-carter', name: 'Ben Carter' },
-    { id: 'clara-voss', name: 'Clara Voss' },
+    { id: 'alice-mercer', name: 'Alice Mercer', locationId: 'study', dossier: { role: 'Housekeeper', relationshipToVictim: 'Employed by Victor Hale.', background: 'Alice Mercer works as the housekeeper at Ashcroft Manor.', relationships: [] } },
+    { id: 'ben-carter', name: 'Ben Carter', locationId: 'garden', dossier: { role: 'Gardener', relationshipToVictim: 'Employed by Victor Hale.', background: "Ben Carter works as Victor Hale's gardener.", relationships: [] } },
+    { id: 'clara-voss', name: 'Clara Voss', locationId: 'library', dossier: { role: 'Business partner', relationshipToVictim: 'Business partner of Victor Hale.', background: "Clara Voss is Victor Hale's business partner and a frequent guest at Ashcroft Manor.", relationships: [] } },
   ],
   evidence: [
-    { id: 'muddy-footprints', name: 'Muddy footprints' },
-    { id: 'torn-contract', name: 'Torn contract' },
-    { id: 'silver-cufflink', name: 'Silver cufflink' },
+    { id: 'muddy-footprints', name: 'Muddy footprints', locationId: 'garden' },
+    { id: 'torn-contract', name: 'Torn contract', locationId: 'study' },
+    { id: 'silver-cufflink', name: 'Silver cufflink', locationId: 'study' },
   ],
 };
 
@@ -36,6 +38,7 @@ test('public lookups expose identities and inspected descriptions, with null for
     assert.deepEqual(game.getPublicSuspect(identity.id), identity);
   }
   for (const evidence of caseData.evidence) {
+    game.travelTo(evidence.locationId);
     assert.deepEqual(game.inspectPublicEvidence(evidence.id), {
       id: evidence.id, name: evidence.name, description: evidence.description,
     });
@@ -71,9 +74,10 @@ test('private fields planted at every record level stay out of serialized public
     ...data.evidence.map(({ id }) => game.inspectPublicEvidence(id))];
   assert.equal(JSON.stringify(results).includes(secret), false);
   for (const suspect of data.suspects) {
-    assert.deepEqual(game.getPublicSuspect(suspect.id), { id: suspect.id, name: suspect.name });
+    assert.deepEqual(game.getPublicSuspect(suspect.id), expectedView.suspects.find(({ id }) => id === suspect.id));
   }
   for (const evidence of data.evidence) {
+    game.travelTo(evidence.locationId);
     assert.deepEqual(game.inspectPublicEvidence(evidence.id), {
       id: evidence.id, name: evidence.name, description: evidence.description,
     });
@@ -89,6 +93,7 @@ test('mutating public results cannot change case data, later reads or gameplay',
   } });
   const view = game.getPublicView();
   const identity = game.getPublicSuspect('clara-voss');
+  game.travelTo('garden');
   const inspection = game.inspectPublicEvidence('muddy-footprints');
   const summaries = game.listEvidence();
   assert.notStrictEqual(view, game.getPublicView());
@@ -118,10 +123,12 @@ test('mutating public results cannot change case data, later reads or gameplay',
   summaries[0].name = 'Changed';
   assert.equal(calls, 0, 'public reads must not call the dialogue adapter');
   assert.deepEqual(data, original);
-  assert.deepEqual(game.getPublicView(), expectedView);
+  assert.deepEqual(game.getPublicView(), { ...expectedView, currentLocationId: 'garden' });
   assert.equal(game.getPublicSuspect('clara-voss').name, 'Clara Voss');
-  assert.deepEqual(game.inspectPublicEvidence('muddy-footprints'), original.evidence[0]);
+  const { locationId: _placement, ...publicClue } = original.evidence[0];
+  assert.deepEqual(game.inspectPublicEvidence('muddy-footprints'), publicClue);
   assert.deepEqual(game.inspectEvidence('muddy-footprints'), original.evidence[0]);
+  game.travelTo('study');
   const answer = await game.askSuspect('alice-mercer', 'Where were you?');
   assert.equal(answer.text, `quietly: ${original.suspects[0].responses.alibi.approvedContent}`);
   game.getPublicView();
@@ -141,17 +148,19 @@ test('public projections use injected case identities and collection sizes', () 
     title: 'Another case', victim: { name: 'Robin', description: 'An authored introduction.', secret: 'hidden' },
     murdererId: 'suspect-7', intendedSolution: ['hidden'],
     locations: ['Atrium', 'Dock', 'Attic', 'Courtyard'],
-    suspects: Array.from({ length: 8 }, (_, i) => ({ id: `suspect-${i}`, name: `Guest ${i}`, privateFacts: ['hidden'] })),
-    evidence: [{ id: 'note', name: 'A note', description: 'An unsigned note.', privateOwner: 'hidden' }],
+    rooms: ['Atrium', 'Dock', 'Attic', 'Courtyard'].map((name) => ({ id: name.toLowerCase(), name })), initialLocationId: 'atrium',
+    suspects: Array.from({ length: 8 }, (_, i) => ({ id: `suspect-${i}`, name: `Guest ${i}`, locationId: 'atrium', publicDossier: { role: 'Guest', relationshipToVictim: 'Known guest.', background: 'An authored public guest.', relationships: [] }, privateFacts: ['hidden'] })),
+    evidence: [{ id: 'note', name: 'A note', locationId: 'atrium', description: 'An unsigned note.', privateOwner: 'hidden' }],
   };
   const game = createInvestigation({ data });
   assert.deepEqual(game.getPublicView(), {
     lifecycle: { status: 'active', finalResult: null },
     title: 'Another case', victim: { name: 'Robin', description: 'An authored introduction.' },
     locations: ['Atrium', 'Dock', 'Attic', 'Courtyard'],
-    suspects: Array.from({ length: 8 }, (_, i) => ({ id: `suspect-${i}`, name: `Guest ${i}` })),
-    evidence: [{ id: 'note', name: 'A note' }],
+    rooms: ['Atrium', 'Dock', 'Attic', 'Courtyard'].map((name) => ({ id: name.toLowerCase(), name })), currentLocationId: 'atrium',
+    suspects: Array.from({ length: 8 }, (_, i) => ({ id: `suspect-${i}`, name: `Guest ${i}`, locationId: 'atrium', dossier: { role: 'Guest', relationshipToVictim: 'Known guest.', background: 'An authored public guest.', relationships: [] } })),
+    evidence: [{ id: 'note', name: 'A note', locationId: 'atrium' }],
   });
-  assert.deepEqual(game.getPublicSuspect('suspect-7'), { id: 'suspect-7', name: 'Guest 7' });
+  assert.deepEqual(game.getPublicSuspect('suspect-7'), { id: 'suspect-7', name: 'Guest 7', locationId: 'atrium', dossier: { role: 'Guest', relationshipToVictim: 'Known guest.', background: 'An authored public guest.', relationships: [] } });
   assert.deepEqual(game.inspectPublicEvidence('note'), { id: 'note', name: 'A note', description: 'An unsigned note.' });
 });

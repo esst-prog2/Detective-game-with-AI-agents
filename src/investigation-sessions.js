@@ -57,6 +57,7 @@ export function createSessionStore({
     if (isQuestion && questions >= maxQuestions) throw new ApiError('question_capacity');
     const reservation = Symbol('command');
     const revision = entry.revision;
+    const location = isQuestion ? entry.game.getLocationContext() : null;
     entry.reservation = reservation;
     touch(entry);
     if (isQuestion) questions += 1;
@@ -69,6 +70,7 @@ export function createSessionStore({
       if (entries.get(entry.id) !== entry || entry.reservation !== reservation || entry.revision !== revision) {
         throw new ApiError('stale_response');
       }
+      if (location && entry.game.getLocationContext().epoch !== location.epoch) throw new ApiError('stale_response');
       // Snapshot before committing so a projection failure cannot advance the revision.
       const state = entry.game.getPublicView();
       entry.revision += 1;

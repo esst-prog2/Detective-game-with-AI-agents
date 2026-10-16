@@ -26,25 +26,31 @@ export async function runCli(io, { game = null } = {}) {
       io.write(`${currentLifecycle.finalResult.text}\n`);
       return;
     }
-    io.write('\n1. Question a suspect\n2. Inspect evidence\n3. Show example questions\n4. Make an accusation\n5. Quit\n');
+    const view = investigation.getPublicView();
+    io.write(`\nCurrent room: ${view.rooms.find((room) => room.id === view.currentLocationId).name}\n`);
+    io.write('\n1. Question a suspect\n2. Inspect evidence\n3. Show example questions\n4. Make an accusation\n5. Quit\n6. Travel to another room\n');
     const action = (await io.ask('Choose an action: ')).trim();
     if (action === '1') await questionSuspect(io, investigation);
     else if (action === '2') await inspectEvidence(io, investigation);
     else if (action === '3') io.write(`${exampleQuestions.map((question) => `- ${question}`).join('\n')}\n`);
     else if (action === '4') running = await accuse(io, investigation);
     else if (action === '5') { io.write('Investigation closed.\n'); running = false; }
-    else io.write('Please choose a number from 1 to 5.\n');
+    else if (action === '6') await travel(io, investigation);
+    else io.write('Please choose a number from 1 to 6.\n');
   }
 }
 
-async function chooseSuspect(io, investigation) {
-  investigation.data.suspects.forEach((suspect, index) => io.write(`${index + 1}. ${suspect.name}\n`));
+async function chooseSuspect(io, investigation, local = false) {
+  const view = investigation.getPublicView();
+  const choices = view.suspects.filter((suspect) => !local || suspect.locationId === view.currentLocationId);
+  if (!choices.length) { io.write('There is nobody to question here.\n'); return null; }
+  choices.forEach((suspect, index) => io.write(`${index + 1}. ${suspect.name}\n`));
   const value = Number((await io.ask('Choose a suspect: ')).trim());
-  return investigation.data.suspects[value - 1] ?? null;
+  return choices[value - 1] ?? null;
 }
 
 async function questionSuspect(io, investigation) {
-  const suspect = await chooseSuspect(io, investigation);
+  const suspect = await chooseSuspect(io, investigation, true);
   if (!suspect) return io.write('Please choose a valid suspect number.\n');
   const question = await io.ask(`Ask ${suspect.name}: `);
   const answer = await investigation.askSuspect(suspect.id, question);
@@ -52,13 +58,23 @@ async function questionSuspect(io, investigation) {
 }
 
 async function inspectEvidence(io, investigation) {
-  const choices = investigation.listEvidence();
+  const choices = investigation.listEvidence().filter((clue) => clue.locationId === investigation.getLocationContext().locationId);
+  if (!choices.length) return io.write('There is no evidence to inspect here.\n');
   choices.forEach((evidence, index) => io.write(`${index + 1}. ${evidence.name}\n`));
   const value = Number((await io.ask('Choose evidence to inspect: ')).trim());
   const selected = choices[value - 1];
   const evidence = selected ? investigation.inspectEvidence(selected.id) : null;
   if (evidence?.kind === 'error') return io.write(`${evidence.text}\n`);
   io.write(evidence ? `${evidence.name}: ${evidence.description}\n` : 'Please choose a valid evidence number.\n');
+}
+
+async function travel(io, investigation) {
+  const view = investigation.getPublicView();
+  view.rooms.forEach((room, i) => io.write(`${i + 1}. ${room.name}\n`));
+  const room = view.rooms[Number((await io.ask('Choose a room: ')).trim()) - 1];
+  if (!room) return io.write('Please choose a valid room number.\n');
+  const result = investigation.travelTo(room.id);
+  io.write(result.kind === 'error' ? `${result.text}\n` : `You are in ${room.name}.\n`);
 }
 
 async function accuse(io, investigation) {

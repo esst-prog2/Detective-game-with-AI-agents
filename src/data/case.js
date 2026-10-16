@@ -22,19 +22,24 @@ export const caseData = Object.freeze({
   },
   murdererId: 'clara-voss',
   locations: ['the study', 'the library', 'the garden'],
+  rooms: [{ id: 'study', name: 'the study' }, { id: 'library', name: 'the library' }, { id: 'garden', name: 'the garden' }],
+  initialLocationId: 'study',
   evidence: [
     {
       id: 'muddy-footprints',
+      locationId: 'garden',
       name: 'Muddy footprints',
       description: 'Fresh muddy footprints lead from the garden door toward the study side entrance.',
     },
     {
       id: 'torn-contract',
+      locationId: 'study',
       name: 'Torn contract',
       description: 'A torn business contract in Victor’s study shows he planned to end his partnership with Clara.',
     },
     {
       id: 'silver-cufflink',
+      locationId: 'study',
       name: 'Silver cufflink',
       description: 'A silver cufflink bearing a V-shaped engraving was found beneath Victor’s desk.',
     },
@@ -47,6 +52,8 @@ export const caseData = Object.freeze({
   suspects: [
     {
       id: 'alice-mercer',
+      locationId: 'study',
+      publicDossier: { role: 'Housekeeper', relationshipToVictim: 'Employed by Victor Hale.', background: 'Alice Mercer works as the housekeeper at Ashcroft Manor.', relationships: [] },
       name: 'Alice Mercer',
       personality: 'Nervous, dutiful, and quick to avoid personal questions.',
       relationshipToVictim: 'Victor’s housekeeper, who depended on him for her position.',
@@ -70,6 +77,8 @@ export const caseData = Object.freeze({
     },
     {
       id: 'ben-carter',
+      locationId: 'garden',
+      publicDossier: { role: 'Gardener', relationshipToVictim: 'Employed by Victor Hale.', background: "Ben Carter works as Victor Hale's gardener.", relationships: [] },
       name: 'Ben Carter',
       personality: 'Blunt, proud, and easily provoked by accusations.',
       relationshipToVictim: 'Victor’s gardener, recently threatened with dismissal.',
@@ -93,6 +102,8 @@ export const caseData = Object.freeze({
     },
     {
       id: 'clara-voss',
+      locationId: 'library',
+      publicDossier: { role: 'Business partner', relationshipToVictim: 'Business partner of Victor Hale.', background: "Clara Voss is Victor Hale's business partner and a frequent guest at Ashcroft Manor.", relationships: [] },
       name: 'Clara Voss',
       personality: 'Polished, composed, and calculating under pressure.',
       relationshipToVictim: 'Victor’s business partner and a frequent guest at Ashcroft Manor.',

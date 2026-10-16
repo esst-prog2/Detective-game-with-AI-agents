@@ -52,7 +52,8 @@ async function setup(t, options = {}) {
 }
 
 const pathFor = (id, action = '') => `/api/investigations/${id}${action ? `/${action}` : ''}`;
-const question = (expectedRevision = 0) => ({ suspectId: 'ben-carter', question: 'Where were you?', expectedRevision });
+// Transport-only tests use Alice in the starting study; the full journey still tests Ben's exact reply.
+const question = (expectedRevision = 0, suspectId = 'alice-mercer') => ({ suspectId, question: 'Where were you?', expectedRevision });
 
 function errorIs(response, status, code) {
   assert.equal(response.status, status);
@@ -78,21 +79,23 @@ test('HTTP supports a complete offline investigation, cancellation and stable co
   assert.equal(read.headers['x-content-type-options'], 'nosniff');
   assert.equal(read.headers['referrer-policy'], 'no-referrer');
   assert.match(read.headers['content-type'], /application\/json/);
-  const ask = await call('POST', `${base}/questions`, question());
+  data = (await call('POST', `${base}/travel`, { locationId: 'garden', expectedRevision: data.revision })).body.data;
+  const ask = await call('POST', `${base}/questions`, question(data.revision, 'ben-carter'));
   assert.equal(ask.status, 200);
   data = ask.body.data;
   assert.equal(data.result.text, 'I was repairing the greenhouse window when Victor died.');
-  assert.equal(data.revision, 1);
-  const cached = await call('POST', `${base}/questions`, question(1));
+  assert.equal(data.revision, 2);
+  const cached = await call('POST', `${base}/questions`, question(data.revision, 'ben-carter'));
   assert.equal(cached.body.data.result.cached, true);
   data = cached.body.data;
-  const unsupported = await call('POST', `${base}/questions`, { ...question(data.revision), question: 'Tell me a joke' });
+  const unsupported = await call('POST', `${base}/questions`, { ...question(data.revision, 'ben-carter'), question: 'Tell me a joke' });
   assert.equal(unsupported.body.data.result.kind, 'unsupported');
   data = unsupported.body.data;
   for (const clue of caseData.evidence) {
+    data = (await call('POST', `${base}/travel`, { locationId: clue.locationId, expectedRevision: data.revision })).body.data;
     const inspected = await call('POST', `${base}/evidence/inspect`, { evidenceId: clue.id, expectedRevision: data.revision });
     assert.equal(inspected.status, 200);
-    assert.deepEqual(inspected.body.data.result, clue);
+    assert.deepEqual(inspected.body.data.result, { id: clue.id, name: clue.name, description: clue.description });
     data = inspected.body.data;
   }
   const cancel = await call('POST', `${base}/accusations`, { suspectId: 'clara-voss', confirmed: false, expectedRevision: data.revision });
@@ -103,7 +106,7 @@ test('HTTP supports a complete offline investigation, cancellation and stable co
   assert.equal(end.status, 200);
   data = end.body.data;
   assert.equal(data.result.result, 'correct');
-  assert.equal(data.revision, 8);
+  assert.equal(data.revision, 12);
   assert.deepEqual(data.state.lifecycle.finalResult, data.result);
   for (const [action, body] of [
     ['questions', question(0)], ['questions', { ...question(0), suspectId: 'unknown' }],
@@ -114,9 +117,9 @@ test('HTTP supports a complete offline investigation, cancellation and stable co
     const rejected = await call('POST', `${base}/${action}`, body);
     errorIs(rejected, 409, 'investigation_ended');
     assert.equal(rejected.text.includes(data.sessionId), false);
-    assert.equal(rejected.body.error.session.revision, 8);
+    assert.equal(rejected.body.error.session.revision, 12);
   }
-  assert.deepEqual((await call('GET', base)).body.data, { sessionId: data.sessionId, revision: 8, state: data.state });
+  assert.deepEqual((await call('GET', base)).body.data, { sessionId: data.sessionId, revision: 12, state: data.state });
 });
 
 test('HTTP incorrect accusations and independent sessions do not reveal the solution or share caches', async (t) => {
@@ -241,7 +244,7 @@ test('HTTP same-session overlap, reads while busy, replay and independent-sessio
   await started.promise;
   errorIs(await call('POST', pathFor(a.sessionId, 'accusations'), { suspectId: 'clara-voss', confirmed: true, expectedRevision: 0 }), 409, 'session_busy');
   assert.equal((await call('GET', pathFor(a.sessionId))).body.data.revision, 0);
-  assert.equal((await call('POST', pathFor(b.sessionId, 'evidence/inspect'), { evidenceId: 'muddy-footprints', expectedRevision: 0 })).status, 200);
+  assert.equal((await call('POST', pathFor(b.sessionId, 'evidence/inspect'), { evidenceId: 'torn-contract', expectedRevision: 0 })).status, 200);
   gate.resolve();
   assert.equal((await pending).body.data.revision, 1);
   const stale = await call('POST', pathFor(a.sessionId, 'questions'), question());
@@ -260,10 +263,12 @@ test('HTTP caps concurrent question operations at four and releases slots after 
   const sessions = await Promise.all(Array.from({ length: 5 }, create));
   const pending = sessions.slice(0, 4).map(({ sessionId }) => call('POST', pathFor(sessionId, 'questions'), question()));
   await started.promise;
-  errorIs(await call('POST', pathFor(sessions[4].sessionId, 'questions'), question()), 429, 'question_capacity');
+  const travel = await call('POST', pathFor(sessions[4].sessionId, 'travel'), { locationId: 'study', expectedRevision: 0 });
+  assert.equal(travel.status, 200); assert.equal(travel.body.data.revision, 1);
+  errorIs(await call('POST', pathFor(sessions[4].sessionId, 'questions'), question(1)), 429, 'question_capacity');
   gate.resolve();
   for (const response of await Promise.all(pending)) assert.equal(response.status, 200);
-  assert.equal((await call('POST', pathFor(sessions[4].sessionId, 'questions'), question())).status, 200);
+  assert.equal((await call('POST', pathFor(sessions[4].sessionId, 'questions'), question(1))).status, 200);
 });
 
 for (const settle of ['success', 'failure']) {
@@ -325,7 +330,8 @@ test('HTTP public responses exclude private fields and generic errors do not exp
   const answer = await call('POST', pathFor(initial.sessionId, 'questions'), { ...question(), question: `Where were you? ${secret}` });
   assert.equal(answer.status, 200);
   assert.equal(answer.text.includes(secret), false);
-  const evidence = await call('POST', pathFor(initial.sessionId, 'evidence/inspect'), { evidenceId: 'muddy-footprints', expectedRevision: 1 });
+  await call('POST', pathFor(initial.sessionId, 'travel'), { locationId: 'garden', expectedRevision: 1 });
+  const evidence = await call('POST', pathFor(initial.sessionId, 'evidence/inspect'), { evidenceId: 'muddy-footprints', expectedRevision: 2 });
   assert.deepEqual(Object.keys(evidence.body.data.result).sort(), ['description', 'id', 'name']);
   assert.equal(evidence.text.includes(secret), false);
   failRead = true;
@@ -483,8 +489,71 @@ test('production launch without model configuration serves fallback dialogue on 
   const created = await fetch(`http://127.0.0.1:${port}/api/investigations`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}',
   }).then((res) => res.json());
+  const travelled = await fetch(`http://127.0.0.1:${port}${pathFor(created.data.sessionId, 'travel')}`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ locationId: 'garden', expectedRevision: 0 }),
+  }).then((res) => res.json());
+  assert.equal(travelled.data.state.currentLocationId, 'garden');
   const answer = await fetch(`http://127.0.0.1:${port}${pathFor(created.data.sessionId, 'questions')}`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(question()),
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(question(1, 'ben-carter')),
   }).then((res) => res.json());
   assert.equal(answer.data.result.text, 'I was repairing the greenhouse window when Victor died.');
+});
+
+test('HTTP room travel validates commands, rejects remote interactions without revisions and isolates sessions', async (t) => {
+  const { call, create } = await setup(t); let a = await create(); const b = await create(); const base = pathFor(a.sessionId);
+  assert.equal(a.state.currentLocationId, 'study');
+  errorIs(await call('POST', `${base}/questions`, question(0, 'ben-carter')), 409, 'suspect_not_present');
+  errorIs(await call('POST', `${base}/evidence/inspect`, { evidenceId: 'muddy-footprints', expectedRevision: 0 }), 409, 'evidence_not_here');
+  assert.equal((await call('GET', base)).body.data.revision, 0);
+  for (const body of [{ locationId: 'missing', expectedRevision: 0 }, { locationId: '../garden', expectedRevision: 0 }, { locationId: 'garden', expectedRevision: 0, currentLocationId: 'garden' }]) {
+    errorIs(await call('POST', `${base}/travel`, body), body.locationId === 'missing' ? 404 : 400, body.locationId === 'missing' ? 'location_not_found' : body.locationId.startsWith('.') ? 'invalid_id' : 'invalid_request');
+  }
+  a = (await call('POST', `${base}/travel`, { locationId: 'garden', expectedRevision: 0 })).body.data;
+  assert.deepEqual(a.result, { kind: 'travel', locationId: 'garden', changed: true }); assert.equal(a.revision, 1);
+  assert.equal((await call('GET', pathFor(b.sessionId))).body.data.state.currentLocationId, 'study');
+  errorIs(await call('POST', `${base}/travel`, { locationId: 'study', expectedRevision: 0 }), 409, 'stale_revision');
+  a = (await call('POST', `${base}/travel`, { locationId: 'garden', expectedRevision: 1 })).body.data;
+  assert.equal(a.result.changed, false); assert.equal(a.revision, 2);
+  a = (await call('POST', `${base}/questions`, question(2, 'ben-carter'))).body.data; assert.equal(a.result.kind, 'answer');
+  const ended = await call('POST', `${base}/accusations`, { suspectId: 'clara-voss', confirmed: true, expectedRevision: 3 });
+  errorIs(await call('POST', `${base}/travel`, { locationId: 'missing', expectedRevision: 0 }), 409, 'investigation_ended');
+  assert.deepEqual((await call('GET', base)).body.data.state.lifecycle.finalResult, ended.body.data.result);
+});
+
+test('HTTP rejects travel during questioning and questioning during a reserved travel', async (t) => {
+  const started = deferred(); const gate = deferred();
+  const { call, create, store } = await setup(t, { investigationFactory: () => createInvestigation({ phraser: { phrase() { started.resolve(); return gate.promise; } } }) });
+  const { sessionId } = await create(); const base = pathFor(sessionId);
+  const questionRequest = call('POST', `${base}/questions`, question()); await started.promise;
+  errorIs(await call('POST', `${base}/travel`, { locationId: 'garden', expectedRevision: 0 }), 409, 'session_busy');
+  gate.resolve('Received reply'); await questionRequest;
+  const entry = store.get(sessionId); const travelGate = deferred(); const admitted = deferred(); const run = store.run;
+  store.run = (target, revision, isQuestion, operation, allowsEnding) => run(target, revision, isQuestion, async () => { if (!isQuestion) { admitted.resolve(); await travelGate.promise; } return operation(); }, allowsEnding);
+  const travelRequest = call('POST', `${base}/travel`, { locationId: 'garden', expectedRevision: 1 }); await admitted.promise;
+  errorIs(await call('POST', `${base}/questions`, question(1)), 409, 'session_busy');
+  travelGate.resolve(); assert.equal((await travelRequest).body.data.state.currentLocationId, 'garden'); assert.equal(entry.revision, 2);
+});
+
+for (const settle of ['success', 'failure']) test(`HTTP discards dialogue ${settle} invalidated by out-of-band leave-and-return`, async (t) => {
+  const started = deferred(); const gate = deferred(); let game;
+  const { call, create } = await setup(t, { investigationFactory: () => { game = createInvestigation({ phraser: { phrase() { started.resolve(); return gate.promise; } } }); return game; } });
+  const { sessionId } = await create(); const base = pathFor(sessionId); const pending = call('POST', `${base}/questions`, question()); await started.promise;
+  game.travelTo('garden'); game.travelTo('study');
+  if (settle === 'success') gate.resolve('FORBIDDEN_ROOM_REPLY'); else gate.reject(Error('FORBIDDEN_ROOM_FAILURE'));
+  const response = await pending; errorIs(response, 409, 'stale_response'); assert.doesNotMatch(response.text, /FORBIDDEN_ROOM/);
+  const read = (await call('GET', base)).body.data; assert.equal(read.revision, 0); assert.equal(read.state.currentLocationId, 'study');
+});
+
+test('HTTP does not publish a cached answer when direct travel invalidates its adapter commit', async (t) => {
+  const started = deferred(); const gate = deferred(); let game;
+  const { call, create } = await setup(t, { investigationFactory: () => {
+    game = createInvestigation(); const ask = game.askSuspect;
+    game.askSuspect = async (...args) => { const result = await ask(...args); if (result.cached) { started.resolve(); await gate.promise; } return result; };
+    return game;
+  } });
+  const { sessionId } = await create(); const base = pathFor(sessionId);
+  assert.equal((await call('POST', `${base}/questions`, question())).status, 200);
+  const pending = call('POST', `${base}/questions`, question(1)); await started.promise;
+  game.travelTo('garden'); game.travelTo('study'); gate.resolve();
+  errorIs(await pending, 409, 'stale_response'); assert.equal((await call('GET', base)).body.data.revision, 1);
 });

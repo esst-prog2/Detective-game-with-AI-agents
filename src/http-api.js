@@ -8,6 +8,8 @@ const errors = {
   forbidden_host: [403, 'Host is not permitted.'], route_not_found: [404, 'Route not found.'],
   session_not_found: [404, 'Investigation not found.'], suspect_not_found: [404, 'Suspect not found.'],
   evidence_not_found: [404, 'Evidence not found.'], method_not_allowed: [405, 'Method not allowed.'],
+  location_not_found: [404, 'Room not found.'], suspect_not_present: [409, 'That suspect is in another room.'],
+  evidence_not_here: [409, 'That evidence is in another room.'],
   investigation_ended: [409, 'The investigation has ended.'], stale_revision: [409, 'Refresh state before retrying.'],
   session_busy: [409, 'A command is already running.'], stale_response: [409, 'The command response is no longer current.'],
   request_too_large: [413, 'Request body is too large.'], unsupported_media_type: [415, 'Use UTF-8 application/json.'],
@@ -31,7 +33,7 @@ function fail(code) { throw new ApiError(code); }
 function route(path) {
   if (!path || !path.startsWith('/') || /[%?#\\]|\/\.|\/\//.test(path)) fail('invalid_route');
   if (path === '/api/investigations') return { action: 'create', method: 'POST' };
-  const match = /^\/api\/investigations\/([^/]+)(?:\/(questions|evidence\/inspect|accusations))?$/.exec(path);
+  const match = /^\/api\/investigations\/([^/]+)(?:\/(questions|evidence\/inspect|accusations|travel))?$/.exec(path);
   if (!match) fail('route_not_found');
   if (!/^[a-f0-9]{64}$/.test(match[1])) fail('invalid_session_id');
   return { id: match[1], action: match[2] ?? 'read', method: match[2] ? 'POST' : 'GET' };
@@ -41,12 +43,13 @@ function validateBody(action, body) {
   const keys = {
     create: [], questions: ['suspectId', 'question', 'expectedRevision'],
     'evidence/inspect': ['evidenceId', 'expectedRevision'], accusations: ['suspectId', 'confirmed', 'expectedRevision'],
+    travel: ['locationId', 'expectedRevision'],
   }[action];
   if (!body || Array.isArray(body) || typeof body !== 'object'
     || Object.keys(body).length !== keys.length || keys.some((key) => !Object.hasOwn(body, key))) fail('invalid_request');
   if (action === 'create') return;
   if (!Number.isSafeInteger(body.expectedRevision) || body.expectedRevision < 0) fail('invalid_request');
-  const id = action === 'evidence/inspect' ? body.evidenceId : body.suspectId;
+  const id = action === 'travel' ? body.locationId : action === 'evidence/inspect' ? body.evidenceId : body.suspectId;
   if (typeof id !== 'string' || id.length > 64 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)) fail('invalid_id');
   if (action === 'questions') {
     if (typeof body.question !== 'string') fail('invalid_request');
@@ -87,6 +90,11 @@ function readBody(req, limit) {
 }
 
 function projectResult(action, result) {
+  if (result?.kind === 'error') {
+    if (Object.hasOwn(errors, result.code)) fail(result.code);
+    throw new Error('Invalid command result');
+  }
+  if (action === 'travel') return { kind: 'travel', locationId: result.locationId, changed: result.changed };
   if (action === 'questions') {
     if (!['answer', 'unsupported'].includes(result?.kind) || typeof result.text !== 'string') throw new Error('Invalid answer');
     const value = { kind: result.kind, text: result.text };
@@ -140,11 +148,13 @@ export function createInvestigationServer({ store = createSessionStore(), bodyLi
         return;
       }
       const action = target.action;
-      const invoke = () => action === 'questions' ? entry.game.askSuspect(body.suspectId, body.question)
+      const invoke = () => action === 'travel' ? entry.game.travelTo(body.locationId) : action === 'questions' ? entry.game.askSuspect(body.suspectId, body.question)
         : action === 'evidence/inspect' ? entry.game.inspectPublicEvidence(body.evidenceId)
           : entry.game.resolveAccusation(body.suspectId, body.confirmed);
       if (entry.game.getLifecycle().status === 'ended') { await invoke(); fail('investigation_ended'); }
-      if (action === 'evidence/inspect') {
+      if (action === 'travel') {
+        if (!entry.game.getPublicView().rooms.some(({ id }) => id === body.locationId)) fail('location_not_found');
+      } else if (action === 'evidence/inspect') {
         if (!entry.game.listEvidence().some(({ id }) => id === body.evidenceId)) fail('evidence_not_found');
       } else if (!entry.game.getPublicSuspect(body.suspectId)) fail('suspect_not_found');
       const data = await store.run(entry, body.expectedRevision, action === 'questions', async () => {
