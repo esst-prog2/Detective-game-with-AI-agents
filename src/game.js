@@ -25,6 +25,22 @@ export function createInvestigation({ data = caseData, phraser = null } = {}) {
     return data.suspects.find((suspect) => suspect.id === suspectId) ?? null;
   }
 
+  // Explicit public projections: never spread authoritative records into these views.
+  function getPublicSuspect(suspectId) {
+    const suspect = findSuspect(suspectId);
+    return suspect ? { id: suspect.id, name: suspect.name } : null;
+  }
+
+  function getPublicView() {
+    return {
+      title: data.title,
+      victim: { name: data.victim.name, description: data.victim.description },
+      locations: [...data.locations],
+      suspects: data.suspects.map(({ id, name }) => ({ id, name })),
+      evidence: listEvidence(),
+    };
+  }
+
   async function askSuspect(suspectId, question) {
     const suspect = findSuspect(suspectId);
     if (!suspect) return { kind: 'error', text: 'That suspect is not available.' };
@@ -56,6 +72,11 @@ export function createInvestigation({ data = caseData, phraser = null } = {}) {
     return data.evidence.find((evidence) => evidence.id === evidenceId) ?? null;
   }
 
+  function inspectPublicEvidence(evidenceId) {
+    const evidence = inspectEvidence(evidenceId);
+    return evidence ? { id: evidence.id, name: evidence.name, description: evidence.description } : null;
+  }
+
   function resolveAccusation(suspectId, confirmed) {
     if (!confirmed) return { ended: false, result: 'cancelled', text: 'The accusation was cancelled. Continue investigating.' };
     const suspect = findSuspect(suspectId);
@@ -68,5 +89,9 @@ export function createInvestigation({ data = caseData, phraser = null } = {}) {
     };
   }
 
-  return { data, findSuspect, askSuspect, listEvidence, inspectEvidence, resolveAccusation };
+  // data, findSuspect and inspectEvidence remain trusted internal APIs for CLI compatibility.
+  return {
+    data, findSuspect, askSuspect, listEvidence, inspectEvidence, resolveAccusation,
+    getPublicView, getPublicSuspect, inspectPublicEvidence,
+  };
 }

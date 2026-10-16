@@ -19,6 +19,22 @@ npm start
 
 Never commit API keys. Copy the variable names from `.env.example`; the game automatically falls back to prewritten dialogue if either setting is missing or the API call fails.
 
+## Player-visible investigation data
+
+`createInvestigation()` in `src/game.js` provides three explicit public read methods for future interface adapters:
+
+| Method | Returned display fields |
+| --- | --- |
+| `getPublicView()` | `title`, `victim: { name, description }`, `locations: string[]`, `suspects: { id, name }[]`, `evidence: { id, name }[]` |
+| `getPublicSuspect(id)` | `{ id, name }`, or `null` for an unknown ID |
+| `inspectPublicEvidence(id)` | `{ id, name, description }`, or `null` for an unknown ID |
+
+Every call constructs detached objects/arrays from the configured case and preserves case-data order. Changing a returned view cannot change the case or later results. Public reads make no model calls. Evidence remains immediately inspectable; this change adds no discovery gates or journal state.
+
+The allowlist excludes the murderer designation, solution, private facts, motives, personality prompts, permitted lies, response tables and additional metadata. Existing introduction and evidence descriptions are authored player-visible text; they still require editorial review for spoilers. These methods assume the current case format, whose allowlisted leaf values and location names are strings. New structured fields require an explicit projection decision.
+
+The existing `data`, `findSuspect()` and `inspectEvidence()` contracts remain available to trusted internal callers, including the CLI. **Future network adapters must serialize public projections, never the investigation object or raw case records.** The game engine and case module belong on the server. This change adds no HTTP server or browser UI and does not resolve NPC dialogue knowledge leaks or implement investigation lifecycle enforcement.
+
 ## HW4 real-model phrasing spike
 
 Verified result (2026-10-02): `gpt-6-luna`, **30/30 passed (100.00%)**, **p50 2249.9 ms**, **p95 4300.6 ms**. Evidence: [phrasing-2026-10-02T13-49-19-290Z-17052.jsonl](spikes/results/phrasing-2026-10-02T13-49-19-290Z-17052.jsonl). All 18 suspect/topic pairs plus 12 predetermined repeats are present, with zero validation failures, API errors, or timeouts. The current real-model phrasing path remains in the design because this run exceeds issue #4's approximately 70% viability threshold; 30 successful attempts do not guarantee future success. Metrics were independently recomputed from the evidence without rerunning the API experiment.
