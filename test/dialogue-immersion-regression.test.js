@@ -26,6 +26,7 @@ test('immersion check examines only the generated lead-in', async () => {
 test('rejected internal lead-in uses and caches the existing game fallback', async () => {
   const approvedContent = caseData.suspects[1].responses.alibi.approvedContent;
   const game = createInvestigation({ phraser: phraserReturning(`Approved statement: ${approvedContent}`) });
+  game.travelTo('garden');
   const first = await game.askSuspect('ben-carter', 'Where were you?');
   const repeated = await game.askSuspect('ben-carter', 'Where were you?');
   assert.equal(first.text, caseData.suspects[1].responses.alibi.fallbackText);

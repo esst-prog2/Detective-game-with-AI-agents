@@ -30,7 +30,9 @@ test('keyword classifier recognizes all six categories and unsupported questions
 test('interrogation selects only the addressed suspect response and has safe fallback', async () => {
   const game = createInvestigation();
   const alice = await game.askSuspect('alice-mercer', 'Where were you?');
+  game.travelTo('library');
   const clara = await game.askSuspect('clara-voss', 'Where were you?');
+  game.travelTo('study');
   const unsupported = await game.askSuspect('alice-mercer', 'Tell me a joke');
   assert.equal(alice.text, caseData.suspects[0].responses.alibi.fallbackText);
   assert.equal(clara.text, caseData.suspects[2].responses.alibi.fallbackText);
@@ -50,6 +52,7 @@ test('a repeated topic response is cached as identical display text', async () =
 
 test('evidence is inspectable and named evidence questions remain general category questions', async () => {
   const game = createInvestigation();
+  game.travelTo('garden');
   assert.equal(game.listEvidence().length, 3);
   assert.match(game.inspectEvidence('muddy-footprints').description, /garden door/);
   const answer = await game.askSuspect('ben-carter', 'What about the cufflink?');
@@ -60,8 +63,11 @@ test('evidence is inspectable and named evidence questions remain general catego
 test('accusations can be cancelled and resolve correct or incorrect outcomes', () => {
   const game = createInvestigation();
   assert.equal(game.resolveAccusation('clara-voss', false).ended, false);
-  assert.equal(game.resolveAccusation('clara-voss', true).result, 'correct');
-  assert.equal(game.resolveAccusation('alice-mercer', true).result, 'incorrect');
+  const finalResult = game.resolveAccusation('clara-voss', true);
+  assert.equal(finalResult.result, 'correct');
+  assert.equal(game.resolveAccusation('alice-mercer', true).code, 'investigation_ended');
+  assert.deepEqual(game.getLifecycle().finalResult, finalResult);
+  assert.equal(createInvestigation().resolveAccusation('alice-mercer', true).result, 'incorrect');
 });
 
 test('OpenAI adapter validates output and configured adapter falls back when no credentials exist', async () => {
@@ -95,10 +101,13 @@ test('OpenAI adapter passes the abort signal in request options and aborts on ti
 });
 
 test('scripted CLI session shows help, evidence, cancellation, and a final accusation', async () => {
-  const answers = ['3', '2', '1', '4', '3', 'no', '4', '3', 'yes'];
+  const answers = ['3', '6', '3', '2', '1', '4', '3', 'no', '4', '3', 'yes'];
   let output = '';
   const io = {
-    ask: async () => answers.shift() ?? '5',
+    ask: async () => {
+      assert.ok(answers.length, 'CLI must not request input after the final accusation');
+      return answers.shift();
+    },
     write: (text) => { output += text; },
   };
   await runCli(io, { game: createInvestigation() });
@@ -106,4 +115,5 @@ test('scripted CLI session shows help, evidence, cancellation, and a final accus
   assert.match(output, /Muddy footprints/);
   assert.match(output, /accusation was cancelled/i);
   assert.match(output, /Correct\. Clara Voss murdered Victor Hale/);
+  assert.equal(answers.length, 0);
 });

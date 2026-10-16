@@ -1,0 +1,5 @@
+desktop: real offline controls completed all scenes, received testimony/guidance, three inspections, Escape/button cancel and correct conclusion.
+desktop: new-session wrong result, cleared notes, 360px and 720px/450px reflow passed; reduced motion enabled.
+mobile: real offline controls completed all scenes, received testimony/guidance, three inspections, Escape/button cancel and correct conclusion.
+mobile: new-session wrong result, cleared notes, 360px and 720px/450px reflow passed; reduced motion enabled.
+Actual API process loss: friendly recovery, retained draft, no automatic retry; Vite log excludes bearer IDs and proxy stack.
