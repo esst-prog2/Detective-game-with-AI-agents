@@ -88,7 +88,7 @@ No candidate dialogue SHALL mutate memory, emotions, presented IDs, history or c
 - **THEN** none of its staged engine state is installed and existing state/revision remain intact
 
 ### Requirement: Preserve offline and historical compatibility
-Complete CLI/HTTP/browser investigation SHALL remain possible with no model key. CLI actions 1-6, plain question prompts and Boolean accusation confirmation SHALL remain compatible; optional choice access SHALL not add prompts to existing plain-text scripts. Historical phraser APIs and their independent HW5 expectations SHALL remain supported with documented legacy limits, while new configured runtime uses the new authority path. Existing request/session caps, safe errors, origin policy, bearer privacy, room restrictions and ended-state behavior SHALL remain enforced.
+Complete CLI/HTTP/browser investigation SHALL remain possible with no model key. CLI actions 1-6, plain question prompts and Boolean accusation confirmation SHALL remain compatible; optional choice access SHALL not add prompts to existing plain-text scripts. Historical phraser APIs and their independent HW5 A/B/C expectations SHALL remain supported with exact authorized compatibility outputs and original testimony fallback, while new configured runtime uses the new authority path. Existing request/session caps, safe errors, origin policy, bearer privacy, room restrictions and ended-state behavior SHALL remain enforced.
 
 #### Scenario: Finish offline or use an explicit legacy fixture
 - **WHEN** a player completes the case offline or a compatibility fixture explicitly injects the old phraser

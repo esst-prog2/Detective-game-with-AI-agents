@@ -266,10 +266,10 @@ test('a previously valid gesture cannot be replayed when current anti-repetition
   assert.equal(memory(g).npcs[0].turns[1].narration, second.narration);
 });
 
-test('historical alphabetic factual lead-in limitation is documented by regression; new path rejects it', async () => {
+test('historical alphabetic factual lead-in is rejected by both current adapters', async () => {
   const speech = `I own the murder weapon: ${original}`;
   const legacy = createOpenAIDialoguePhraser({ client: { responses: { create: async () => ({ output_text: speech }) } }, model: 'test-model' });
-  assert.equal(await legacy.phrase({ approvedContent: original, personality: 'Nervous.' }), speech);
+  await assert.rejects(legacy.phrase({ approvedContent: original, personality: 'Nervous.' }));
   await assert.rejects(adapter(async () => completed({ narration: 'I own the murder weapon', dialogue: original })).perform(context()));
   const g = createInvestigation({ performer: { perform: async () => ({ narration: null, dialogue: speech }) } });
   assert.equal((await ask(g)).dialogue, original);

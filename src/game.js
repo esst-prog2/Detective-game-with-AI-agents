@@ -3,6 +3,7 @@ import { defaultDialogueCatalog, validateDialogueCatalog, freezeCatalog } from '
 import { initialDialogueState, resolveDialogue, dialogueOptions, prepareTurn, cachePerformance, publicDialogue, guidance, dialogueDiagnostics } from './dialogue-state.js';
 import { validateAuthoredPerformances, offerPerformances, applyPerformance } from './authored-performances.js';
 import { validatePerformance } from './npc-performance.js';
+import { legacyPerformances } from './dialogue-phraser.js';
 
 export function validateSpatialData(data) {
   const slug = (id) => typeof id === 'string' && id.length <= 64 && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id);
@@ -178,15 +179,20 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
           text = pair.dialogue; narration = pair.narration;
           candidate.performances = offer.context.performances;
         }
-        else if (cached) { text = cached.text; narration = legacy ? null : cached.narration; reused = true; }
         else if (legacy) {
           narration = null;
           text = turn.core.approvedContent;
+          const performances = legacyPerformances(text);
+          candidate.performances = performances;
           try {
-            const phrased = await phraser.phrase({ approvedContent: text, personality: suspect.personality });
-            if (typeof phrased === 'string' && phrased.trim()) text = phrased.trim();
+            const style = catalog.profiles.find((p) => p.suspectId === suspectId).speechStyle;
+            const phrased = cached ? cached.text : await phraser.phrase({ approvedContent: text,
+              personality: [...`${style.vocabulary} ${style.rhythm}`].slice(0, 500).join('') });
+            text = validatePerformance({ narration: null, dialogue: phrased }, performances).dialogue;
+            reused = !!cached;
           } catch { /* Historical adapter failure uses the unchanged approved core. */ }
         }
+        else if (cached) { text = cached.text; narration = cached.narration; reused = true; }
         turn.result.text = text; turn.result.dialogue = text; turn.result.narration = narration; turn.result.cached = reused;
         turn.record.dialogue = text; turn.record.narration = narration;
         cachePerformance(turn.npc, cacheKey, { text, narration });
