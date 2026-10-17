@@ -13,7 +13,12 @@ export default function AccusationDialog({ initialId, onClose }) {
     return () => { dialog.current?.close(); };
   }, []);
   useEffect(() => { if (state.endedKnown || state.expired) onClose(); }, [state.endedKnown, state.expired, onClose]);
-  async function decide(confirmed) { if (canAct && await client.accuse(id, confirmed)) onClose(); }
+  async function decide(confirmed) {
+    if (state.pending) return;
+    // Closing after uncertain receipt is local only; the server may already have ended play.
+    if (!confirmed && !canAct) { onClose(); return; }
+    if (canAct && await client.accuse(id, confirmed)) onClose();
+  }
   function trapFocus(event) {
     if (event.key !== 'Tab') return;
     const controls = [...dialog.current.querySelectorAll('select:not(:disabled),button:not(:disabled)')];
@@ -27,6 +32,6 @@ export default function AccusationDialog({ initialId, onClose }) {
     <label htmlFor="accused">Selected suspect</label><select id="accused" value={id} disabled={!canAct} onChange={(event) => setId(event.target.value)}>{state.snapshot.suspects.map((suspect) => <option key={suspect.id} value={suspect.id}>{suspect.name}</option>)}</select>
     {suspect && <div className="accused-preview"><Portrait suspect={suspect} /><span>{suspect.name}<small>Suspect</small></span></div>}
     {state.pending && <p role="status">{state.pending.label}</p>}{state.error && <div role="alert"><p>{state.error.message}</p><button disabled={!!state.pending} onClick={() => client.refresh()}>Refresh investigation</button></div>}
-    <div className="dialog-actions"><button ref={cancel} disabled={!canAct} onClick={() => decide(false)}>Cancel accusation</button><button className="danger" disabled={!canAct} onClick={() => decide(true)}>Confirm accusation</button></div>
+    <div className="dialog-actions"><button ref={cancel} disabled={!!state.pending} onClick={() => decide(false)}>{canAct ? 'Cancel accusation' : 'Close dialog'}</button><button className="danger" disabled={!canAct} onClick={() => decide(true)}>Confirm accusation</button></div>
   </dialog>;
 }

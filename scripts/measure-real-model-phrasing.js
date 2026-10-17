@@ -27,6 +27,13 @@ export function summarize(attempts) {
   };
 }
 
+// Provider error text/codes can echo credentials or request content. Persist only a fixed category.
+export function safeExperimentError(error, outcome) {
+  const category = ['validation_failure', 'timeout', 'api_error'].includes(outcome) ? outcome : 'api_error';
+  return { name: 'ExperimentError', message: 'Phrasing attempt failed.', code: category,
+    status: Number.isInteger(error?.status) && error.status >= 400 && error.status <= 599 ? error.status : null };
+}
+
 async function main() {
   const { OPENAI_API_KEY, OPENAI_MODEL } = process.env;
   if (!OPENAI_API_KEY || !OPENAI_MODEL) {
@@ -74,8 +81,8 @@ async function main() {
         record.outcome = 'passed';
       } catch (error) {
         record.outcome = responseReceived ? 'validation_failure'
-          : signal?.aborted || error.name === 'APIConnectionTimeoutError' ? 'timeout' : 'api_error';
-        record.error = { name: error.name, message: error.message, status: error.status, code: error.code };
+          : signal?.aborted || error?.name === 'APIConnectionTimeoutError' ? 'timeout' : 'api_error';
+        record.error = safeExperimentError(error, record.outcome);
       } finally {
         record.latencyMs = performance.now() - start;
       }
@@ -96,8 +103,8 @@ async function main() {
 
 // Importing the calculation helpers in offline tests never runs the experiment.
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
-  main().catch((error) => {
-    console.error(error.message);
+  main().catch(() => {
+    console.error('Phrasing experiment failed. Check configuration and local evidence storage.');
     process.exitCode = 1;
   });
 }

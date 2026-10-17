@@ -82,6 +82,28 @@ test('complete real offline room investigation, cancellation, both verdicts and 
   await expect(page.locator('.verdict')).not.toContainText('Clara'); expect(errors).toEqual([]);
 });
 
+for (const dismiss of ['Escape', 'Close dialog']) test(`lost accusation reply permits ${dismiss} without replay and reconciles the real ending`, async ({ page }) => {
+  await start(page);
+  await dialog(page);
+  let attempts = 0;
+  await page.route('**/accusations', async (route) => {
+    attempts++;
+    await route.fetch(); // The real server commits the ending; only its receipt is lost.
+    await route.abort('failed');
+  });
+  await page.getByRole('button', { name: 'Confirm accusation' }).click();
+  await expect(page.getByRole('dialog').getByRole('alert')).toContainText('may already have completed');
+  if (dismiss === 'Escape') await page.keyboard.press('Escape');
+  else await page.getByRole('button', { name: 'Close dialog', exact: true }).click();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Accuse', exact: true }).first()).toBeDisabled();
+  await nav(page, 'Evidence journal').click();
+  await expect(page.getByRole('heading', { name: 'The evidence journal' })).toBeVisible();
+  await page.getByRole('button', { name: 'Refresh investigation' }).click();
+  await expect(page.getByRole('heading', { name: 'The truth comes to light.' })).toBeVisible();
+  expect(attempts).toBe(1);
+});
+
 test('pending actions gate travel and retain original attribution while reading another dossier', async ({ page }) => {
   await start(page); await talk(page);
   let count = 0; let release; const pending = new Promise((resolve) => { release = resolve; });

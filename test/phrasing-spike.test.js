@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { buildAttempts, summarize } from '../scripts/measure-real-model-phrasing.js';
+import { buildAttempts, summarize, safeExperimentError } from '../scripts/measure-real-model-phrasing.js';
 import { caseData, TOPICS } from '../src/data/case.js';
 
 test('spike schedule covers 18 pairs then 12 predetermined balanced repeats', () => {
@@ -11,6 +11,17 @@ test('spike schedule covers 18 pairs then 12 predetermined balanced repeats', ()
   assert.deepEqual(keys.slice(18), [0, 1, 2, 3, 8, 9, 10, 11, 16, 17, 12, 13].map((i) => keys[i]));
   for (const suspect of caseData.suspects) assert.equal(attempts.filter((a) => a.suspect.id === suspect.id).length, 10);
   for (const topic of TOPICS) assert.equal(attempts.filter((a) => a.topic === topic).length, 5);
+});
+
+test('experiment errors cannot persist provider credentials or arbitrary diagnostic fields', () => {
+  const privateText = 'PRIVATE_ERROR_CANARY';
+  const diagnostic = { name: privateText, message: privateText, code: privateText, status: 401, request: privateText };
+  const safe = safeExperimentError(diagnostic, 'api_error');
+  assert.doesNotMatch(JSON.stringify(safe), /PRIVATE_ERROR_CANARY/);
+  assert.equal(safe.status, 401);
+  assert.equal(safe.code, 'api_error');
+  assert.equal(safeExperimentError({ status: privateText }, privateText).status, null);
+  assert.doesNotMatch(JSON.stringify(safeExperimentError(null, privateText)), /PRIVATE_ERROR_CANARY/);
 });
 
 test('summary includes failures and timeouts in denominator and nearest-rank latencies', () => {

@@ -8,6 +8,14 @@ function deferred() {
   return { promise, resolve };
 }
 
+test('invalid resource limits fail at construction rather than disabling capacity or expiry', () => {
+  for (const name of ['maxSessions', 'maxQuestions', 'idleMs']) {
+    for (const value of [NaN, Infinity, 0, -1, 1.5, '4', null, Number.MAX_SAFE_INTEGER + 1]) {
+      assert.throws(() => createSessionStore({ [name]: value }), /Invalid session limits/);
+    }
+  }
+});
+
 test('session store defaults cap creation at 100 and expire idle sessions after 30 minutes', () => {
   let now = 0;
   const store = createSessionStore({ clock: () => now });
