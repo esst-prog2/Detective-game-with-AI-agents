@@ -1,5 +1,5 @@
 import { createInvestigation } from './game.js';
-import { createConfiguredOpenAIPhraser } from './dialogue-phraser.js';
+import { createConfiguredNPCPerformer } from './npc-performance.js';
 
 export const exampleQuestions = [
   'Where were you when Victor died?',
@@ -10,8 +10,8 @@ export const exampleQuestions = [
   'What happened when Victor died?',
 ];
 
-export async function runCli(io, { game = null } = {}) {
-  const investigation = game ?? createInvestigation({ phraser: await createConfiguredOpenAIPhraser() });
+export async function runCli(io, { game = null, createPerformer = createConfiguredNPCPerformer } = {}) {
+  const investigation = game ?? createInvestigation({ performer: await createPerformer() });
   const lifecycle = investigation.getLifecycle();
   if (lifecycle.status === 'ended') {
     io.write(`${lifecycle.finalResult.text}\n`);
@@ -52,8 +52,16 @@ async function chooseSuspect(io, investigation, local = false) {
 async function questionSuspect(io, investigation) {
   const suspect = await chooseSuspect(io, investigation, true);
   if (!suspect) return io.write('Please choose a valid suspect number.\n');
-  const question = await io.ask(`Ask ${suspect.name}: `);
-  const answer = await investigation.askSuspect(suspect.id, question);
+  const question = await io.ask(`Ask ${suspect.name} (or /choices): `);
+  let answer;
+  if (question.trim() === '/choices') {
+    const options = investigation.getPublicView().dialogue.conversations.find((c) => c.suspectId === suspect.id)?.options ?? [];
+    options.forEach((option, i) => io.write(`${i + 1}. ${option.label}\n`));
+    const choice = options[Number((await io.ask('Choose a question: ')).trim()) - 1];
+    if (!choice) return io.write('Please choose a valid question number.\n');
+    answer = await investigation.interact(suspect.id, { choiceId: choice.id });
+  } else answer = await investigation.askSuspect(suspect.id, question);
+  if (answer.narration) io.write(`*${answer.narration}*\n`);
   io.write(`${suspect.name}: ${answer.text}\n`);
 }
 

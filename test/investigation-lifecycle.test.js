@@ -112,7 +112,7 @@ test('safe public lifecycle snapshots are exact, detached and exclude private da
   assert.deepEqual(JSON.parse(JSON.stringify(view.lifecycle)), expected);
   assert.equal(JSON.stringify(view).includes('FORBIDDEN_LIFECYCLE_CANARY'), false);
   assert.equal(JSON.stringify(view.lifecycle).includes('Clara'), false);
-  assert.deepEqual(Object.keys(view).sort(), ['title', 'victim', 'locations', 'rooms', 'currentLocationId', 'suspects', 'evidence', 'lifecycle'].sort());
+  assert.deepEqual(Object.keys(view).sort(), ['title', 'victim', 'locations', 'rooms', 'currentLocationId', 'suspects', 'evidence', 'lifecycle', 'dialogue'].sort());
   assert.notStrictEqual(view.lifecycle.finalResult, snapshot.finalResult);
   resolution.result = 'correct';
   resolution.text = 'Changed';

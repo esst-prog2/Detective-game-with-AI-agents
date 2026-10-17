@@ -6,9 +6,18 @@ import { initialState, investigationReducer } from '../web/src/state/investigati
 
 const token = 'a'.repeat(64);
 const profile = { role: 'Guest', relationshipToVictim: 'A known guest.', background: 'Public introduction.', relationships: [] };
-const state = { title: 'Public case', victim: { name: 'Victim', description: 'Public introduction' }, locations: ['the study', 'the garden'], rooms: [{ id: 'study', name: 'the study' }, { id: 'garden', name: 'the garden' }], currentLocationId: 'study', suspects: [{ id: 'guest', name: 'Guest', locationId: 'study', dossier: profile }, { id: 'another', name: 'Another Guest', locationId: 'study', dossier: profile }], evidence: [{ id: 'clue', name: 'Clue', locationId: 'study' }], lifecycle: { status: 'active', finalResult: null } };
+const state = { title: 'Public case', victim: { name: 'Victim', description: 'Public introduction' }, locations: ['the study', 'the garden'], rooms: [{ id: 'study', name: 'the study' }, { id: 'garden', name: 'the garden' }], currentLocationId: 'study', suspects: [{ id: 'guest', name: 'Guest', locationId: 'study', dossier: profile }, { id: 'another', name: 'Another Guest', locationId: 'study', dossier: profile }], evidence: [{ id: 'clue', name: 'Clue', locationId: 'study' }], lifecycle: { status: 'active', finalResult: null }, dialogue: { inspectedEvidenceIds: [], conversations: [] } };
 const closed = { ...state, lifecycle: { status: 'ended', finalResult: { ended: true, result: 'incorrect', text: 'An authoritative conclusion.' } } };
-const response = (revision = 0, snapshot = state, result, sessionId = token) => ({ ok: true, status: 200, json: async () => ({ ok: true, data: { sessionId, revision, state: snapshot, result }, error: null }) });
+// Additive dialogue-contract fixture migration; substantive replies carry their server turn.
+const response = (revision = 0, snapshot = state, result, sessionId = token) => {
+  snapshot = structuredClone(snapshot);
+  if (result?.kind === 'answer' && snapshot.lifecycle.status === 'active') {
+    result = { topic: 'alibi', cached: false, turnId: 1, narration: null, ...result, dialogue: result.dialogue ?? result.text };
+    if (!snapshot.dialogue.conversations.length) snapshot.dialogue.conversations.push({ suspectId: 'guest', demeanor: 'neutral', options: [], recentTurns: [{ turnId: result.turnId, question: 'Where were you?', kind: 'answer', topic: result.topic, narration: result.narration, dialogue: result.dialogue }] });
+    result.demeanor ??= 'neutral';
+  }
+  return { ok: true, status: 200, json: async () => ({ ok: true, data: { sessionId, revision, state: snapshot, result }, error: null }) };
+};
 const error = (code, status = 409) => ({ ok: false, status, json: async () => ({ ok: false, data: null, error: { code, message: 'PRIVATE_CANARY_DO_NOT_RENDER' } }) });
 const deferred = () => { let resolve; const promise = new Promise((done) => { resolve = done; }); return { promise, resolve }; };
 function setup(fetchImpl, options = {}) {
@@ -181,4 +190,115 @@ test('ended-command rejection reconciles to the first authoritative conclusion o
   await app.client.start(); app.dispatch({ type: 'SUSPECT', id: 'guest' }); await app.client.ask('guest', 'Question');
   assert.equal(app.state.endedKnown, true); assert.equal(app.state.snapshot.lifecycle.finalResult, null);
   await app.client.refresh(); assert.equal(app.state.screen, 'conclusion'); assert.deepEqual(app.state.snapshot.lifecycle.finalResult, closed.lifecycle.finalResult);
+});
+
+function conversationSnapshot(turns = [], options = [], extra = {}) {
+  return { ...structuredClone(state), dialogue: { inspectedEvidenceIds: [], conversations: [{ suspectId: 'guest', demeanor: 'uneasy', recentTurns: turns, options, ...extra }] } };
+}
+const turn = (id, narration = null) => ({ turnId: id, question: 'Authorized question ' + id, kind: 'answer', topic: 'alibi', narration, dialogue: 'Received speech ' + id });
+const answer = (record) => ({ ...record, text: record.dialogue, cached: false, demeanor: 'uneasy' });
+
+test('choice bodies use only identity and revision; duplicate gate and typed drafts survive success', async () => {
+  const waiting = deferred(); const calls = [];
+  const app = setup(async (_url, options) => { calls.push(JSON.parse(options.body)); return calls.length === 1 ? response() : waiting.promise; });
+  await app.client.start(); app.dispatch({ type: 'DRAFT', id: 'guest', text: 'My independent question' });
+  const choice = app.client.choose('guest', 'ask-alibi');
+  assert.equal(await app.client.ask('guest', 'Where were you?'), false);
+  assert.equal(await app.client.choose('guest', 'ask-alibi'), false);
+  const record = turn(1, 'A controlled pause.');
+  waiting.resolve(response(1, conversationSnapshot([record]), answer(record)));
+  assert.equal(await choice, true);
+  assert.deepEqual(calls[1], { suspectId: 'guest', choiceId: 'ask-alibi', expectedRevision: 0 });
+  assert.equal(app.state.drafts.guest, 'My independent question');
+  assert.equal(app.state.transcripts.guest[0].question, record.question);
+  assert.equal(app.state.transcripts.guest[0].narration, record.narration);
+});
+
+test('malformed choices and empty/oversized text never reach HTTP', async () => {
+  let calls = 0; const app = setup(async () => { calls++; return response(); }); await app.client.start();
+  for (const id of ['', 'ask/alibi', 'A'.repeat(65), null]) assert.equal(await app.client.choose('guest', id), false);
+  for (const input of ['', ' ', 'x'.repeat(1001), null]) assert.equal(await app.client.ask('guest', input), false);
+  assert.equal(calls, 1);
+});
+
+test('unavailable choice preserves draft and testimony, requires deliberate refresh without replay', async () => {
+  let calls = 0; const app = setup(async () => ++calls === 1 ? response() : calls === 2 ? error('dialogue_option_unavailable') : response(1));
+  await app.client.start(); app.dispatch({ type: 'DRAFT', id: 'guest', text: 'Keep this' });
+  assert.equal(await app.client.choose('guest', 'present-clue'), false);
+  assert.equal(app.state.drafts.guest, 'Keep this'); assert.equal(app.state.uncertain, true);
+  assert.match(app.state.error.message, /Refresh/); assert.deepEqual(app.state.transcripts, {});
+  await app.client.refresh(); assert.equal(calls, 3); assert.equal(app.state.uncertain, false);
+});
+
+test('reconciliation recovers lost replies once, retains older local turns beyond the eight-turn window', async () => {
+  let snapshot = conversationSnapshot([turn(1)]);
+  const app = setup(async () => response(1, snapshot)); await app.client.start();
+  snapshot = conversationSnapshot(Array.from({ length: 8 }, (_, i) => turn(i + 2)));
+  await app.client.refresh(); await app.client.refresh();
+  assert.deepEqual(app.state.transcripts.guest.map((record) => record.turnId), [1,2,3,4,5,6,7,8,9]);
+  assert.equal(app.state.transcripts.guest[0].question, 'Authorized question 1');
+  assert.equal(app.state.transcripts.guest[0].narration, null);
+  assert.equal(app.state.transcripts.guest.at(-1).dialogue, 'Received speech 9');
+});
+
+test('GET overtaking command deduplicates testimony using speaker and server turn ID', async () => {
+  const delayed = deferred(); let calls = 0; const record = turn(1);
+  const app = setup(async () => ++calls === 1 ? response() : calls === 2 ? delayed.promise : response(1, conversationSnapshot([record])));
+  await app.client.start(); const command = app.client.choose('guest', 'ask-alibi'); await app.client.refresh();
+  assert.equal(app.state.pending.mutation, true, 'a read cannot clear the pending mutation indicator');
+  delayed.resolve(response(1, conversationSnapshot([record]), answer(record))); await command;
+  assert.equal(app.state.transcripts.guest.length, 1);
+  assert.equal(app.state.transcripts.guest[0].question, record.question);
+});
+
+test('unsupported guidance is browser-local, separately keyed and does not manufacture a server turn', async () => {
+  let calls = 0; const guidance = { kind: 'unsupported', topic: 'unsupported', narration: null, dialogue: 'Please ask about this case.', text: 'Please ask about this case.' };
+  const app = setup(async () => ++calls === 1 ? response() : response(1, state, guidance));
+  await app.client.start(); await app.client.ask('guest', 'Purple planets?');
+  assert.equal(app.state.transcripts.guest[0].localGuidance, true);
+  assert.equal(app.state.transcripts.guest[0].turnId, undefined);
+  assert.equal(app.state.transcripts.guest[0].question, 'Purple planets?');
+});
+
+test('inspected IDs from reconciliation never fabricate clue descriptions or clear drafts', async () => {
+  const snapshot = conversationSnapshot(); snapshot.dialogue.inspectedEvidenceIds = ['clue'];
+  const app = setup(async () => response(1, snapshot)); await app.client.start();
+  assert.deepEqual(app.state.snapshot.dialogue.inspectedEvidenceIds, ['clue']); assert.deepEqual(app.state.inspected, {});
+  app.dispatch({ type: 'DRAFT', id: 'guest', text: 'Remember' }); await app.client.refresh();
+  assert.equal(app.state.drafts.guest, 'Remember'); assert.deepEqual(app.state.inspected, {});
+});
+
+test('nested public dialogue projections discard metadata and reject invalid bounds and identities', () => {
+  const option = { id: 'ask-alibi', label: 'Ask about the evening', kind: 'topic', secret: 'PRIVATE_NESTED' };
+  const snapshot = conversationSnapshot([{ ...turn(1), secret: 'PRIVATE_NESTED' }], [option], { privateEmotion: 'PRIVATE_NESTED' });
+  snapshot.dialogue.secret = 'PRIVATE_NESTED';
+  assert.doesNotMatch(JSON.stringify(publicState(snapshot)), /PRIVATE_NESTED/);
+  for (const mutate of [
+    (v) => v.dialogue.conversations[0].demeanor = 'guilty',
+    (v) => v.dialogue.conversations[0].recentTurns[0].narration = '',
+    (v) => v.dialogue.conversations[0].recentTurns[0].dialogue = 'x'.repeat(1201),
+    (v) => v.dialogue.conversations[0].recentTurns[0].turnId = -1,
+    (v) => v.dialogue.conversations[0].options[0].kind = 'secret',
+    (v) => v.dialogue.conversations[0].options.push(...Array(6).fill(option)),
+    (v) => v.dialogue.inspectedEvidenceIds = ['missing'],
+    (v) => v.dialogue.conversations[0].suspectId = 'missing',
+    (v) => v.currentLocationId = 'garden',
+  ]) { const bad = structuredClone(snapshot); mutate(bad); assert.throws(() => publicState(bad)); }
+});
+
+test('mismatched legacy speech, invalid narration and unpaired turn results cannot enter state', async () => {
+  for (const result of [{ ...answer(turn(1)), text: 'Different meaning' }, { ...answer(turn(1)), narration: 'x'.repeat(241) }, answer(turn(2))]) {
+    let calls = 0; const app = setup(async () => ++calls === 1 ? response() : response(1, conversationSnapshot([turn(1)]), result));
+    await app.client.start(); assert.equal(await app.client.ask('guest', 'Where were you?'), false);
+    assert.deepEqual(app.state.transcripts, {}); assert.equal(app.state.uncertain, true);
+  }
+});
+
+test('ended late structured response cannot change narration, demeanor or history; explicit GET can recover pre-end testimony', async () => {
+  const snapshot = conversationSnapshot([turn(1, 'Late gesture.')]); snapshot.lifecycle = closed.lifecycle;
+  let calls = 0; const app = setup(async () => ++calls === 1 ? response(0, conversationSnapshot()) : response(1, snapshot, answer(turn(1, 'Late gesture.'))));
+  await app.client.start(); await app.client.choose('guest', 'ask-alibi');
+  assert.equal(app.state.endedKnown, true); assert.deepEqual(app.state.transcripts, {});
+  assert.doesNotMatch(JSON.stringify(app.state), /Late gesture/);
+  await app.client.refresh(); assert.equal(app.state.transcripts.guest[0].narration, 'Late gesture.');
 });

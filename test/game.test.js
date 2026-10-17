@@ -50,14 +50,16 @@ test('a repeated topic response is cached as identical display text', async () =
   assert.equal(calls, 1);
 });
 
-test('evidence is inspectable and named evidence questions remain general category questions', async () => {
+test('evidence is inspectable; named presentation requires inspected relevance while general evidence remains answerable', async () => {
   const game = createInvestigation();
   game.travelTo('garden');
   assert.equal(game.listEvidence().length, 3);
   assert.match(game.inspectEvidence('muddy-footprints').description, /garden door/);
   const answer = await game.askSuspect('ben-carter', 'What about the cufflink?');
-  assert.equal(answer.topic, 'evidence');
-  assert.equal(answer.text, caseData.suspects[1].responses.evidence.fallbackText);
+  assert.equal(answer.kind, 'unsupported');
+  const general = await game.askSuspect('ben-carter', 'What do you know about the evidence?');
+  assert.equal(general.topic, 'evidence');
+  assert.equal(general.text, caseData.suspects[1].responses.evidence.fallbackText);
 });
 
 test('accusations can be cancelled and resolve correct or incorrect outcomes', () => {

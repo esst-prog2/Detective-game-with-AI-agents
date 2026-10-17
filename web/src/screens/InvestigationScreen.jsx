@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useInvestigation } from '../state/InvestigationProvider.jsx';
 import { sceneFor, genericScene, evidenceFor, genericEvidence } from '../presentation/asset-manifest.js';
 import Artwork from '../components/Artwork.jsx';
@@ -24,7 +24,7 @@ export default function InvestigationScreen({ onAccuse }) {
       <aside className="room-objects" aria-label="Evidence in this room"><p className="eyebrow">EXAMINE THE ROOM</p>
         {clues.length ? clues.map((clue) => <button className="room-object" key={clue.id} disabled={!state.inspected[clue.id] && !canAct} onClick={async () => { setInspecting(clue.id); if (!state.inspected[clue.id]) await client.inspect(clue.id); }}><Artwork asset={evidenceFor(clue.id)} fallback={genericEvidence} decorative /><span>{clue.name}<small>{state.inspected[clue.id] ? 'Review observation' : 'Inspect evidence'}</small></span><span aria-hidden="true">↗</span></button>) : <p className="room-empty">No case evidence is recorded in this room.</p>}
         {inspecting && state.inspected[inspecting] && <div className="room-observation" role="status"><h3>{state.inspected[inspecting].name}</h3><p>{state.inspected[inspecting].description}</p><button onClick={() => setInspecting(null)}>Close observation</button></div>}
-        <button className="room-journal" onClick={() => dispatch({ type: 'NAVIGATE', screen: 'journal' })}>Open evidence journal <small>{Object.keys(state.inspected).length} of {state.snapshot.evidence.length} inspected</small></button>
+        <button className="room-journal" onClick={() => dispatch({ type: 'NAVIGATE', screen: 'journal' })}>Open evidence journal <small>{state.snapshot.dialogue.inspectedEvidenceIds.length} of {state.snapshot.evidence.length} inspected</small></button>
       </aside>
     </>}
     <footer className="room-exits"><div><span className="eyebrow">LEAVE THE ROOM</span><div className="exit-links">{state.snapshot.rooms.filter(({ id }) => id !== room.id).map((exit) => <button key={exit.id} disabled={!canAct} onClick={() => client.travel(exit.id)}>Go to {exit.name} <span aria-hidden="true">→</span></button>)}</div></div><button className="danger" disabled={!canAct} onClick={() => onAccuse(selected?.id)}>Make an accusation</button></footer>

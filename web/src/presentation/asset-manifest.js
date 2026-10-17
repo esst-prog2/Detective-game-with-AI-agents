@@ -52,6 +52,8 @@ const figures = {
   'ben-carter': { neutral: '/art/figures/ben-carter-neutral.svg' },
   'clara-voss': { neutral: '/art/figures/clara-voss-neutral.svg' },
 };
-export function figureFor(id) {
-  return Object.hasOwn(figures, id) ? { src: figures[id].neutral, alt: 'Temporary illustrated standing character figure.' } : { ...genericFigure };
+export function figureFor(id, demeanor = 'neutral') {
+  const variants = Object.hasOwn(figures, id) ? figures[id] : null;
+  const expression = ['neutral', 'receptive', 'irritated', 'uneasy'].includes(demeanor) && variants && Object.hasOwn(variants, demeanor) ? variants[demeanor] : variants?.neutral;
+  return expression ? { src: expression, alt: 'Temporary illustrated standing character figure.' } : { ...genericFigure };
 }

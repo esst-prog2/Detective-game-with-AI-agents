@@ -3,8 +3,27 @@ import test from 'node:test';
 import { createInvestigation } from '../src/game.js';
 import { caseData } from '../src/data/case.js';
 
+// Independently authored initial dialogue contract; no production resolver imports.
+function expectedDialogue(room = 'study', inspected = []) {
+  const topicOptions = [
+    { id: 'ask-hiding', label: 'Are you hiding something from me?', kind: 'social' },
+    { id: 'ask-alibi', label: 'Where were you when the victim died?', kind: 'topic' },
+    { id: 'ask-relationship-with-victim', label: 'What was your relationship with the victim?', kind: 'topic' },
+    { id: 'ask-motive', label: 'Did you have a reason to hurt the victim?', kind: 'topic' },
+    { id: 'ask-sighting', label: 'Did you see anyone suspicious?', kind: 'topic' },
+    { id: 'ask-evidence', label: 'What do you know about the evidence?', kind: 'topic' },
+  ];
+  return { inspectedEvidenceIds: [...inspected], conversations: [
+    ['alice-mercer', 'study'], ['ben-carter', 'garden'], ['clara-voss', 'library'],
+  ].map(([suspectId, location]) => ({ suspectId, demeanor: 'neutral', recentTurns: [],
+    options: location !== room ? [] : suspectId === 'ben-carter' && inspected.includes('muddy-footprints')
+      ? [{ id: 'present-footprints', label: 'Present the inspected muddy footprints.', kind: 'evidence' }, ...topicOptions].slice(0, 6) : structuredClone(topicOptions),
+  })) };
+}
+
 // Independently specified public contract, rather than a copy of a raw case record.
 const expectedView = {
+  dialogue: expectedDialogue(),
   lifecycle: { status: 'active', finalResult: null },
   title: 'The Ashcroft Manor Murder',
   victim: {
@@ -123,7 +142,7 @@ test('mutating public results cannot change case data, later reads or gameplay',
   summaries[0].name = 'Changed';
   assert.equal(calls, 0, 'public reads must not call the dialogue adapter');
   assert.deepEqual(data, original);
-  assert.deepEqual(game.getPublicView(), { ...expectedView, currentLocationId: 'garden' });
+  assert.deepEqual(game.getPublicView(), { ...expectedView, currentLocationId: 'garden', dialogue: expectedDialogue('garden', ['muddy-footprints']) });
   assert.equal(game.getPublicSuspect('clara-voss').name, 'Clara Voss');
   const { locationId: _placement, ...publicClue } = original.evidence[0];
   assert.deepEqual(game.inspectPublicEvidence('muddy-footprints'), publicClue);
@@ -154,6 +173,7 @@ test('public projections use injected case identities and collection sizes', () 
   };
   const game = createInvestigation({ data });
   assert.deepEqual(game.getPublicView(), {
+    dialogue: { inspectedEvidenceIds: [], conversations: [] },
     lifecycle: { status: 'active', finalResult: null },
     title: 'Another case', victim: { name: 'Robin', description: 'An authored introduction.' },
     locations: ['Atrium', 'Dock', 'Attic', 'Courtyard'],

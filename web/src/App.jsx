@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useInvestigation } from './state/InvestigationProvider.jsx';
 import MainMenu from './screens/MainMenu.jsx';
 import LocationSelection from './screens/LocationSelection.jsx';
@@ -13,14 +13,19 @@ export default function App() {
   const { state, dispatch, canAct } = useInvestigation();
   const [accusing, setAccusing] = useState(null);
   const accusationTrigger = useRef(null);
+  const restoreAccusationFocus = useRef(false);
   const closeDialog = useCallback(() => {
+    restoreAccusationFocus.current = true;
     setAccusing(null);
-    requestAnimationFrame(() => {
+  }, []);
+  useLayoutEffect(() => {
+    if (!accusing && !state.pending && restoreAccusationFocus.current) {
+      restoreAccusationFocus.current = false;
       const trigger = accusationTrigger.current;
       if (trigger?.isConnected && !trigger.disabled) trigger.focus();
       else document.querySelector('h1[tabindex="-1"]')?.focus();
-    });
-  }, []);
+    }
+  });
   function accuse(id) { if (canAct) { accusationTrigger.current = document.activeElement; setAccusing({ id }); } }
   useEffect(() => { if (!accusing) document.querySelector('h1[tabindex="-1"]')?.focus(); }, [state.screen, state.snapshot?.currentLocationId]);
   if (!state.snapshot) return <MainMenu />;

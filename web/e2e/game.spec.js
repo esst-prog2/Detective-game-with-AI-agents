@@ -150,7 +150,7 @@ test('public-only extended collection, artwork fallbacks, escaped text and runti
   await talk(page);
   await expect(page.locator('.character-figure')).toHaveAttribute('src', '/art/figures/generic-neutral.svg');
   const attack = '<img src=x onerror="window.unwanted=true">';
-  await page.route('**/questions', async (route) => { const response = await route.fetch(); const envelope = await response.json(); envelope.data.result.text = attack; await route.fulfill({ response, json: envelope }); });
+  await page.route('**/questions', async (route) => { const response = await route.fetch(); const envelope = await response.json(); envelope.data.result.text = attack; envelope.data.result.dialogue = attack; envelope.data.state.dialogue.conversations.find((item) => item.suspectId === 'ben-carter').recentTurns.at(-1).dialogue = attack; await route.fulfill({ response, json: envelope }); });
   await page.getByLabel('Your question for Ben Carter').fill('Where were you?'); await page.getByRole('button', { name: 'Ask question' }).click();
   await expect(page.locator('blockquote')).toHaveText(attack); expect(await page.evaluate(() => window.unwanted)).toBeUndefined();
   const runtime = await page.evaluate(() => ({ dom: document.documentElement.outerHTML, local: { ...localStorage }, session: { ...sessionStorage }, cookies: document.cookie, url: location.href }));
@@ -189,7 +189,7 @@ test('failed travel retains current room and empty-room fixtures offer navigatio
   await expect(page.getByRole('alert')).toContainText('Refresh before trying again');
   await expect(page.getByRole('heading', { name: 'the study', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Refresh investigation' }).click();
-  await page.route('**/travel', async (route) => { const response = await route.fetch(); const envelope = await response.json(); envelope.data.state.suspects = envelope.data.state.suspects.map((suspect) => ({ ...suspect, locationId: 'study' })); await route.fulfill({ response, json: envelope }); }, { times: 1 });
+  await page.route('**/travel', async (route) => { const response = await route.fetch(); const envelope = await response.json(); envelope.data.state.suspects = envelope.data.state.suspects.map((suspect) => ({ ...suspect, locationId: 'study' })); envelope.data.state.dialogue.conversations.forEach((item) => { item.options = []; }); await route.fulfill({ response, json: envelope }); }, { times: 1 });
   await page.getByRole('button', { name: 'Go to the library', exact: true }).click();
   await expect(page.getByText('Nobody is here to question.', { exact: true })).toBeVisible();
   await expect(page.getByText('No case evidence is recorded in this room.', { exact: true })).toBeVisible();
@@ -204,7 +204,7 @@ test('long received testimony remains readable and direct browser requests canno
   const remoteClue = await page.request.post(base + '/evidence/inspect', { data: { evidenceId: 'muddy-footprints', expectedRevision: 0 } });
   expect(remoteClue.status()).toBe(409); expect((await remoteClue.json()).error.code).toBe('evidence_not_here');
   await page.getByRole('button', { name: 'Speak with Alice Mercer', exact: true }).click();
-  await page.route('**/questions', async (route) => { const response = await route.fetch(); const data = await response.json(); data.data.result.text = Array(70).fill(data.data.result.text).join(' '); await route.fulfill({ response, json: data }); });
+  await page.route('**/questions', async (route) => { const response = await route.fetch(); const data = await response.json(); data.data.result.text = Array(70).fill(data.data.result.text).join(' ').slice(0, 1200); data.data.result.dialogue = data.data.result.text; data.data.state.dialogue.conversations.find((item) => item.suspectId === 'alice-mercer').recentTurns.at(-1).dialogue = data.data.result.text; await route.fulfill({ response, json: data }); });
   await page.getByLabel('Your question for Alice Mercer').fill('Where were you?'); await page.getByRole('button', { name: 'Ask question' }).click();
   const reply = page.getByRole('blockquote', { name: 'Latest reply' }); await expect(reply).toContainText('I was at home in my room all evening.');
   expect(await reply.evaluate((node) => node.scrollHeight > node.clientHeight)).toBe(true);

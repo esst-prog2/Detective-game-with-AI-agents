@@ -57,25 +57,39 @@ export function createSessionStore({
     if (isQuestion && questions >= maxQuestions) throw new ApiError('question_capacity');
     const reservation = Symbol('command');
     const revision = entry.revision;
-    const location = isQuestion ? entry.game.getLocationContext() : null;
+    const game = entry.game;
+    const sessionId = entry.id;
+    const location = isQuestion ? game.getLocationContext() : null;
     entry.reservation = reservation;
     touch(entry);
     if (isQuestion) questions += 1;
+    let candidate;
     try {
-      const result = await operation();
+      let result = await operation();
+      if (game.isDialogueCandidate(result)) candidate = result;
       if (result?.code === 'investigation_ended'
         || (entry.game.getLifecycle().status === 'ended' && !(allowsEnding && result?.ended === true))) {
         throw new ApiError('investigation_ended');
       }
-      if (entries.get(entry.id) !== entry || entry.reservation !== reservation || entry.revision !== revision) {
+      const current = () => entries.get(sessionId) === entry && entry.id === sessionId && entry.game === game
+        && entry.reservation === reservation && entry.revision === revision;
+      if (!current()) {
         throw new ApiError('stale_response');
       }
       if (location && entry.game.getLocationContext().epoch !== location.epoch) throw new ApiError('stale_response');
       // Snapshot before committing so a projection failure cannot advance the revision.
-      const state = entry.game.getPublicView();
+      let state = entry.game.getPublicView();
+      if (!current()) throw new ApiError('stale_response');
+      if (candidate) {
+        const committed = game.commitDialogue(candidate);
+        if (committed.kind === 'error') throw new ApiError(committed.code);
+        state = committed.state;
+        result = committed.result;
+      }
       entry.revision += 1;
       return { sessionId: entry.id, revision: entry.revision, state, result };
     } finally {
+      if (candidate) game.discardDialogue(candidate);
       if (entry.reservation === reservation) entry.reservation = null;
       if (isQuestion) questions -= 1;
       touch(entry);
