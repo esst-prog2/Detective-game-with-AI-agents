@@ -40,8 +40,16 @@ Missing configuration, provider failure/refusal, timeout, malformed/oversized ou
 - **THEN** successful or failed delayed work is discarded without altering the stable final result or any dialogue state
 
 ### Requirement: Preserve historical validation without overstating safety
-The new runtime SHALL use the new bounded performer while retaining the explicitly injected historical phraser API, independent HW5 validator expectations and historical evidence unchanged. The old free lead-in SHALL NOT be promoted into trusted structured narration. Documentation SHALL state the finite-selection trade-off, authored-content risk and continuing open status of issue #3; the milestone SHALL NOT claim its resolution or close it.
+The new runtime SHALL use the new bounded performer while retaining the explicitly injected historical phraser API, independent HW5 validator expectations and historical evidence unchanged. The historical phraser SHALL select only original testimony or the authored compatibility prefixes quietly, I hesitated and firmly followed by that exact testimony. Both adapter and engine SHALL use the existing exact-pair validator, including cached results and final commit. The old free lead-in SHALL NOT be promoted into trusted structured narration or trusted speech. Documentation SHALL state the finite-selection trade-off, authored-content risk and continuing open status of issue #3; the milestone SHALL NOT claim its resolution or close it.
 
 #### Scenario: Run old and new boundary regressions
 - **WHEN** historical A/B/C and immersion tests run alongside adversarial structured-output tests
-- **THEN** the original expectations remain intact, the new path rejects unauthorized text in either field and passing tests do not imply a general semantic hallucination guarantee
+- **THEN** the independent HW5 A/B/C expectations remain intact, both paths reject unauthorized text in either field and passing tests do not imply a general semantic hallucination guarantee
+
+#### Scenario: Reject an injected historical phraser invention
+- **WHEN** an explicitly injected phraser returns a factual lead-in, another speaker's answer or a valid answer from another topic
+- **THEN** the engine independently rejects that string before history/cache installation and uses the current original testimony with null narration
+
+#### Scenario: Project historical request style safely
+- **WHEN** a legacy game has private case personality annotations, inspected evidence or hostile player conversation history
+- **THEN** its provider receives only bounded reviewed catalog style and current authorized testimony deliveries, never those private annotations, evidence records or raw player history
