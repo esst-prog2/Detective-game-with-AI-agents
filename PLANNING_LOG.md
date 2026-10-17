@@ -493,3 +493,4 @@ In my real offline game session, I questioned Ben Carter, inspected all three ev
 - 2026-10-17 — Assistant decided: review 2 retains the staged engine/session/browser guards and historical adapter seam because they protect distinct contracts; no speculative architectural refactor.
 - 2026-10-17 — Assistant decided: review 3 preserves independent projections/validators and literal test oracles; small helper duplication does not justify a behavior-changing refactor.
 - 2026-10-17 — Assistant decided: review 4 allows local accusation-dialog dismissal after uncertain receipt while retaining the action block and explicit refresh; regression proves no accusation replay.
+- 2026-10-17 — Assistant decided: review 5 removes verified unreachable SceneStage and its exclusive CSS; retains used dependencies, lockfile versions and historical tooling.

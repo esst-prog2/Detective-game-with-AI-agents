@@ -12,7 +12,7 @@ Severity: high = security/data-integrity loss; medium = incorrect behavior or br
 | 2 | [Root causes](02-root-causes.md) | No new actionable defect; verified distinct ownership and staged commit guards |
 | 3 | [Duplication/complexity](03-duplication-complexity.md) | Small duplication retained; independent boundary checks and fixture oracles preserved |
 | 4 | [Failure handling](04-failure-handling.md) | Fixed medium-severity accusation modal recovery trap; four browser regressions pass |
-| 5 | Dependencies/dead code | Pending |
+| 5 | [Dependencies/dead code](05-dependencies-dead-code.md) | Removed unused SceneStage and 16 dedicated CSS rules; both audits clean |
 | 6 | Defaults/assumptions | Pending |
 | 7 | Hygiene/security | Pending |
 
