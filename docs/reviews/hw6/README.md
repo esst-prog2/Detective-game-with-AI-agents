@@ -10,7 +10,7 @@ Severity: high = security/data-integrity loss; medium = incorrect behavior or br
 | --- | --- | --- |
 | 1 | [Specification alignment](01-specification-alignment.md) | No new runtime violation confirmed; retained known content inconsistency and specification organization limitation |
 | 2 | [Root causes](02-root-causes.md) | No new actionable defect; verified distinct ownership and staged commit guards |
-| 3 | Duplication/complexity | Pending |
+| 3 | [Duplication/complexity](03-duplication-complexity.md) | Small duplication retained; independent boundary checks and fixture oracles preserved |
 | 4 | Failure handling | Pending |
 | 5 | Dependencies/dead code | Pending |
 | 6 | Defaults/assumptions | Pending |

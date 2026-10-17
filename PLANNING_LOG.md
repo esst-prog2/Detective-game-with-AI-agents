@@ -491,3 +491,4 @@ In my real offline game session, I questioned Ben Carter, inspected all three ev
 - 2026-10-17 — User decided: perform seven sequential whole-repository HW6 reviews on hw6-review, each in its own commit; push/create a PR, stop before merge, eventually use a merge commit and retain the branch.
 - 2026-10-17 — Assistant decided: review 1 consults canonical and older active-change specifications; preserves known Alice/issue #3 limitations and records test-evidence boundaries without changing gameplay.
 - 2026-10-17 — Assistant decided: review 2 retains the staged engine/session/browser guards and historical adapter seam because they protect distinct contracts; no speculative architectural refactor.
+- 2026-10-17 — Assistant decided: review 3 preserves independent projections/validators and literal test oracles; small helper duplication does not justify a behavior-changing refactor.
