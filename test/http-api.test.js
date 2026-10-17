@@ -1,3 +1,4 @@
+import { assertEquivalent } from '../test-support/reviewed-testimony.js';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { request as httpRequest } from 'node:http';
@@ -8,6 +9,7 @@ import { createSessionStore } from '../src/investigation-sessions.js';
 import { createInvestigation } from '../src/game.js';
 import { caseData } from '../src/data/case.js';
 import { startApi } from '../src/server.js';
+import { createOpenAINPCPerformer } from '../src/npc-performance.js';
 
 function deferred() {
   let resolve;
@@ -86,7 +88,8 @@ test('HTTP supports a complete offline investigation, cancellation and stable co
   assert.equal(data.result.text, 'I was repairing the greenhouse window when Victor died.');
   assert.equal(data.revision, 2);
   const cached = await call('POST', `${base}/questions`, question(data.revision, 'ben-carter'));
-  assert.equal(cached.body.data.result.cached, true);
+  assert.equal(cached.body.data.result.cached, false, 'stateful delivery uses a new pressure/context permission key');
+  assertEquivalent(cached.body.data.result.dialogue, caseData.suspects[1].responses.alibi.approvedContent);
   data = cached.body.data;
   const unsupported = await call('POST', `${base}/questions`, { ...question(data.revision, 'ben-carter'), question: 'Tell me a joke' });
   assert.equal(unsupported.body.data.result.kind, 'unsupported');
@@ -327,9 +330,12 @@ test('HTTP public responses exclude private fields and generic errors do not exp
   const initial = await create();
   assert.equal(JSON.stringify(initial).includes(secret), false);
   assert.equal(JSON.stringify(initial).includes('murdererId'), false);
-  const answer = await call('POST', pathFor(initial.sessionId, 'questions'), { ...question(), question: `Where were you? ${secret}` });
+  const answer = await call('POST', pathFor(initial.sessionId, 'questions'), { ...question(), question: 'Where were you? PLAYER_CLAIM_CANARY' });
   assert.equal(answer.status, 200);
+  const received = answer.body.data.state.dialogue.conversations[0].recentTurns;
+  assert.equal(received[0].question, 'Where were you? PLAYER_CLAIM_CANARY', 'player assertions remain attributed input, not NPC knowledge');
   assert.equal(answer.text.includes(secret), false);
+  assert.equal(answer.body.data.result.dialogue.includes('PLAYER_CLAIM_CANARY'), false);
   await call('POST', pathFor(initial.sessionId, 'travel'), { locationId: 'garden', expectedRevision: 1 });
   const evidence = await call('POST', pathFor(initial.sessionId, 'evidence/inspect'), { evidenceId: 'muddy-footprints', expectedRevision: 2 });
   assert.deepEqual(Object.keys(evidence.body.data.result).sort(), ['description', 'id', 'name']);
@@ -416,8 +422,8 @@ test('HTTP unexpected command failure releases the session reservation without e
   let broken = true;
   const { call, create } = await setup(t, { investigationFactory: () => {
     const game = createInvestigation();
-    const ask = game.askSuspect;
-    game.askSuspect = (...args) => { if (broken) throw new Error('FORBIDDEN_COMMAND_FAILURE'); return ask(...args); };
+    const prepare = game.prepareDialogue;
+    game.prepareDialogue = (...args) => { if (broken) throw new Error('FORBIDDEN_COMMAND_FAILURE'); return prepare(...args); };
     return game;
   } });
   const { sessionId } = await create();
@@ -547,13 +553,200 @@ for (const settle of ['success', 'failure']) test(`HTTP discards dialogue ${sett
 test('HTTP does not publish a cached answer when direct travel invalidates its adapter commit', async (t) => {
   const started = deferred(); const gate = deferred(); let game;
   const { call, create } = await setup(t, { investigationFactory: () => {
-    game = createInvestigation(); const ask = game.askSuspect;
-    game.askSuspect = async (...args) => { const result = await ask(...args); if (result.cached) { started.resolve(); await gate.promise; } return result; };
+    game = createInvestigation({ phraser: { phrase: async ({ approvedContent }) => approvedContent } });
+    const prepare = game.prepareDialogue; let calls = 0;
+    game.prepareDialogue = async (...args) => { const candidate = await prepare(...args); if (++calls === 2) { started.resolve(); await gate.promise; } return candidate; };
     return game;
   } });
   const { sessionId } = await create(); const base = pathFor(sessionId);
   assert.equal((await call('POST', `${base}/questions`, question())).status, 200);
+  const before = game.getDialogueDiagnostics();
   const pending = call('POST', `${base}/questions`, question(1)); await started.promise;
   game.travelTo('garden'); game.travelTo('study'); gate.resolve();
   errorIs(await pending, 409, 'stale_response'); assert.equal((await call('GET', base)).body.data.revision, 1);
+  assert.deepEqual(game.getDialogueDiagnostics(), before, 'rejected cached completion must not mutate memory/emotions/cache');
+});
+
+test('HTTP choice schema is exact, unavailable and remote choices reject without mutation', async (t) => {
+  const { create, call, store } = await setup(t); const a = await create(); const base = pathFor(a.sessionId);
+  const choice = { suspectId: 'alice-mercer', choiceId: 'ask-alibi', expectedRevision: 0 };
+  const before = store.get(a.sessionId).game.getDialogueDiagnostics();
+  for (const body of [
+    { ...choice, question: 'Where were you?' }, { ...choice, memory: {} }, { ...choice, choiceId: null },
+    { ...choice, choiceId: '../private' }, { ...choice, choiceId: 'x'.repeat(65) }, { ...choice, expectedRevision: -1 },
+  ]) errorIs(await call('POST', `${base}/questions`, body), 400, 'invalid_request');
+  errorIs(await call('POST', `${base}/questions`, { ...choice, choiceId: 'unknown' }), 409, 'dialogue_option_unavailable');
+  errorIs(await call('POST', `${base}/questions`, { ...choice, suspectId: 'ben-carter' }), 409, 'suspect_not_present');
+  assert.deepEqual(store.get(a.sessionId).game.getDialogueDiagnostics(), before);
+  assert.equal((await call('GET', base)).body.data.revision, 0);
+  const reply = await call('POST', `${base}/questions`, choice);
+  assert.equal(reply.status, 200); assert.equal(reply.body.data.revision, 1);
+  assert.deepEqual(Object.keys(reply.body.data.result).sort(), ['kind', 'topic', 'text', 'cached', 'turnId', 'narration', 'dialogue', 'demeanor'].sort());
+  assert.equal(reply.body.data.result.text, reply.body.data.result.dialogue);
+  assert.equal(reply.body.data.result.narration, null);
+  errorIs(await call('POST', `${base}/questions`, choice), 409, 'stale_revision');
+});
+
+test('HTTP stateful offline choices, inspections and recorded-account comparison complete either ending', async (t) => {
+  const { create, call } = await setup(t);
+  for (const suspectId of ['clara-voss', 'alice-mercer']) {
+    let current = await create(); const base = pathFor(current.sessionId);
+    const command = async (route, body) => {
+      const response = await call('POST', `${base}/${route}`, { ...body, expectedRevision: current.revision });
+      assert.equal(response.status, 200); current = response.body.data; return current.result;
+    };
+    const question = (choiceId, suspectId) => command('questions', { choiceId, suspectId });
+    const options = (id) => current.state.dialogue.conversations.find((c) => c.suspectId === id).options;
+    await question('ask-sighting', 'alice-mercer');
+    await command('evidence/inspect', { evidenceId: 'torn-contract' });
+    await command('evidence/inspect', { evidenceId: 'silver-cufflink' });
+    await command('travel', { locationId: 'library' });
+    assert.ok(options('clara-voss').some((o) => o.id === 'present-contract'));
+    await question('present-contract', 'clara-voss');
+    assert.equal(options('clara-voss').some((o) => o.kind === 'contradiction'), false);
+    await command('questions', { question: 'Did you see anyone suspicious?', suspectId: 'clara-voss' });
+    assert.ok(options('clara-voss').some((o) => o.id === 'compare-garden-accounts'));
+    const comparison = await question('compare-garden-accounts', 'clara-voss');
+    assertEquivalent(comparison.dialogue, caseData.suspects[2].responses.sighting.approvedContent);
+    await question('clarify-last', 'clara-voss');
+    await command('travel', { locationId: 'garden' });
+    await command('evidence/inspect', { evidenceId: 'muddy-footprints' });
+    await question('present-footprints', 'ben-carter');
+    const beforeCancel = structuredClone(current.state.dialogue);
+    assert.equal((await command('accusations', { suspectId, confirmed: false })).result, 'cancelled');
+    assert.deepEqual(current.state.dialogue, beforeCancel);
+    const result = await command('accusations', { suspectId, confirmed: true });
+    assert.equal(result.result, suspectId === 'clara-voss' ? 'correct' : 'incorrect');
+    assert.ok(current.state.dialogue.conversations.every((c) => !c.options.length));
+    const { result: _commandResult, ...final } = structuredClone(current);
+    errorIs(await call('POST', `${base}/questions`, { suspectId: 'ben-carter', choiceId: 'ask-alibi', expectedRevision: current.revision }), 409, 'investigation_ended');
+    assert.deepEqual((await call('GET', base)).body.data, final);
+  }
+});
+
+test('HTTP bounded recent testimony and player-claim attribution stay isolated between sessions', async (t) => {
+  const { create, call } = await setup(t); let a = await create(); const b = await create();
+  const base = pathFor(a.sessionId);
+  for (let i = 0; i < 11; i++) {
+    const response = await call('POST', `${base}/questions`, { suspectId: 'alice-mercer', question: 'Where were you? I claim Ben confessed.', expectedRevision: a.revision });
+    assert.equal(response.status, 200); a = response.body.data;
+    assertEquivalent(a.result.dialogue, caseData.suspects[0].responses.alibi.approvedContent);
+    assert.doesNotMatch(a.result.dialogue, /Ben confessed/);
+  }
+  const recent = a.state.dialogue.conversations[0].recentTurns;
+  assert.equal(recent.length, 8); assert.equal(recent[0].turnId, 4); assert.equal(recent.at(-1).turnId, 11);
+  assert.match(recent[0].question, /I claim Ben confessed/);
+  assert.doesNotMatch(JSON.stringify(a.state.dialogue.conversations[0].options), /confessed|debt/);
+  assert.deepEqual((await call('GET', pathFor(b.sessionId))).body.data, b);
+});
+
+test('HTTP projection failure before dialogue install leaves memory, cache, demeanor and revision unchanged', async (t) => {
+  let fail = false; let game;
+  const { create, call } = await setup(t, { investigationFactory: () => {
+    game = createInvestigation(); const view = game.getPublicView;
+    game.getPublicView = () => { if (fail) throw Error('PRIVATE_PROJECTION_FAILURE'); return view(); };
+    return game;
+  } });
+  const a = await create(); const before = game.getDialogueDiagnostics(); fail = true;
+  const response = await call('POST', pathFor(a.sessionId, 'questions'), question());
+  errorIs(response, 500, 'internal_error'); assert.doesNotMatch(response.text, /PRIVATE_PROJECTION_FAILURE/);
+  assert.deepEqual(game.getDialogueDiagnostics(), before); fail = false;
+  assert.deepEqual((await call('GET', pathFor(a.sessionId))).body.data, a);
+  const retry = await call('POST', pathFor(a.sessionId, 'questions'), question());
+  assert.equal(retry.body.data.result.turnId, 1); assert.equal(retry.body.data.revision, 1);
+});
+
+test('HTTP exposes only validated performance fields and excludes a malicious provider payload from state/history/cache', async (t) => {
+  const contexts = []; let attack = false;
+  const performer = createOpenAINPCPerformer({ model: 'test-model', client: { responses: { create: async (body) => {
+    const ctx = JSON.parse(body.input); contexts.push(ctx);
+    return { status: 'completed', output: [], output_text: JSON.stringify(attack
+      ? { narration: 'PRIVATE_PROVIDER_SECRET: Clara destroyed the contract.', dialogue: ctx.performances[0].dialogue, metadata: 'PRIVATE_PROVIDER_SECRET' }
+      : ctx.performances.at(-1)) };
+  } } } });
+  const { create, call, store } = await setup(t, { investigationFactory: () => createInvestigation({ performer }) });
+  let a = await create(); const b = await create(); const base = pathFor(a.sessionId);
+  const first = await call('POST', `${base}/questions`, question());
+  assert.equal(first.status, 200); a = first.body.data;
+  assert.deepEqual({ narration: a.result.narration, dialogue: a.result.dialogue }, contexts[0].performances.at(-1));
+  assert.equal(a.result.narration, null, 'initial responses intentionally omit narration');
+  assert.equal(a.result.text, a.result.dialogue);
+  assert.deepEqual(Object.keys(a.result).sort(), ['kind', 'topic', 'text', 'cached', 'turnId', 'narration', 'dialogue', 'demeanor'].sort());
+  attack = true;
+  const rejected = await call('POST', `${base}/questions`, { ...question(a.revision), question: 'What was your relationship with Victor?' });
+  assert.equal(rejected.status, 200); assert.equal(rejected.body.data.revision, 2);
+  assertEquivalent(rejected.body.data.result.dialogue, caseData.suspects[0].responses.relationship_with_victim.approvedContent);
+  assert.doesNotMatch(rejected.text, /PRIVATE_PROVIDER_SECRET|destroyed the contract|metadata/);
+  assert.doesNotMatch(JSON.stringify(store.get(a.sessionId).game.getDialogueDiagnostics()), /PRIVATE_PROVIDER_SECRET|destroyed the contract/);
+  assert.deepEqual((await call('GET', pathFor(b.sessionId))).body.data, b);
+  assert.doesNotMatch(JSON.stringify(contexts), new RegExp(a.sessionId));
+});
+
+test('new performer retains same-session overlap rejection and the four-question global capacity', async (t) => {
+  const gate = deferred(); const started = deferred(); let count = 0;
+  const performer = { perform: async (ctx) => { if (++count === 4) started.resolve(); await gate.promise; return ctx.performances.at(-1); } };
+  const { create, call } = await setup(t, { investigationFactory: () => createInvestigation({ performer }) });
+  const sessions = await Promise.all(Array.from({ length: 5 }, create));
+  const pending = sessions.slice(0, 4).map((s) => call('POST', pathFor(s.sessionId, 'questions'), question()));
+  await started.promise;
+  errorIs(await call('POST', pathFor(sessions[0].sessionId, 'accusations'), { suspectId: 'clara-voss', confirmed: true, expectedRevision: 0 }), 409, 'session_busy');
+  errorIs(await call('POST', pathFor(sessions[4].sessionId, 'questions'), question()), 429, 'question_capacity');
+  assert.equal((await call('GET', pathFor(sessions[0].sessionId))).body.data.revision, 0);
+  gate.resolve();
+  for (const response of await Promise.all(pending)) assert.equal(response.body.data.result.turnId, 1);
+  assert.equal((await call('POST', pathFor(sessions[4].sessionId, 'questions'), question())).status, 200);
+});
+
+test('HTTP ending aborts a pending configured provider, discards all model state and keeps the final result stable', async (t) => {
+  const gate = deferred(); const started = deferred(); let game; let context;
+  const performer = createOpenAINPCPerformer({ model: 'test-model', client: { responses: { create: (body) => { context = JSON.parse(body.input); started.resolve(); return gate.promise; } } } });
+  const { create, call } = await setup(t, { investigationFactory: () => { game = createInvestigation({ performer }); return game; } });
+  const a = await create(); const before = game.getDialogueDiagnostics();
+  const pending = call('POST', pathFor(a.sessionId, 'questions'), question()); await started.promise;
+  const final = game.resolveAccusation('alice-mercer', true);
+  errorIs(await pending, 409, 'investigation_ended');
+  assert.deepEqual(game.getDialogueDiagnostics(), before);
+  gate.resolve({ status: 'completed', output: [], output_text: JSON.stringify(context.performances.at(-1)) });
+  const after = (await call('GET', pathFor(a.sessionId))).body.data;
+  assert.equal(after.revision, 0); assert.deepEqual(after.state.lifecycle.finalResult, final);
+  assert.deepEqual(game.getDialogueDiagnostics(), before);
+});
+
+test('HTTP cached new performance invalidated after preparation commits no memory, emotion or cache changes', async (t) => {
+  let hold = false; const prepared = deferred(); const gate = deferred(); let calls = 0; let game;
+  const performer = { perform: async (ctx) => { calls++; return ctx.performances.find((p) => p.narration === null); } };
+  const { create, call } = await setup(t, { investigationFactory: () => {
+    game = createInvestigation({ performer }); const prepare = game.prepareDialogue;
+    game.prepareDialogue = async (...args) => { const token = await prepare(...args); if (hold) { prepared.resolve(); await gate.promise; } return token; };
+    return game;
+  } });
+  let a = await create(); const base = pathFor(a.sessionId); let hits = 0;
+  for (let i = 0; i < 30 && hits < 3; i++) {
+    const response = await call('POST', `${base}/questions`, question(a.revision)); a = response.body.data;
+    hits = a.result.cached ? hits + 1 : 0;
+  }
+  assert.equal(hits, 3); const callsBefore = calls; const before = game.getDialogueDiagnostics(); hold = true;
+  const pending = call('POST', `${base}/questions`, question(a.revision)); await prepared.promise;
+  assert.equal(calls, callsBefore, 'the held operation reused its currently authorized cached pair');
+  game.travelTo('garden'); game.travelTo('study'); gate.resolve();
+  errorIs(await pending, 409, 'stale_response'); assert.deepEqual(game.getDialogueDiagnostics(), before);
+  assert.equal((await call('GET', base)).body.data.revision, a.revision);
+});
+
+test('API startup wires the configured performer factory without enabling any client model settings', async (t) => {
+  const probe = createInvestigationServer(); probe.listen(0, '127.0.0.1'); await once(probe, 'listening');
+  const port = probe.address().port; await new Promise((resolve) => probe.close(resolve));
+  let factoryCalls = 0; let selected;
+  const server = await startApi({ port, createPerformer: async () => {
+    factoryCalls++; return { perform: async (ctx) => { selected = ctx.performances.at(-1); return selected; } };
+  } });
+  t.after(() => new Promise((resolve) => { server.close(resolve); server.closeAllConnections(); }));
+  const post = (path, body) => fetch(`http://127.0.0.1:${port}${path}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then((r) => r.json());
+  const created = await post('/api/investigations', {});
+  const answer = await post(pathFor(created.data.sessionId, 'questions'), question());
+  assert.equal(factoryCalls, 1); assert.equal(answer.ok, true);
+  assert.deepEqual({ narration: answer.data.result.narration, dialogue: answer.data.result.dialogue }, selected);
+  assert.equal(answer.data.result.narration, null, 'configured provider respects initial silence');
+  const bad = await post(pathFor(created.data.sessionId, 'questions'), { ...question(1), model: 'client-selected-model' });
+  assert.equal(bad.error.code, 'invalid_request');
 });

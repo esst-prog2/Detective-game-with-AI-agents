@@ -1,0 +1,1038 @@
+{
+  "date": "2026-10-16",
+  "note": "Read-only pre-change planning probe. Fake-last-pair is an injected deterministic selector, not a live provider. Independent investigations; setup inspection and Clara prerequisite Alice sighting excluded from the 18 measured turns.",
+  "reports": [
+    {
+      "mode": "offline",
+      "suspectId": "alice-mercer",
+      "count": 18,
+      "openings": {
+        "i was at home": 1,
+        "let me answer carefully": 5,
+        "please let me be": 9,
+        "to be clear i": 1,
+        "that is a rather": 1,
+        "to be clear those": 1
+      },
+      "gestures": {
+        "Alice carefully straightens her sleeve.": 2,
+        "Alice pauses before choosing her words.": 2,
+        "Alice briefly lowers her gaze.": 2
+      },
+      "speechOnly": 12,
+      "cacheHits": 1,
+      "turns": [
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": null,
+          "dialogue": "I was at home in my room all evening.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What was your relationship with the victim?",
+          "topic": "relationship_with_victim",
+          "narration": "Alice carefully straightens her sleeve.",
+          "dialogue": "Let me answer carefully. Victor was my employer. He could be demanding, but I tried to serve him well.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Did you have a reason to hurt the victim?",
+          "topic": "motive",
+          "narration": null,
+          "dialogue": "Let me answer carefully. I had no wish to harm Victor. My debt was my own problem, not his.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Did you see anyone suspicious?",
+          "topic": "sighting",
+          "narration": null,
+          "dialogue": "Let me answer carefully. I saw Clara coming in from the garden shortly before the alarm, though I did not see where she went next.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What do you know about the evidence?",
+          "topic": "evidence",
+          "narration": "Alice pauses before choosing her words.",
+          "dialogue": "Let me answer carefully. Those muddy footprints came from someone who used the garden door, not from me.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What happened when the victim died?",
+          "topic": "crime_details",
+          "narration": null,
+          "dialogue": "Let me answer carefully. I heard a sharp sound from the study, then found Victor after the others gathered.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": null,
+          "dialogue": "Please let me be precise. I was at home in my room all evening.",
+          "demeanor": "uneasy",
+          "cached": false
+        },
+        {
+          "question": "What do you mean by that?",
+          "topic": "alibi",
+          "narration": "Alice briefly lowers her gaze.",
+          "dialogue": "To be clear, I was at home in my room all evening.",
+          "demeanor": "uneasy",
+          "cached": false
+        },
+        {
+          "question": "Are you hiding something from me?",
+          "topic": "social",
+          "narration": null,
+          "dialogue": "That is a rather broad question, Detective. Please ask me about something specific; I will choose my words carefully.",
+          "demeanor": "uneasy",
+          "cached": false
+        },
+        {
+          "question": "You killed Victor.",
+          "topic": "social",
+          "narration": null,
+          "dialogue": "Please let me be precise. That is a rather broad question, Detective. Please ask me about something specific; I will choose my words carefully.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Did you have a reason to hurt the victim?",
+          "topic": "motive",
+          "narration": "Alice carefully straightens her sleeve.",
+          "dialogue": "Please let me be precise. I had no wish to harm Victor. My debt was my own problem, not his.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What about the muddy footprints?",
+          "topic": "evidence",
+          "narration": null,
+          "dialogue": "Please let me be precise. Those muddy footprints came from someone who used the garden door, not from me.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What do you mean by that?",
+          "topic": "evidence",
+          "narration": null,
+          "dialogue": "To be clear, Those muddy footprints came from someone who used the garden door, not from me.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Did you see anyone suspicious?",
+          "topic": "sighting",
+          "narration": "Alice pauses before choosing her words.",
+          "dialogue": "Please let me be precise. I saw Clara coming in from the garden shortly before the alarm, though I did not see where she went next.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What happened when the victim died?",
+          "topic": "crime_details",
+          "narration": null,
+          "dialogue": "Please let me be precise. I heard a sharp sound from the study, then found Victor after the others gathered.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Are you hiding something from me?",
+          "topic": "social",
+          "narration": null,
+          "dialogue": "Please let me be precise. That is a rather broad question, Detective. Please ask me about something specific; I will choose my words carefully.",
+          "demeanor": "irritated",
+          "cached": true
+        },
+        {
+          "question": "What was your relationship with the victim?",
+          "topic": "relationship_with_victim",
+          "narration": "Alice briefly lowers her gaze.",
+          "dialogue": "Please let me be precise. Victor was my employer. He could be demanding, but I tried to serve him well.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": null,
+          "dialogue": "Please let me be precise. I was at home in my room all evening.",
+          "demeanor": "irritated",
+          "cached": false
+        }
+      ]
+    },
+    {
+      "mode": "offline",
+      "suspectId": "ben-carter",
+      "count": 18,
+      "openings": {
+        "i was repairing the": 1,
+        "plainly put victor was": 1,
+        "plainly put i was": 1,
+        "plainly put i saw": 1,
+        "plainly put the mud": 1,
+        "plainly put i heard": 1,
+        "i already told you": 1,
+        "what i mean is": 2,
+        "hiding what ask me": 1,
+        "look let me finishlet": 8
+      },
+      "gestures": {
+        "Ben shifts his stance.": 2,
+        "Ben opens his palms, then lets them fall.": 2,
+        "Ben takes a breath before continuing.": 2
+      },
+      "speechOnly": 12,
+      "cacheHits": 1,
+      "turns": [
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": null,
+          "dialogue": "I was repairing the greenhouse window when Victor died.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What was your relationship with the victim?",
+          "topic": "relationship_with_victim",
+          "narration": "Ben shifts his stance.",
+          "dialogue": "Plainly put: Victor was my employer. We did not always agree, but I knew the grounds better than anyone.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Did you have a reason to hurt the victim?",
+          "topic": "motive",
+          "narration": null,
+          "dialogue": "Plainly put: I was angry about work, not murderous. Losing a job is not a reason to kill a man.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Did you see anyone suspicious?",
+          "topic": "sighting",
+          "narration": null,
+          "dialogue": "Plainly put: I saw no one clearly from the greenhouse. The rain made the garden hard to see.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What do you know about the evidence?",
+          "topic": "evidence",
+          "narration": "Ben opens his palms, then lets them fall.",
+          "dialogue": "Plainly put: The mud by the garden door was fresh after the storm. Anyone using that path would have tracked it inside.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What happened when the victim died?",
+          "topic": "crime_details",
+          "narration": null,
+          "dialogue": "Plainly put: I heard Alice call out from the house, then I came straight to the study.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": null,
+          "dialogue": "I already told you. I was repairing the greenhouse window when Victor died.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What do you mean by that?",
+          "topic": "alibi",
+          "narration": "Ben takes a breath before continuing.",
+          "dialogue": "What I mean is this: I was repairing the greenhouse window when Victor died.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Are you hiding something from me?",
+          "topic": "social",
+          "narration": null,
+          "dialogue": "Hiding what? Ask me straight. No, waitâ€”let me finish. A proper question deserves a proper answer.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "You killed Victor.",
+          "topic": "social",
+          "narration": null,
+          "dialogue": "Look, let me finishâ€”let me explain it plainly. Hiding what? Ask me straight. No, waitâ€”let me finish. A proper question deserves a proper answer.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Did you have a reason to hurt the victim?",
+          "topic": "motive",
+          "narration": "Ben shifts his stance.",
+          "dialogue": "Look, let me finishâ€”let me explain it plainly. I was angry about work, not murderous. Losing a job is not a reason to kill a man.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What about the muddy footprints?",
+          "topic": "evidence",
+          "narration": null,
+          "dialogue": "Look, let me finishâ€”let me explain it plainly. The mud by the garden door was fresh after the storm. Anyone using that path would have tracked it inside.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What do you mean by that?",
+          "topic": "evidence",
+          "narration": null,
+          "dialogue": "What I mean is this: The mud by the garden door was fresh after the storm. Anyone using that path would have tracked it inside.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Did you see anyone suspicious?",
+          "topic": "sighting",
+          "narration": "Ben opens his palms, then lets them fall.",
+          "dialogue": "Look, let me finishâ€”let me explain it plainly. I saw no one clearly from the greenhouse. The rain made the garden hard to see.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What happened when the victim died?",
+          "topic": "crime_details",
+          "narration": null,
+          "dialogue": "Look, let me finishâ€”let me explain it plainly. I heard Alice call out from the house, then I came straight to the study.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Are you hiding something from me?",
+          "topic": "social",
+          "narration": null,
+          "dialogue": "Look, let me finishâ€”let me explain it plainly. Hiding what? Ask me straight. No, waitâ€”let me finish. A proper question deserves a proper answer.",
+          "demeanor": "irritated",
+          "cached": true
+        },
+        {
+          "question": "What was your relationship with the victim?",
+          "topic": "relationship_with_victim",
+          "narration": "Ben takes a breath before continuing.",
+          "dialogue": "Look, let me finishâ€”let me explain it plainly. Victor was my employer. We did not always agree, but I knew the grounds better than anyone.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": null,
+          "dialogue": "Look, let me finishâ€”let me explain it plainly. I was repairing the greenhouse window when Victor died.",
+          "demeanor": "irritated",
+          "cached": false
+        }
+      ]
+    },
+    {
+      "mode": "offline",
+      "suspectId": "clara-voss",
+      "count": 18,
+      "openings": {
+        "i was in the": 1,
+        "allow me to be": 5,
+        "my answer remains the": 1,
+        "my meaning is quite": 2,
+        "that is an assumption": 1,
+        "i object to the": 8
+      },
+      "gestures": {
+        "Clara folds her arms.": 2,
+        "Clara holds a level gaze.": 2,
+        "Clara lets a brief silence pass.": 2
+      },
+      "speechOnly": 12,
+      "cacheHits": 1,
+      "turns": [
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": null,
+          "dialogue": "I was in the library, trying to read while the storm passed.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What was your relationship with the victim?",
+          "topic": "relationship_with_victim",
+          "narration": "Clara folds her arms.",
+          "dialogue": "Allow me to be clear. Victor and I were business partners. Our disagreements were ordinary business matters.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Did you have a reason to hurt the victim?",
+          "topic": "motive",
+          "narration": null,
+          "dialogue": "Allow me to be clear. I had no reason to harm Victor. Our partnership was difficult at times, but it was profitable.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Did you see anyone suspicious?",
+          "topic": "sighting",
+          "narration": null,
+          "dialogue": "Allow me to be clear. I saw only Ben near the greenhouse before dinner. I was nowhere near the garden after that.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What do you know about the evidence?",
+          "topic": "evidence",
+          "narration": "Clara holds a level gaze.",
+          "dialogue": "Allow me to be clear. A cufflink proves very little. Victor entertained many guests, and the garden mud was everywhere after the rain.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What happened when the victim died?",
+          "topic": "crime_details",
+          "narration": null,
+          "dialogue": "Allow me to be clear. I heard the alarm like everyone else. I went to the study only after Alice called for help.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": null,
+          "dialogue": "My answer remains the same. I was in the library, trying to read while the storm passed.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What do you mean by that?",
+          "topic": "alibi",
+          "narration": "Clara lets a brief silence pass.",
+          "dialogue": "My meaning is quite specific. I was in the library, trying to read while the storm passed.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Are you hiding something from me?",
+          "topic": "social",
+          "narration": null,
+          "dialogue": "That is an assumption, Detective, not a question. Ask directly, and kindly spare me the insinuation.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "You killed Victor.",
+          "topic": "social",
+          "narration": null,
+          "dialogue": "I object to the assumption, Detective. That is an assumption, Detective, not a question. Ask directly, and kindly spare me the insinuation.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Did you have a reason to hurt the victim?",
+          "topic": "motive",
+          "narration": "Clara folds her arms.",
+          "dialogue": "I object to the assumption, Detective. I had no reason to harm Victor. Our partnership was difficult at times, but it was profitable.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What about the silver cufflink?",
+          "topic": "evidence",
+          "narration": null,
+          "dialogue": "I object to the assumption, Detective. A cufflink proves very little. Victor entertained many guests, and the garden mud was everywhere after the rain.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What do you mean by that?",
+          "topic": "evidence",
+          "narration": null,
+          "dialogue": "My meaning is quite specific. A cufflink proves very little. Victor entertained many guests, and the garden mud was everywhere after the rain.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Did you see anyone suspicious?",
+          "topic": "sighting",
+          "narration": "Clara holds a level gaze.",
+          "dialogue": "I object to the assumption, Detective. I saw only Ben near the greenhouse before dinner. I was nowhere near the garden after that.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Alice said she saw you near the garden; how do your accounts fit?",
+          "topic": "sighting",
+          "narration": null,
+          "dialogue": "I object to the assumption, Detective. I saw only Ben near the greenhouse before dinner. I was nowhere near the garden after that.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Are you hiding something from me?",
+          "topic": "social",
+          "narration": null,
+          "dialogue": "I object to the assumption, Detective. That is an assumption, Detective, not a question. Ask directly, and kindly spare me the insinuation.",
+          "demeanor": "irritated",
+          "cached": true
+        },
+        {
+          "question": "What was your relationship with the victim?",
+          "topic": "relationship_with_victim",
+          "narration": "Clara lets a brief silence pass.",
+          "dialogue": "I object to the assumption, Detective. Victor and I were business partners. Our disagreements were ordinary business matters.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": null,
+          "dialogue": "I object to the assumption, Detective. I was in the library, trying to read while the storm passed.",
+          "demeanor": "irritated",
+          "cached": false
+        }
+      ]
+    },
+    {
+      "mode": "fake-last-pair",
+      "suspectId": "alice-mercer",
+      "count": 18,
+      "openings": {
+        "let me answer carefully": 4,
+        "victor was my employer": 1,
+        "those muddy footprints came": 1,
+        "please let me be": 9,
+        "to be clear let": 1,
+        "that is a rather": 1,
+        "to be clear those": 1
+      },
+      "gestures": {
+        "Alice pauses before choosing her words.": 5,
+        "Alice briefly lowers her gaze.": 4,
+        "Alice carefully straightens her sleeve.": 4
+      },
+      "speechOnly": 5,
+      "cacheHits": 0,
+      "turns": [
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": "Alice pauses before choosing her words.",
+          "dialogue": "Let me answer carefully. I was at home in my room all evening.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What was your relationship with the victim?",
+          "topic": "relationship_with_victim",
+          "narration": "Alice briefly lowers her gaze.",
+          "dialogue": "Victor was my employer. He could be demanding, but I tried to serve him well.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Did you have a reason to hurt the victim?",
+          "topic": "motive",
+          "narration": "Alice carefully straightens her sleeve.",
+          "dialogue": "Let me answer carefully. I had no wish to harm Victor. My debt was my own problem, not his.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Did you see anyone suspicious?",
+          "topic": "sighting",
+          "narration": "Alice pauses before choosing her words.",
+          "dialogue": "Let me answer carefully. I saw Clara coming in from the garden shortly before the alarm, though I did not see where she went next.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What do you know about the evidence?",
+          "topic": "evidence",
+          "narration": null,
+          "dialogue": "Those muddy footprints came from someone who used the garden door, not from me.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What happened when the victim died?",
+          "topic": "crime_details",
+          "narration": "Alice briefly lowers her gaze.",
+          "dialogue": "Let me answer carefully. I heard a sharp sound from the study, then found Victor after the others gathered.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": "Alice carefully straightens her sleeve.",
+          "dialogue": "Please let me be precise. I was at home in my room all evening.",
+          "demeanor": "uneasy",
+          "cached": false
+        },
+        {
+          "question": "What do you mean by that?",
+          "topic": "alibi",
+          "narration": null,
+          "dialogue": "To be clear, Let me answer carefully. I was at home in my room all evening.",
+          "demeanor": "uneasy",
+          "cached": false
+        },
+        {
+          "question": "Are you hiding something from me?",
+          "topic": "social",
+          "narration": "Alice pauses before choosing her words.",
+          "dialogue": "That is a rather broad question, Detective. Please ask me about something specific; I will choose my words carefully.",
+          "demeanor": "uneasy",
+          "cached": false
+        },
+        {
+          "question": "You killed Victor.",
+          "topic": "social",
+          "narration": "Alice briefly lowers her gaze.",
+          "dialogue": "Please let me be precise. That is a rather broad question, Detective. Please ask me about something specific; I will choose my words carefully.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Did you have a reason to hurt the victim?",
+          "topic": "motive",
+          "narration": null,
+          "dialogue": "Please let me be precise. As I said, Detective, I had no wish to harm Victor. My debt was my own problem, not his.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What about the muddy footprints?",
+          "topic": "evidence",
+          "narration": "Alice carefully straightens her sleeve.",
+          "dialogue": "Please let me be precise. Those muddy footprints came from someone who used the garden door, not from me.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What do you mean by that?",
+          "topic": "evidence",
+          "narration": "Alice pauses before choosing her words.",
+          "dialogue": "To be clear, Those muddy footprints came from someone who used the garden door, not from me.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Did you see anyone suspicious?",
+          "topic": "sighting",
+          "narration": null,
+          "dialogue": "Please let me be precise. As I said, Detective, I saw Clara coming in from the garden shortly before the alarm, though I did not see where she went next.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What happened when the victim died?",
+          "topic": "crime_details",
+          "narration": "Alice briefly lowers her gaze.",
+          "dialogue": "Please let me be precise. I heard a sharp sound from the study, then found Victor after the others gathered.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Are you hiding something from me?",
+          "topic": "social",
+          "narration": "Alice carefully straightens her sleeve.",
+          "dialogue": "Please let me be precise. That is a rather broad question, Detective. Please ask me about something specific; I will choose my words carefully.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What was your relationship with the victim?",
+          "topic": "relationship_with_victim",
+          "narration": null,
+          "dialogue": "Please let me be precise. As I said, Detective, Victor was my employer. He could be demanding, but I tried to serve him well.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": "Alice pauses before choosing her words.",
+          "dialogue": "Please let me be precise. I was at home in my room all evening.",
+          "demeanor": "irritated",
+          "cached": false
+        }
+      ]
+    },
+    {
+      "mode": "fake-last-pair",
+      "suspectId": "ben-carter",
+      "count": 18,
+      "openings": {
+        "plainly put i was": 2,
+        "victor was my employer": 1,
+        "plainly put i saw": 1,
+        "the mud by the": 1,
+        "plainly put i heard": 1,
+        "i already told you": 1,
+        "what i mean is": 2,
+        "hiding what ask me": 1,
+        "look let me finishlet": 8
+      },
+      "gestures": {
+        "Ben opens his palms, then lets them fall.": 5,
+        "Ben takes a breath before continuing.": 4,
+        "Ben shifts his stance.": 4
+      },
+      "speechOnly": 5,
+      "cacheHits": 0,
+      "turns": [
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": "Ben opens his palms, then lets them fall.",
+          "dialogue": "Plainly put: I was repairing the greenhouse window when Victor died.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What was your relationship with the victim?",
+          "topic": "relationship_with_victim",
+          "narration": "Ben takes a breath before continuing.",
+          "dialogue": "Victor was my employer. We did not always agree, but I knew the grounds better than anyone.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Did you have a reason to hurt the victim?",
+          "topic": "motive",
+          "narration": "Ben shifts his stance.",
+          "dialogue": "Plainly put: I was angry about work, not murderous. Losing a job is not a reason to kill a man.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Did you see anyone suspicious?",
+          "topic": "sighting",
+          "narration": "Ben opens his palms, then lets them fall.",
+          "dialogue": "Plainly put: I saw no one clearly from the greenhouse. The rain made the garden hard to see.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What do you know about the evidence?",
+          "topic": "evidence",
+          "narration": null,
+          "dialogue": "The mud by the garden door was fresh after the storm. Anyone using that path would have tracked it inside.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What happened when the victim died?",
+          "topic": "crime_details",
+          "narration": "Ben takes a breath before continuing.",
+          "dialogue": "Plainly put: I heard Alice call out from the house, then I came straight to the study.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": "Ben shifts his stance.",
+          "dialogue": "I already told you. I was repairing the greenhouse window when Victor died.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What do you mean by that?",
+          "topic": "alibi",
+          "narration": null,
+          "dialogue": "What I mean is this: Plainly put: I was repairing the greenhouse window when Victor died.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Are you hiding something from me?",
+          "topic": "social",
+          "narration": "Ben opens his palms, then lets them fall.",
+          "dialogue": "Hiding what? Ask me straight. No, waitâ€”let me finish. A proper question deserves a proper answer.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "You killed Victor.",
+          "topic": "social",
+          "narration": "Ben takes a breath before continuing.",
+          "dialogue": "Look, let me finishâ€”let me explain it plainly. Hiding what? Ask me straight. No, waitâ€”let me finish. A proper question deserves a proper answer.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Did you have a reason to hurt the victim?",
+          "topic": "motive",
+          "narration": null,
+          "dialogue": "Look, let me finishâ€”let me explain it plainly. I already told you. I was angry about work, not murderous. Losing a job is not a reason to kill a man.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What about the muddy footprints?",
+          "topic": "evidence",
+          "narration": "Ben shifts his stance.",
+          "dialogue": "Look, let me finishâ€”let me explain it plainly. The mud by the garden door was fresh after the storm. Anyone using that path would have tracked it inside.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What do you mean by that?",
+          "topic": "evidence",
+          "narration": "Ben opens his palms, then lets them fall.",
+          "dialogue": "What I mean is this: The mud by the garden door was fresh after the storm. Anyone using that path would have tracked it inside.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Did you see anyone suspicious?",
+          "topic": "sighting",
+          "narration": null,
+          "dialogue": "Look, let me finishâ€”let me explain it plainly. I already told you. I saw no one clearly from the greenhouse. The rain made the garden hard to see.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What happened when the victim died?",
+          "topic": "crime_details",
+          "narration": "Ben takes a breath before continuing.",
+          "dialogue": "Look, let me finishâ€”let me explain it plainly. I heard Alice call out from the house, then I came straight to the study.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Are you hiding something from me?",
+          "topic": "social",
+          "narration": "Ben shifts his stance.",
+          "dialogue": "Look, let me finishâ€”let me explain it plainly. Hiding what? Ask me straight. No, waitâ€”let me finish. A proper question deserves a proper answer.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What was your relationship with the victim?",
+          "topic": "relationship_with_victim",
+          "narration": null,
+          "dialogue": "Look, let me finishâ€”let me explain it plainly. I already told you. Victor was my employer. We did not always agree, but I knew the grounds better than anyone.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": "Ben opens his palms, then lets them fall.",
+          "dialogue": "Look, let me finishâ€”let me explain it plainly. I was repairing the greenhouse window when Victor died.",
+          "demeanor": "irritated",
+          "cached": false
+        }
+      ]
+    },
+    {
+      "mode": "fake-last-pair",
+      "suspectId": "clara-voss",
+      "count": 18,
+      "openings": {
+        "allow me to be": 4,
+        "victor and i were": 1,
+        "a cufflink proves very": 1,
+        "my answer remains the": 1,
+        "my meaning is quite": 2,
+        "that is an assumption": 1,
+        "i object to the": 8
+      },
+      "gestures": {
+        "Clara holds a level gaze.": 5,
+        "Clara lets a brief silence pass.": 4,
+        "Clara folds her arms.": 4
+      },
+      "speechOnly": 5,
+      "cacheHits": 0,
+      "turns": [
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": "Clara holds a level gaze.",
+          "dialogue": "Allow me to be clear. I was in the library, trying to read while the storm passed.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What was your relationship with the victim?",
+          "topic": "relationship_with_victim",
+          "narration": "Clara lets a brief silence pass.",
+          "dialogue": "Victor and I were business partners. Our disagreements were ordinary business matters.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Did you have a reason to hurt the victim?",
+          "topic": "motive",
+          "narration": "Clara folds her arms.",
+          "dialogue": "Allow me to be clear. I had no reason to harm Victor. Our partnership was difficult at times, but it was profitable.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Did you see anyone suspicious?",
+          "topic": "sighting",
+          "narration": "Clara holds a level gaze.",
+          "dialogue": "Allow me to be clear. I saw only Ben near the greenhouse before dinner. I was nowhere near the garden after that.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What do you know about the evidence?",
+          "topic": "evidence",
+          "narration": null,
+          "dialogue": "A cufflink proves very little. Victor entertained many guests, and the garden mud was everywhere after the rain.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What happened when the victim died?",
+          "topic": "crime_details",
+          "narration": "Clara lets a brief silence pass.",
+          "dialogue": "Allow me to be clear. I heard the alarm like everyone else. I went to the study only after Alice called for help.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": "Clara folds her arms.",
+          "dialogue": "My answer remains the same. I was in the library, trying to read while the storm passed.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "What do you mean by that?",
+          "topic": "alibi",
+          "narration": null,
+          "dialogue": "My meaning is quite specific. Allow me to be clear. I was in the library, trying to read while the storm passed.",
+          "demeanor": "neutral",
+          "cached": false
+        },
+        {
+          "question": "Are you hiding something from me?",
+          "topic": "social",
+          "narration": "Clara holds a level gaze.",
+          "dialogue": "That is an assumption, Detective, not a question. Ask directly, and kindly spare me the insinuation.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "You killed Victor.",
+          "topic": "social",
+          "narration": "Clara lets a brief silence pass.",
+          "dialogue": "I object to the assumption, Detective. That is an assumption, Detective, not a question. Ask directly, and kindly spare me the insinuation.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Did you have a reason to hurt the victim?",
+          "topic": "motive",
+          "narration": null,
+          "dialogue": "I object to the assumption, Detective. My answer remains the same. I had no reason to harm Victor. Our partnership was difficult at times, but it was profitable.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What about the silver cufflink?",
+          "topic": "evidence",
+          "narration": "Clara folds her arms.",
+          "dialogue": "I object to the assumption, Detective. A cufflink proves very little. Victor entertained many guests, and the garden mud was everywhere after the rain.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What do you mean by that?",
+          "topic": "evidence",
+          "narration": "Clara holds a level gaze.",
+          "dialogue": "My meaning is quite specific. A cufflink proves very little. Victor entertained many guests, and the garden mud was everywhere after the rain.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Did you see anyone suspicious?",
+          "topic": "sighting",
+          "narration": null,
+          "dialogue": "I object to the assumption, Detective. My answer remains the same. I saw only Ben near the greenhouse before dinner. I was nowhere near the garden after that.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Alice said she saw you near the garden; how do your accounts fit?",
+          "topic": "sighting",
+          "narration": "Clara lets a brief silence pass.",
+          "dialogue": "I object to the assumption, Detective. I saw only Ben near the greenhouse before dinner. I was nowhere near the garden after that.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Are you hiding something from me?",
+          "topic": "social",
+          "narration": "Clara folds her arms.",
+          "dialogue": "I object to the assumption, Detective. That is an assumption, Detective, not a question. Ask directly, and kindly spare me the insinuation.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "What was your relationship with the victim?",
+          "topic": "relationship_with_victim",
+          "narration": null,
+          "dialogue": "I object to the assumption, Detective. My answer remains the same. Victor and I were business partners. Our disagreements were ordinary business matters.",
+          "demeanor": "irritated",
+          "cached": false
+        },
+        {
+          "question": "Where were you when the victim died?",
+          "topic": "alibi",
+          "narration": "Clara holds a level gaze.",
+          "dialogue": "I object to the assumption, Detective. I was in the library, trying to read while the storm passed.",
+          "demeanor": "irritated",
+          "cached": false
+        }
+      ]
+    }
+  ],
+  "sourceSha256": {
+    "src/game.js": "d4cc240edf87ee3bb0fc1949c42df27c72a7baf3d46355483aadb29991b27986",
+    "src/dialogue-state.js": "bc2a3ee1c26c953985e1a69189f55a842a4c3daca5e5c2bdb0b77dc2f3c6b05c",
+    "src/authored-performances.js": "753c82a807a343250c2d440697bf170131756a4012b62223664e5b27b18f87ce",
+    "src/npc-performance.js": "a8eab49ee5ebd96be1a10c8a5a343f5d52303c9eefec2d0c0194f99ee272c3c5",
+    "src/data/dialogue-catalog.js": "a0f73dd903be5fc9d84341e42f0f0b1979a40ae54a5b9295b6917a744450abf8",
+    "src/data/case.js": "cefc36e6b6ec6050a46d00844d41da7e92576eeafd698e7edd843b057a23d819"
+  },
+  "runtime": "Node.js v24.19.0; no external requests or configured provider",
+  "setup": {
+    "alice-mercer": [
+      "travel garden",
+      "inspectPublicEvidence muddy-footprints",
+      "travel study"
+    ],
+    "ben-carter": [
+      "travel garden",
+      "inspectPublicEvidence muddy-footprints",
+      "travel garden"
+    ],
+    "clara-voss": [
+      "ask Alice: Did you see anyone suspicious?",
+      "travel study",
+      "inspectPublicEvidence silver-cufflink",
+      "travel library"
+    ]
+  }
+}

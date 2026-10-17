@@ -1,0 +1,3 @@
+desktop: real offline mixed text/choices, optional narration, draft retention, history/focus, all evidence, cancel/Escape and both verdicts; 360px and CSS 200% reflow; no page errors.
+mobile: real offline mixed text/choices, optional narration, draft retention, history/focus, all evidence, cancel/Escape and both verdicts; 360px and CSS 200% reflow; no page errors.
+Synthetic twelve-contact/fallback portraits, long option, null narration/no options and long escaped reply screenshots captured separately from real case walkthrough.

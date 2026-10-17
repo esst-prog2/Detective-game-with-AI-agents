@@ -10,6 +10,7 @@ const errors = {
   evidence_not_found: [404, 'Evidence not found.'], method_not_allowed: [405, 'Method not allowed.'],
   location_not_found: [404, 'Room not found.'], suspect_not_present: [409, 'That suspect is in another room.'],
   evidence_not_here: [409, 'That evidence is in another room.'],
+  dialogue_option_unavailable: [409, 'That dialogue option is not available. Refresh state before trying again.'],
   investigation_ended: [409, 'The investigation has ended.'], stale_revision: [409, 'Refresh state before retrying.'],
   session_busy: [409, 'A command is already running.'], stale_response: [409, 'The command response is no longer current.'],
   request_too_large: [413, 'Request body is too large.'], unsupported_media_type: [415, 'Use UTF-8 application/json.'],
@@ -41,7 +42,7 @@ function route(path) {
 
 function validateBody(action, body) {
   const keys = {
-    create: [], questions: ['suspectId', 'question', 'expectedRevision'],
+    create: [], questions: ['suspectId', Object.hasOwn(body ?? {}, 'choiceId') ? 'choiceId' : 'question', 'expectedRevision'],
     'evidence/inspect': ['evidenceId', 'expectedRevision'], accusations: ['suspectId', 'confirmed', 'expectedRevision'],
     travel: ['locationId', 'expectedRevision'],
   }[action];
@@ -52,9 +53,13 @@ function validateBody(action, body) {
   const id = action === 'travel' ? body.locationId : action === 'evidence/inspect' ? body.evidenceId : body.suspectId;
   if (typeof id !== 'string' || id.length > 64 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)) fail('invalid_id');
   if (action === 'questions') {
-    if (typeof body.question !== 'string') fail('invalid_request');
-    body.question = body.question.trim();
-    if ([...body.question].length < 1 || [...body.question].length > 1000) fail('invalid_request');
+    if (Object.hasOwn(body, 'choiceId')) {
+      if (typeof body.choiceId !== 'string' || body.choiceId.length > 64 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(body.choiceId)) fail('invalid_request');
+    } else {
+      if (typeof body.question !== 'string') fail('invalid_request');
+      body.question = body.question.trim();
+      if ([...body.question].length < 1 || [...body.question].length > 1000) fail('invalid_request');
+    }
   }
   if (action === 'accusations' && typeof body.confirmed !== 'boolean') fail('invalid_request');
 }
@@ -100,6 +105,15 @@ function projectResult(action, result) {
     const value = { kind: result.kind, text: result.text };
     if (typeof result.topic === 'string') value.topic = result.topic;
     if (typeof result.cached === 'boolean') value.cached = result.cached;
+    if (result.narration !== null && typeof result.narration !== 'string') throw new Error('Invalid narration');
+    if (typeof result.dialogue !== 'string' || result.dialogue !== result.text) throw new Error('Invalid dialogue');
+    value.narration = result.narration;
+    value.dialogue = result.dialogue;
+    if (result.kind === 'answer') {
+      if (!Number.isSafeInteger(result.turnId) || result.turnId < 1 || !['neutral', 'receptive', 'irritated', 'uneasy'].includes(result.demeanor)) throw new Error('Invalid turn');
+      value.turnId = result.turnId;
+      value.demeanor = result.demeanor;
+    }
     return value;
   }
   if (action === 'evidence/inspect') {
@@ -148,7 +162,8 @@ export function createInvestigationServer({ store = createSessionStore(), bodyLi
         return;
       }
       const action = target.action;
-      const invoke = () => action === 'travel' ? entry.game.travelTo(body.locationId) : action === 'questions' ? entry.game.askSuspect(body.suspectId, body.question)
+      const invoke = () => action === 'travel' ? entry.game.travelTo(body.locationId) : action === 'questions' ? entry.game.prepareDialogue(body.suspectId,
+        Object.hasOwn(body, 'choiceId') ? { choiceId: body.choiceId } : { question: body.question }, (result) => projectResult('questions', result))
         : action === 'evidence/inspect' ? entry.game.inspectPublicEvidence(body.evidenceId)
           : entry.game.resolveAccusation(body.suspectId, body.confirmed);
       if (entry.game.getLifecycle().status === 'ended') { await invoke(); fail('investigation_ended'); }
@@ -160,6 +175,7 @@ export function createInvestigationServer({ store = createSessionStore(), bodyLi
       const data = await store.run(entry, body.expectedRevision, action === 'questions', async () => {
         const result = await invoke();
         if (result?.code === 'investigation_ended') return result;
+        if (action === 'questions' && entry.game.isDialogueCandidate(result)) return result;
         return projectResult(action, result);
       }, action === 'accusations' && body.confirmed);
       send(res, 200, { ok: true, data, error: null });

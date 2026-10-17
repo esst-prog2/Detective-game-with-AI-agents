@@ -75,7 +75,7 @@ test('ended travel rejects before target lookup and cannot alter a remote accusa
 test('session commit rejects a cached reply invalidated during its await gap', async () => {
   const store = createSessionStore(); const entry = store.create();
   await entry.game.askSuspect('alice-mercer', 'Where were you?');
-  const pending = store.run(entry, 0, true, () => entry.game.askSuspect('alice-mercer', 'Where were you?'));
+  const pending = store.run(entry, 0, true, () => entry.game.prepareDialogue('alice-mercer', { question: 'Where were you?' }));
   entry.game.travelTo('garden'); entry.game.travelTo('study');
   await assert.rejects(pending, { code: 'stale_response' }); assert.equal(entry.revision, 0); assert.equal(entry.reservation, null);
 });
