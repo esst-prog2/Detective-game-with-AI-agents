@@ -495,3 +495,6 @@ In my real offline game session, I questioned Ben Carter, inspected all three ev
 - 2026-10-17 — Assistant decided: review 4 allows local accusation-dialog dismissal after uncertain receipt while retaining the action block and explicit refresh; regression proves no accusation replay.
 - 2026-10-17 — Assistant decided: review 5 removes verified unreachable SceneStage and its exclusive CSS; retains used dependencies, lockfile versions and historical tooling.
 - 2026-10-17 — Assistant decided: review 6 requires positive safe integer session/question/idle limits so invalid configuration cannot silently disable resource bounds; all existing defaults are preserved.
+- 2026-10-17 — Assistant decided: review 7 sanitizes future experiment error records and terminal errors, preserving historical evidence; retains documented screenshot artifacts and records bounded history-scan limitations.
+- 2026-10-17 — Assistant decided: provide the authorized GitHub comparison link and ready-to-use PR description because GitHub CLI is unavailable; do not merge or delete hw6-review.
+- 2026-10-17 — Assistant recorded: final HW6 verification passed 230 Node and 34 Chromium tests, production/privacy checks, both zero-vulnerability npm audits, strict current/archive OpenSpec validation and diff checks; original case and historical evidence unchanged.
