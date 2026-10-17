@@ -13,7 +13,7 @@ Severity: high = security/data-integrity loss; medium = incorrect behavior or br
 | 3 | [Duplication/complexity](03-duplication-complexity.md) | Small duplication retained; independent boundary checks and fixture oracles preserved |
 | 4 | [Failure handling](04-failure-handling.md) | Fixed medium-severity accusation modal recovery trap; four browser regressions pass |
 | 5 | [Dependencies/dead code](05-dependencies-dead-code.md) | Removed unused SceneStage and 16 dedicated CSS rules; both audits clean |
-| 6 | Defaults/assumptions | Pending |
+| 6 | [Defaults/assumptions](06-defaults-assumptions.md) | Reject invalid resource limits instead of silently disabling caps/expiry; five targeted tests pass |
 | 7 | Hygiene/security | Pending |
 
 Historical HW4/HW5 evidence, canonical case/testimony and murder solution must remain unchanged. Alice's debt annotation conflict and issue #3 remain unresolved. Final verification and PR details will be recorded after review 7.

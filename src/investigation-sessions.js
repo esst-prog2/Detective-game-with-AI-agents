@@ -17,6 +17,9 @@ export function createSessionStore({
   idleMs = 30 * 60 * 1000,
   maxQuestions = 4,
 } = {}) {
+  if (![maxSessions, idleMs, maxQuestions].every((value) => Number.isSafeInteger(value) && value > 0)) {
+    throw new Error('Invalid session limits.');
+  }
   const entries = new Map();
   let questions = 0;
 
