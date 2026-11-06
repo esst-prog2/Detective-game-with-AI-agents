@@ -15,7 +15,12 @@ export function initialDialogueState(catalog) {
   }])) };
 }
 
-const coreFor = (catalog, id, topic) => catalog.cores.find((c) => c.suspectId === id && c.topic === topic);
+const coreFor = (catalog, id, topic) => catalog.cores.find((c) => c.suspectId === id && c.topic === topic && c.requiredEvidenceId === undefined);
+export const coreAllowed = (catalog, state, suspectId, coreId) => {
+  if (coreId === null) return true;
+  const core = catalog.cores.find((c) => c.id === coreId && c.suspectId === suspectId);
+  return !!core && (core.requiredEvidenceId === undefined || state.inspected.has(core.requiredEvidenceId));
+};
 const prerequisites = (state, catalog, comparison) => comparison.requires.every((id) => {
   const core = catalog.cores.find((c) => c.id === id);
   return state.npcs.get(core.suspectId)?.discussed.has(id);
@@ -29,12 +34,12 @@ export function dialogueOptions(catalog, state, suspectId) {
   for (const e of catalog.evidence.filter((e) => e.suspectId === suspectId && state.inspected.has(e.evidenceId))) options.push({ id: e.id, label: e.label, kind: 'evidence', intent: 'present_evidence', coreId: e.coreId, evidenceId: e.evidenceId });
   if (npc.lastCore) options.push({ id: 'clarify-last', label: 'What do you mean by that?', kind: 'clarify', intent: 'clarify', coreId: npc.lastCore });
   options.push({ id: 'ask-hiding', label: 'Are you hiding something from me?', kind: 'social', intent: 'social_challenge', coreId: null });
-  const topics = catalog.cores.filter((c) => c.suspectId === suspectId);
-  const unanswered = topics.filter((c) => !npc.discussed.has(c.id));
+  const topics = catalog.cores.filter((c) => c.suspectId === suspectId && c.requiredEvidenceId === undefined);
+  const unanswered = topics.filter((c) => !npc.discussed.has(c.id)).sort((a, b) => (b.suggestionPriority ?? 0) - (a.suggestionPriority ?? 0));
   const answered = topics.filter((c) => npc.discussed.has(c.id));
   const rotated = answered.slice(npc.deliveries % (answered.length || 1)).concat(answered.slice(0, npc.deliveries % (answered.length || 1)));
   for (const c of [...unanswered, ...rotated]) options.push({ id: `ask-${c.topic.replaceAll('_', '-')}`, label: topicQuestions[c.topic], kind: npc.discussed.has(c.id) ? 'revisit' : 'topic', intent: npc.discussed.has(c.id) ? 'revisit' : 'topic', coreId: c.id });
-  return options.slice(0, 6);
+  return options.filter((o) => coreAllowed(catalog, state, suspectId, o.coreId)).slice(0, 6);
 }
 
 export function resolveDialogue(catalog, state, data, suspectId, input) {

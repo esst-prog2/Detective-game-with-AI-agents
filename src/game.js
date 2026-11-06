@@ -1,9 +1,10 @@
 import { caseData, TOPICS } from './data/case.js';
 import { defaultDialogueCatalog, validateDialogueCatalog, freezeCatalog } from './data/dialogue-catalog.js';
-import { initialDialogueState, resolveDialogue, dialogueOptions, prepareTurn, cachePerformance, publicDialogue, guidance, dialogueDiagnostics } from './dialogue-state.js';
+import { initialDialogueState, resolveDialogue, dialogueOptions, prepareTurn, cachePerformance, publicDialogue, guidance, dialogueDiagnostics, coreAllowed } from './dialogue-state.js';
 import { validateAuthoredPerformances, offerPerformances, applyPerformance } from './authored-performances.js';
 import { validatePerformance } from './npc-performance.js';
 import { legacyPerformances } from './dialogue-phraser.js';
+import { explainAshcroft } from './mystery-conclusion.js';
 
 export function validateSpatialData(data) {
   const slug = (id) => typeof id === 'string' && id.length <= 64 && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id);
@@ -128,6 +129,7 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
     if (status === 'ended') return endedError();
     if (!candidate || candidate.generation !== mutationGeneration || candidate.epoch !== locationEpoch
       || findSuspect(candidate.suspectId)?.locationId !== currentLocationId) return commandError('stale_response');
+    if (candidate.coreId && !coreAllowed(catalog, dialogueState, candidate.suspectId, candidate.coreId)) return commandError('stale_response');
     return null;
   }
 
@@ -144,11 +146,12 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
     if (Object.hasOwn(input, 'choiceId') && (typeof input.choiceId !== 'string' || input.choiceId.length > 64
       || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(input.choiceId))) return commandError('invalid_request');
     if (pendingDialogue) return commandError('session_busy');
-    const plan = resolveDialogue(catalog, dialogueState, data, suspectId, input);
+    const resolved = resolveDialogue(catalog, dialogueState, data, suspectId, input);
+    const plan = resolved && coreAllowed(catalog, dialogueState, suspectId, resolved.coreId) ? resolved : null;
     if (!plan && Object.hasOwn(input, 'choiceId')) return commandError('dialogue_option_unavailable');
     const token = Symbol('dialogue-candidate');
     pendingDialogue = token;
-    const candidate = { generation: mutationGeneration, epoch: locationEpoch, suspectId, next: dialogueState, result: guidance(), project, controller: new AbortController() };
+    const candidate = { generation: mutationGeneration, epoch: locationEpoch, suspectId, coreId: plan?.coreId, next: dialogueState, result: guidance(), project, controller: new AbortController() };
     candidates.set(token, candidate);
     try {
       if (plan) {
@@ -156,10 +159,10 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
         const turn = prepareTurn(catalog, dialogueState, suspectId, plan, question);
         let { text, narration } = turn.result;
         let reused = false;
-        // Explicit historical injection retains its exact topic-string cache contract.
+        // Historical injection retains stable strings per core, including gated evidence.
         const legacy = phraser && turn.core;
         const offer = !legacy && (performer || turn.core?.deliveries || (!turn.core && catalog.profiles.find((p) => p.suspectId === suspectId)?.socialDeliveries)) ? offerPerformances(catalog, dialogueState, suspectId, plan, turn) : null;
-        const cacheKey = legacy ? `legacy:${turn.core.topic}` : offer?.cacheKey ?? turn.cacheKey;
+        const cacheKey = legacy ? `legacy:${turn.core.id}` : offer?.cacheKey ?? turn.cacheKey;
         const cached = turn.npc.cache.get(cacheKey);
         if (offer) {
           let pair;
@@ -274,10 +277,12 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
     const suspect = findSuspect(suspectId);
     if (!suspect) return { ended: false, result: 'invalid', text: 'That suspect is not available.' };
     const correct = suspect.id === data.murdererId;
+    const explanation = correct && data.title === caseData.title && data.murdererId === 'clara-voss'
+      && catalog.version === 'ashcroft-dialogue-v3' ? explainAshcroft(dialogueState) : '';
     finalResult = {
       ended: true,
       result: correct ? 'correct' : 'incorrect',
-      text: correct ? `Correct. ${suspect.name} murdered ${data.victim.name}.` : `Incorrect. ${suspect.name} is innocent. The investigation is over.`,
+      text: correct ? `Correct. ${suspect.name} murdered ${data.victim.name}.${explanation}` : `Incorrect. ${suspect.name} is innocent. The investigation is over.`,
     };
     status = 'ended';
     invalidateDialogue();

@@ -45,9 +45,10 @@ export const caseData = Object.freeze({
     },
   ],
   intendedSolution: [
-    'The torn contract establishes that Clara had a strong motive.',
-    'Alice saw Clara leave the garden near the time of the murder.',
-    'The muddy footprints and Clara’s missing cufflink connect her to the study entrance.',
+    'The torn contract documents a possible motive: Victor planned to end the partnership with Clara.',
+    'Alice reports Clara coming from the garden shortly before the alarm, conflicting with Clara’s denial of being there after dinner.',
+    'Alice recognizes the recovered cufflink’s design as matching Clara’s dinner accessories, without knowing its owner or when or how it reached the study.',
+    'The footprints suggest a possible garden-to-study route, not the identity of their maker. The combined evidence is circumstantial.',
   ],
   suspects: [
     {
@@ -61,6 +62,7 @@ export const caseData = Object.freeze({
       privateFacts: [
         'Alice hid in the library reading a debt letter during the murder.',
         'Alice saw Clara leave the garden toward the study side entrance.',
+        'Alice remembers Clara wearing silver cufflinks with V-shaped engravings at dinner; she cannot establish ownership of the recovered cufflink or when or how it reached the study.',
       ],
       permittedLie: {
         subject: 'her alibi',
@@ -69,7 +71,7 @@ export const caseData = Object.freeze({
       responses: {
         alibi: response('I was at home in my room all evening.', 'lie', 'Alice was in the library hiding a debt letter.'),
         relationship_with_victim: response('Victor was my employer. He could be demanding, but I tried to serve him well.', 'truth'),
-        motive: response('I had no wish to harm Victor. My debt was my own problem, not his.', 'concealment', 'Alice does not mention the debt.'),
+        motive: response('I had no wish to harm Victor. My debt was my own problem, not his.', 'concealment', 'Alice acknowledges her debt but conceals the debt letter and that she was in the library during the murder.'),
         sighting: response('I saw Clara coming in from the garden shortly before the alarm, though I did not see where she went next.', 'truth'),
         evidence: response('Those muddy footprints came from someone who used the garden door, not from me.', 'truth'),
         crime_details: response('I heard a sharp sound from the study, then found Victor after the others gathered.', 'truth'),

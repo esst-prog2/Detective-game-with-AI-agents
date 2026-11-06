@@ -9,6 +9,15 @@ import { runCli } from '../src/cli.js';
 test('room metadata leaves original case content unchanged and invalid spatial references never fall back to global access', () => {
   const originalContent = structuredClone(caseData); delete originalContent.rooms; delete originalContent.initialLocationId;
   for (const entity of [...originalContent.suspects, ...originalContent.evidence]) { delete entity.locationId; delete entity.publicDossier; }
+  // Normalize only the three reviewed mystery-deduction changes before the historical checksum.
+  originalContent.intendedSolution = [
+    'The torn contract establishes that Clara had a strong motive.',
+    'Alice saw Clara leave the garden near the time of the murder.',
+    'The muddy footprints and Clara’s missing cufflink connect her to the study entrance.',
+  ];
+  assert.equal(originalContent.suspects[0].privateFacts.length, 3);
+  originalContent.suspects[0].privateFacts.pop();
+  originalContent.suspects[0].responses.motive.concealmentReason = 'Alice does not mention the debt.';
   // Checksum of committed pre-room case content, captured before this implementation.
   assert.equal(createHash('sha256').update(JSON.stringify(originalContent)).digest('hex'), '07f998eaaa1614a4b7e4b9d4d055140b81150a8a460fdb3515f28a6106b6f6f0');
   for (const mutate of [

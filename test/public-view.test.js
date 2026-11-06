@@ -7,18 +7,21 @@ import { caseData } from '../src/data/case.js';
 function expectedDialogue(room = 'study', inspected = []) {
   const topicOptions = [
     { id: 'ask-hiding', label: 'Are you hiding something from me?', kind: 'social' },
+    { id: 'ask-sighting', label: 'Did you see anyone suspicious?', kind: 'topic' },
     { id: 'ask-alibi', label: 'Where were you when the victim died?', kind: 'topic' },
     { id: 'ask-relationship-with-victim', label: 'What was your relationship with the victim?', kind: 'topic' },
     { id: 'ask-motive', label: 'Did you have a reason to hurt the victim?', kind: 'topic' },
-    { id: 'ask-sighting', label: 'Did you see anyone suspicious?', kind: 'topic' },
     { id: 'ask-evidence', label: 'What do you know about the evidence?', kind: 'topic' },
   ];
   return { inspectedEvidenceIds: [...inspected], conversations: [
     ['alice-mercer', 'study'], ['ben-carter', 'garden'], ['clara-voss', 'library'],
-  ].map(([suspectId, location]) => ({ suspectId, demeanor: 'neutral', recentTurns: [],
-    options: location !== room ? [] : suspectId === 'ben-carter' && inspected.includes('muddy-footprints')
-      ? [{ id: 'present-footprints', label: 'Present the inspected muddy footprints.', kind: 'evidence' }, ...topicOptions].slice(0, 6) : structuredClone(topicOptions),
-  })) };
+  ].map(([suspectId, location]) => {
+    const ordered = suspectId === 'ben-carter' ? [topicOptions[0], ...topicOptions.slice(2, 5), topicOptions[1], topicOptions[5]] : topicOptions;
+    return { suspectId, demeanor: 'neutral', recentTurns: [],
+      options: location !== room ? [] : suspectId === 'ben-carter' && inspected.includes('muddy-footprints')
+        ? [{ id: 'present-footprints', label: 'Present the inspected muddy footprints.', kind: 'evidence' }, ...ordered].slice(0, 6) : structuredClone(ordered),
+    };
+  }) };
 }
 
 // Independently specified public contract, rather than a copy of a raw case record.
