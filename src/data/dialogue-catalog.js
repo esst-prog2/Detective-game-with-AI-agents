@@ -1,5 +1,6 @@
 import { caseData, TOPICS } from './case.js';
 import { speechAlternatives, socialAlternatives, reviewedDeliveries } from './authored-deliveries.js';
+import { validateDisclosurePolicy } from '../dialogue-policy.js';
 
 const styles = [
   {
@@ -86,6 +87,16 @@ const vector = (v, baseline = false) => Array.isArray(v) && v.length === 3
   && v.every((n) => Number.isInteger(n) && n >= (baseline ? 0 : -4) && n <= 4);
 
 export function validateDialogueCatalog(catalog, data) {
+  if (catalog?.schemaVersion === 2) {
+    const errors = validateDisclosurePolicy(catalog, data);
+    return errors.length ? errors : validateCatalogStructure(catalog, data);
+  }
+  if ((catalog?.schemaVersion !== undefined && catalog.schemaVersion !== 1) || catalog?.policy !== undefined
+    || (Array.isArray(catalog?.cores) && catalog.cores.some((core) => core?.role !== undefined))) return ['Unsupported dialogue schema.'];
+  return validateCatalogStructure(catalog, data);
+}
+
+function validateCatalogStructure(catalog, data) {
   const errors = [];
   if (!catalog || !slug(catalog.version) || !['profiles', 'cores', 'evidence', 'comparisons'].every((key) => Array.isArray(catalog[key]))) return ['Invalid dialogue catalog.'];
   if (['profiles', 'cores', 'evidence', 'comparisons'].some((key) => catalog[key].some((v) => !v || typeof v !== 'object' || Array.isArray(v)))) return ['Invalid dialogue catalog record.'];
@@ -137,7 +148,8 @@ export function validateDialogueCatalog(catalog, data) {
   for (const c of catalog.comparisons) if (!Array.isArray(c.requires) || c.requires.length < 2
     || c.requires.some((id) => !cores.has(id)) || !Array.isArray(c.triggers) || !c.triggers.length
     || c.triggers.some((trigger) => !text(trigger, 100))) errors.push('Invalid comparison prerequisites.');
-  for (const p of profiles.values()) if (TOPICS.some((topic) => catalog.cores.filter((c) => c.suspectId === p.suspectId && c.topic === topic && c.requiredEvidenceId === undefined).length !== 1)) errors.push('Incomplete dialogue topics.');
+  for (const p of profiles.values()) if (TOPICS.some((topic) => catalog.cores.filter((c) => c.suspectId === p.suspectId && c.topic === topic && c.requiredEvidenceId === undefined
+    && (catalog.schemaVersion !== 2 || c.role === 'base')).length !== 1)) errors.push('Incomplete dialogue topics.');
   return errors;
 }
 

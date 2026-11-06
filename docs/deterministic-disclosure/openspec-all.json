@@ -1,0 +1,366 @@
+{
+  "items": [
+    {
+      "id": "add-investigation-http-api",
+      "type": "change",
+      "valid": false,
+      "issues": [
+        {
+          "level": "WARNING",
+          "path": "investigation-http-api/spec.md",
+          "message": "ADDED \"Play the existing case through session endpoints\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "investigation-http-api/spec.md",
+          "message": "ADDED \"Keep sessions isolated and bounded\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "investigation-http-api/spec.md",
+          "message": "ADDED \"Validate the entire transport contract\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "investigation-http-api/spec.md",
+          "message": "ADDED \"Return consistent safe JSON\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "investigation-http-api/spec.md",
+          "message": "ADDED \"Reject overlapping and stale commands\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "investigation-http-api/spec.md",
+          "message": "ADDED \"Keep the service local and model access server-side\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        }
+      ],
+      "durationMs": 51
+    },
+    {
+      "id": "add-playable-browser-interface",
+      "type": "change",
+      "valid": false,
+      "issues": [
+        {
+          "level": "WARNING",
+          "path": "browser-investigation/spec.md",
+          "message": "ADDED \"Present an illustrated complete investigation\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "browser-investigation/spec.md",
+          "message": "ADDED \"Represent location selection honestly\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "browser-investigation/spec.md",
+          "message": "ADDED \"Display public identities and received testimony only\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "browser-investigation/spec.md",
+          "message": "ADDED \"Track inspection history without pretending discovery gates\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "browser-investigation/spec.md",
+          "message": "ADDED \"Confirm and cancel accusations through the engine\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "browser-investigation/spec.md",
+          "message": "ADDED \"Handle pending requests and recovery safely\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "browser-investigation/spec.md",
+          "message": "ADDED \"Keep private data and credentials out of frontend artifacts\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "browser-investigation/spec.md",
+          "message": "ADDED \"Provide responsive keyboard-accessible play\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        }
+      ],
+      "durationMs": 58
+    },
+    {
+      "id": "add-room-based-investigation",
+      "type": "change",
+      "valid": false,
+      "issues": [
+        {
+          "level": "WARNING",
+          "path": "room-investigation/spec.md",
+          "message": "ADDED \"Own current location and static placements on the server\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "room-investigation/spec.md",
+          "message": "ADDED \"Travel through an authoritative active command\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "room-investigation/spec.md",
+          "message": "ADDED \"Reject remote questioning and inspection in the engine\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "room-investigation/spec.md",
+          "message": "ADDED \"Expose only explicitly approved public dossiers and spatial state\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "room-investigation/spec.md",
+          "message": "ADDED \"Extend the existing HTTP command contract safely\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "room-investigation/spec.md",
+          "message": "ADDED \"Provide room-based selection and globally readable notes\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "room-investigation/spec.md",
+          "message": "ADDED \"Present cinematic person-to-person interrogation\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "room-investigation/spec.md",
+          "message": "ADDED \"Preserve request safety and accessible cinematic play\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "room-investigation/spec.md",
+          "message": "ADDED \"Preserve CLI and complete offline mystery compatibility\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        }
+      ],
+      "durationMs": 61
+    },
+    {
+      "id": "build-mvp-detective-game",
+      "type": "change",
+      "valid": true,
+      "issues": [],
+      "durationMs": 118
+    },
+    {
+      "id": "design-relationship-driven-mystery",
+      "type": "change",
+      "valid": true,
+      "issues": [
+        {
+          "level": "INFO",
+          "path": "file",
+          "message": "skip_specs is set in .openspec.yaml: change declares no spec-level behavior changes, zero deltas accepted"
+        }
+      ],
+      "durationMs": 28
+    },
+    {
+      "id": "deterministic-disclosure",
+      "type": "change",
+      "valid": true,
+      "issues": [],
+      "durationMs": 52
+    },
+    {
+      "id": "enforce-investigation-lifecycle",
+      "type": "change",
+      "valid": false,
+      "issues": [
+        {
+          "level": "WARNING",
+          "path": "investigation-lifecycle/spec.md",
+          "message": "ADDED \"Reject commands after ending\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "investigation-public-view/spec.md",
+          "message": "ADDED \"Expose only allowlisted lifecycle information\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        }
+      ],
+      "durationMs": 82
+    },
+    {
+      "id": "expose-safe-investigation-view",
+      "type": "change",
+      "valid": false,
+      "issues": [
+        {
+          "level": "WARNING",
+          "path": "investigation-public-view/spec.md",
+          "message": "ADDED \"Provide an allowlisted investigation overview\": Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        }
+      ],
+      "durationMs": 56
+    },
+    {
+      "id": "hybrid-dialogue-interface",
+      "type": "spec",
+      "valid": false,
+      "issues": [
+        {
+          "level": "WARNING",
+          "path": "requirements[4]",
+          "message": "Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        }
+      ],
+      "durationMs": 2
+    },
+    {
+      "id": "measure-real-model-phrasing",
+      "type": "change",
+      "valid": true,
+      "issues": [
+        {
+          "level": "INFO",
+          "path": "file",
+          "message": "skip_specs is set in .openspec.yaml: change declares no spec-level behavior changes, zero deltas accepted"
+        }
+      ],
+      "durationMs": 24
+    },
+    {
+      "id": "multi-case-foundation",
+      "type": "change",
+      "valid": true,
+      "issues": [],
+      "durationMs": 51
+    },
+    {
+      "id": "mystery-deduction",
+      "type": "spec",
+      "valid": true,
+      "issues": [],
+      "durationMs": 1
+    },
+    {
+      "id": "npc-dialogue-naturalness",
+      "type": "spec",
+      "valid": false,
+      "issues": [
+        {
+          "level": "WARNING",
+          "path": "requirements[0]",
+          "message": "Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "requirements[1]",
+          "message": "Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "requirements[2]",
+          "message": "Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "requirements[3]",
+          "message": "Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "requirements[4]",
+          "message": "Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "requirements[6]",
+          "message": "Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        }
+      ],
+      "durationMs": 1
+    },
+    {
+      "id": "reject-internal-prompt-dialogue",
+      "type": "change",
+      "valid": true,
+      "issues": [],
+      "durationMs": 51
+    },
+    {
+      "id": "safe-npc-performance",
+      "type": "spec",
+      "valid": false,
+      "issues": [
+        {
+          "level": "WARNING",
+          "path": "requirements[0]",
+          "message": "Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "requirements[1]",
+          "message": "Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "requirements[3]",
+          "message": "Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        }
+      ],
+      "durationMs": 0
+    },
+    {
+      "id": "stateful-npc-dialogue",
+      "type": "spec",
+      "valid": false,
+      "issues": [
+        {
+          "level": "WARNING",
+          "path": "requirements[0]",
+          "message": "Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "requirements[3]",
+          "message": "Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "requirements[5]",
+          "message": "Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "requirements[6]",
+          "message": "Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        },
+        {
+          "level": "WARNING",
+          "path": "requirements[7]",
+          "message": "Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one behavior."
+        }
+      ],
+      "durationMs": 1
+    }
+  ],
+  "summary": {
+    "totals": {
+      "items": 16,
+      "passed": 7,
+      "failed": 9
+    },
+    "byType": {
+      "change": {
+        "items": 11,
+        "passed": 6,
+        "failed": 5
+      },
+      "spec": {
+        "items": 5,
+        "passed": 1,
+        "failed": 4
+      }
+    }
+  },
+  "version": "1.0",
+  "root": {
+    "path": "D:\\Documents\\university\\MA\\3rd semester\\advanced programming\\detective game",
+    "source": "nearest"
+  }
+}

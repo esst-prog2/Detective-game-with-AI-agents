@@ -1,6 +1,6 @@
 # Greyhaven staged implementation roadmap
 
-**Narrative baseline approved for technical planning on 2026-11-06. All work below is proposed and unstarted; no production implementation is authorized.** A-F identifiers below are future work packages, not completed tasks. The planning checklist in tasks.md tracks preparation of this roadmap only. No new OpenSpec implementation change or canonical delta is created now.
+**Narrative baseline approved on 2026-11-06; execution status updated after separate milestone authorizations.** A is merged through PR #14 at3727a9b. B is implemented and verified on `feature/deterministic-disclosure`, approved for publication and awaiting PR review/manual merge; its specifications and B1-B4 checklist are in [deterministic-disclosure](../deterministic-disclosure/tasks.md). C-F remain proposed, unstarted and unapproved. The overarching planning checklist tracks preparation only; implementation tracking lives in the scoped changes. Narrative canon is unchanged.
 
 ## Gates and critical path
 
@@ -20,7 +20,7 @@ Use existing plain JavaScript, Node tests, React/Playwright and exact-pair perfo
 
 **Acceptance/definition of done:** default original CLI/browser journey and accusation unchanged; injected second case demonstrably isolated; no fixture/Greyhaven story published; full Node/API/client tests and relevant Chromium case-selection/default regression, production/import/artifact privacy pass. Any exact-envelope fixture migration covers only explicit additive metadata, never rewritten expected testimony. Complexity **medium**, broad integration surface,1-2 sessions.
 
-Future packages: **A1** definition/validator/default adapter; **A2** factory/session/API selection; **A3** CLI/browser manifest and envelope guards; **A4** compatibility/isolation/privacy proof. All unstarted.
+Completed packages: **A1** definition/validator/default adapter; **A2** factory/session/API selection; **A3** CLI/browser manifest and envelope guards; **A4** compatibility/isolation/privacy proof. See the [merged implementation report](../../../docs/multi-case-foundation/implementation.md) for actual full-only scope: preview support and ending-resolver extraction remain deferred under the authorized exclusion of new accusation logic.
 
 ## Milestone B — Knowledge, belief and disclosure
 
@@ -34,7 +34,7 @@ Future packages: **A1** definition/validator/default adapter; **A2** factory/ses
 
 **Acceptance/definition of done:** synthetic secret accessible through two reviewed branches, impossible through unsupported questions/model inventiveness/mood farming; no partial state installation; original case same fallback/delivery. Complete Node/security tests and source/privacy boundary review. Complexity **high**, technically riskiest,2-3 sessions.
 
-Future packages: **B1** schema/gate validation; **B2** staged account selection; **B3** cache/commit revalidation; **B4** independent negative/alternate/security matrix. All unstarted.
+Implemented packages awaiting review: **B1** schema/gate validation; **B2** staged account selection; **B3** cache/commit revalidation; **B4** independent negative/alternate/security matrix. See [Milestone B report](../../../docs/deterministic-disclosure/implementation.md). Informational cores use the `disclosure` role; facet roles/primary targets remain C. No Greyhaven content is publicly registered.
 
 ## Milestone C — Contextual clarification
 

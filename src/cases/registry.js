@@ -25,7 +25,8 @@ export function createCaseRegistry({ definitions = [ashcroft], publishedIds = de
     createInvestigation(caseId = defaultCaseId, { performer = null, phraser = null } = {}) {
       const definition = resolve(caseId);
       if (!definition) throw new Error('Unavailable case.');
-      return createInvestigation({ data: definition.data, dialogueCatalog: definition.catalog, performer, phraser });
+      return createInvestigation({ data: definition.data, dialogueCatalog: definition.catalog, performer, phraser,
+        caseContext: { id: definition.id, version: definition.version } });
     },
   });
 }
