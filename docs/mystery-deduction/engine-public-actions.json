@@ -1,0 +1,123 @@
+{
+  "mode": "offline",
+  "actions": [
+    {
+      "action": "Inspect contract in study",
+      "result": {
+        "id": "torn-contract",
+        "name": "Torn contract",
+        "description": "A torn business contract in Victor’s study shows he planned to end his partnership with Clara."
+      }
+    },
+    {
+      "action": "Inspect cufflink in study",
+      "result": {
+        "id": "silver-cufflink",
+        "name": "Silver cufflink",
+        "description": "A silver cufflink bearing a V-shaped engraving was found beneath Victor’s desk."
+      }
+    },
+    {
+      "action": "Ask whether Alice recognizes the inspected silver cufflink.",
+      "result": {
+        "kind": "answer",
+        "topic": "evidence",
+        "text": "The distinctive design matches the silver cufflinks I remember Clara wearing at dinner. I cannot be certain this one belongs to her. I did not see her drop it, and I do not know how or when it reached Victor’s study.",
+        "cached": false,
+        "turnId": 1,
+        "narration": null,
+        "dialogue": "The distinctive design matches the silver cufflinks I remember Clara wearing at dinner. I cannot be certain this one belongs to her. I did not see her drop it, and I do not know how or when it reached Victor’s study.",
+        "demeanor": "uneasy"
+      }
+    },
+    {
+      "action": "Did you see anyone suspicious?",
+      "result": {
+        "kind": "answer",
+        "topic": "sighting",
+        "text": "Clara, coming in from the garden. That is what I saw shortly before the alarm, not where she went next.",
+        "cached": false,
+        "turnId": 2,
+        "narration": null,
+        "dialogue": "Clara, coming in from the garden. That is what I saw shortly before the alarm, not where she went next.",
+        "demeanor": "uneasy"
+      }
+    },
+    {
+      "action": "Travel to garden",
+      "result": {
+        "kind": "travel",
+        "locationId": "garden",
+        "changed": true
+      }
+    },
+    {
+      "action": "Inspect footprints",
+      "result": {
+        "id": "muddy-footprints",
+        "name": "Muddy footprints",
+        "description": "Fresh muddy footprints lead from the garden door toward the study side entrance."
+      }
+    },
+    {
+      "action": "Ask Ben about footprints",
+      "result": {
+        "kind": "answer",
+        "topic": "evidence",
+        "text": "After the storm, the mud by the garden door was fresh. Anyone using that path would have tracked it inside.",
+        "cached": false,
+        "turnId": 3,
+        "narration": null,
+        "dialogue": "After the storm, the mud by the garden door was fresh. Anyone using that path would have tracked it inside.",
+        "demeanor": "neutral"
+      }
+    },
+    {
+      "action": "Travel to library",
+      "result": {
+        "kind": "travel",
+        "locationId": "library",
+        "changed": true
+      }
+    },
+    {
+      "action": "Did you see anyone suspicious?",
+      "result": {
+        "kind": "answer",
+        "topic": "sighting",
+        "text": "I saw only Ben near the greenhouse before dinner. I was nowhere near the garden after that.",
+        "cached": false,
+        "turnId": 4,
+        "narration": null,
+        "dialogue": "I saw only Ben near the greenhouse before dinner. I was nowhere near the garden after that.",
+        "demeanor": "neutral"
+      }
+    },
+    {
+      "action": "Alice described seeing you near the garden; how does that fit your account?",
+      "result": {
+        "kind": "answer",
+        "topic": "sighting",
+        "text": "Before dinner, I saw only Ben near the greenhouse. I was nowhere near the garden after that.",
+        "cached": false,
+        "turnId": 5,
+        "narration": "Clara lets a brief silence pass.",
+        "dialogue": "Before dinner, I saw only Ben near the greenhouse. I was nowhere near the garden after that.",
+        "demeanor": "neutral"
+      }
+    },
+    {
+      "action": "Confirm Clara accusation",
+      "result": {
+        "ended": true,
+        "result": "correct",
+        "text": "Correct. Clara Voss murdered Victor Hale.\n\nThe investigation recorded a contract showing Victor intended to end his partnership with Clara, suggesting a possible motive. Motive alone does not establish guilt.\n\nAlice reported seeing Clara coming in from the garden shortly before the alarm, but did not see where she went next.\n\nClara said she was nowhere near the garden after dinner.\n\nThose garden accounts conflict; the disagreement alone does not establish which witness is truthful.\n\nThe cufflink found beneath Victor’s desk has a design Alice remembers on Clara’s dinner accessories. Alice could not be certain it belonged to Clara, did not see her drop it, and could not explain how or when it reached the study. This is a possible connection, not proof of murder-time presence.\n\nFresh footprints suggest a possible route between the garden door and the study side entrance, without identifying their maker.\n\nBen explained that anyone using the muddy path could have tracked mud inside.\n\nTogether, the documentary motive, conflicting accounts and possible accessory connection provide substantial circumstantial support for the accusation. No single clue independently establishes guilt."
+      }
+    }
+  ],
+  "result": {
+    "ended": true,
+    "result": "correct",
+    "text": "Correct. Clara Voss murdered Victor Hale.\n\nThe investigation recorded a contract showing Victor intended to end his partnership with Clara, suggesting a possible motive. Motive alone does not establish guilt.\n\nAlice reported seeing Clara coming in from the garden shortly before the alarm, but did not see where she went next.\n\nClara said she was nowhere near the garden after dinner.\n\nThose garden accounts conflict; the disagreement alone does not establish which witness is truthful.\n\nThe cufflink found beneath Victor’s desk has a design Alice remembers on Clara’s dinner accessories. Alice could not be certain it belonged to Clara, did not see her drop it, and could not explain how or when it reached the study. This is a possible connection, not proof of murder-time presence.\n\nFresh footprints suggest a possible route between the garden door and the study side entrance, without identifying their maker.\n\nBen explained that anyone using the muddy path could have tracked mud inside.\n\nTogether, the documentary motive, conflicting accounts and possible accessory connection provide substantial circumstantial support for the accusation. No single clue independently establishes guilt."
+  }
+}

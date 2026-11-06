@@ -8,7 +8,7 @@ const active = { status: 'active', finalResult: null };
 const endedError = { kind: 'error', code: 'investigation_ended', text: 'The investigation has ended.' };
 const accusationError = { ...endedError, ended: true, result: 'rejected' };
 const outcomes = [
-  ['clara-voss', { ended: true, result: 'correct', text: 'Correct. Clara Voss murdered Victor Hale.' }],
+  ['clara-voss', { ended: true, result: 'correct', text: 'Correct. Clara Voss murdered Victor Hale.\n\nThe accusation is correct, but the investigation did not establish the complete supporting chain. The recorded evidence is incomplete.' }],
   ['alice-mercer', { ended: true, result: 'incorrect', text: 'Incorrect. Alice Mercer is innocent. The investigation is over.' }],
 ];
 

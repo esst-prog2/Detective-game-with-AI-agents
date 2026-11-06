@@ -1,0 +1,208 @@
+
+The Ashcroft Manor Murder
+The owner of Ashcroft Manor, found dead in his study after a stormy dinner.
+One of the three suspects is the murderer. Inspect evidence, ask questions, then make one final accusation.
+
+Current room: the study
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Make an accusation
+5. Quit
+6. Travel to another room
+Choose an action: 2
+1. Torn contract
+2. Silver cufflink
+Choose evidence to inspect: 1
+Torn contract: A torn business contract in Victor’s study shows he planned to end his partnership with Clara.
+
+Current room: the study
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Make an accusation
+5. Quit
+6. Travel to another room
+Choose an action: 2
+1. Torn contract
+2. Silver cufflink
+Choose evidence to inspect: 2
+Silver cufflink: A silver cufflink bearing a V-shaped engraving was found beneath Victor’s desk.
+
+Current room: the study
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Make an accusation
+5. Quit
+6. Travel to another room
+Choose an action: 1
+1. Alice Mercer
+Choose a suspect: 1
+Ask Alice Mercer (or /choices): /choices
+1. Ask whether Alice recognizes the inspected silver cufflink.
+2. Are you hiding something from me?
+3. Did you see anyone suspicious?
+4. Where were you when the victim died?
+5. What was your relationship with the victim?
+6. Did you have a reason to hurt the victim?
+Choose a question: 1
+Alice Mercer: The distinctive design matches the silver cufflinks I remember Clara wearing at dinner. I cannot be certain this one belongs to her. I did not see her drop it, and I do not know how or when it reached Victor’s study.
+
+Current room: the study
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Make an accusation
+5. Quit
+6. Travel to another room
+Choose an action: 1
+1. Alice Mercer
+Choose a suspect: 1
+Ask Alice Mercer (or /choices): /choices
+1. Ask whether Alice recognizes the inspected silver cufflink.
+2. What do you mean by that?
+3. Are you hiding something from me?
+4. Did you see anyone suspicious?
+5. Where were you when the victim died?
+6. What was your relationship with the victim?
+Choose a question: 4
+Alice Mercer: Clara, coming in from the garden. That is what I saw shortly before the alarm, not where she went next.
+
+Current room: the study
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Make an accusation
+5. Quit
+6. Travel to another room
+Choose an action: 6
+1. the study
+2. the library
+3. the garden
+Choose a room: 3
+You are in the garden.
+
+Current room: the garden
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Make an accusation
+5. Quit
+6. Travel to another room
+Choose an action: 2
+1. Muddy footprints
+Choose evidence to inspect: 1
+Muddy footprints: Fresh muddy footprints lead from the garden door toward the study side entrance.
+
+Current room: the garden
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Make an accusation
+5. Quit
+6. Travel to another room
+Choose an action: 1
+1. Ben Carter
+Choose a suspect: 1
+Ask Ben Carter (or /choices): What about the muddy footprints?
+Ben Carter: After the storm, the mud by the garden door was fresh. Anyone using that path would have tracked it inside.
+
+Current room: the garden
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Make an accusation
+5. Quit
+6. Travel to another room
+Choose an action: 6
+1. the study
+2. the library
+3. the garden
+Choose a room: 2
+You are in the library.
+
+Current room: the library
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Make an accusation
+5. Quit
+6. Travel to another room
+Choose an action: 1
+1. Clara Voss
+Choose a suspect: 1
+Ask Clara Voss (or /choices): /choices
+1. Present the inspected silver cufflink.
+2. Ask about the inspected contract ending the partnership.
+3. Are you hiding something from me?
+4. Did you see anyone suspicious?
+5. Where were you when the victim died?
+6. What was your relationship with the victim?
+Choose a question: 4
+Clara Voss: I saw only Ben near the greenhouse before dinner. I was nowhere near the garden after that.
+
+Current room: the library
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Make an accusation
+5. Quit
+6. Travel to another room
+Choose an action: 1
+1. Clara Voss
+Choose a suspect: 1
+Ask Clara Voss (or /choices): /choices
+1. Alice described seeing you near the garden; how does that fit your account?
+2. Present the inspected silver cufflink.
+3. Ask about the inspected contract ending the partnership.
+4. What do you mean by that?
+5. Are you hiding something from me?
+6. Where were you when the victim died?
+Choose a question: 1
+*Clara lets a brief silence pass.*
+Clara Voss: Before dinner, I saw only Ben near the greenhouse. I was nowhere near the garden after that.
+
+Current room: the library
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Make an accusation
+5. Quit
+6. Travel to another room
+Choose an action: 4
+Choose the murderer:
+1. Alice Mercer
+2. Ben Carter
+3. Clara Voss
+Choose a suspect: 3
+Confirming ends the investigation, whether the accusation is correct or incorrect.
+Accuse Clara Voss? (yes/no): yes
+Correct. Clara Voss murdered Victor Hale.
+
+The investigation recorded a contract showing Victor intended to end his partnership with Clara, suggesting a possible motive. Motive alone does not establish guilt.
+
+Alice reported seeing Clara coming in from the garden shortly before the alarm, but did not see where she went next.
+
+Clara said she was nowhere near the garden after dinner.
+
+Those garden accounts conflict; the disagreement alone does not establish which witness is truthful.
+
+The cufflink found beneath Victor’s desk has a design Alice remembers on Clara’s dinner accessories. Alice could not be certain it belonged to Clara, did not see her drop it, and could not explain how or when it reached the study. This is a possible connection, not proof of murder-time presence.
+
+Fresh footprints suggest a possible route between the garden door and the study side entrance, without identifying their maker.
+
+Ben explained that anyone using the muddy path could have tracked mud inside.
+
+Together, the documentary motive, conflicting accounts and possible accessory connection provide substantial circumstantial support for the accusation. No single clue independently establishes guilt.

@@ -1,0 +1,132 @@
+openspec.cmd : Note: OpenSpec collects anonymous usage stats. Opt out: OPENSPEC_TELEMETRY=0 or openspec config set
+telemetry.enabled false
+At line:2 char:1
++ openspec.cmd validate --all --strict *> ../.openspec-baseline-results ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Note: OpenSpec ...y.enabled false:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+✗ change/add-investigation-http-api
+  ⚠ [WARNING] investigation-http-api/spec.md: ADDED "Play the existing case through session endpoints": Requirement
+text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate
+requirements that each state one behavior.
+  ⚠ [WARNING] investigation-http-api/spec.md: ADDED "Keep sessions isolated and bounded": Requirement text is very
+long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each
+state one behavior.
+  ⚠ [WARNING] investigation-http-api/spec.md: ADDED "Validate the entire transport contract": Requirement text is very
+long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each
+state one behavior.
+  ⚠ [WARNING] investigation-http-api/spec.md: ADDED "Return consistent safe JSON": Requirement text is very long (>500
+characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state one
+behavior.
+  ⚠ [WARNING] investigation-http-api/spec.md: ADDED "Reject overlapping and stale commands": Requirement text is very
+long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each
+state one behavior.
+  ⚠ [WARNING] investigation-http-api/spec.md: ADDED "Keep the service local and model access server-side": Requirement
+text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate
+requirements that each state one behavior.
+✗ change/add-playable-browser-interface
+  ⚠ [WARNING] browser-investigation/spec.md: ADDED "Present an illustrated complete investigation": Requirement text
+is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements
+that each state one behavior.
+  ⚠ [WARNING] browser-investigation/spec.md: ADDED "Represent location selection honestly": Requirement text is very
+long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each
+state one behavior.
+  ⚠ [WARNING] browser-investigation/spec.md: ADDED "Display public identities and received testimony only":
+Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into
+separate requirements that each state one behavior.
+  ⚠ [WARNING] browser-investigation/spec.md: ADDED "Track inspection history without pretending discovery gates":
+Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into
+separate requirements that each state one behavior.
+  ⚠ [WARNING] browser-investigation/spec.md: ADDED "Confirm and cancel accusations through the engine": Requirement
+text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate
+requirements that each state one behavior.
+  ⚠ [WARNING] browser-investigation/spec.md: ADDED "Handle pending requests and recovery safely": Requirement text is
+very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that
+each state one behavior.
+  ⚠ [WARNING] browser-investigation/spec.md: ADDED "Keep private data and credentials out of frontend artifacts":
+Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into
+separate requirements that each state one behavior.
+  ⚠ [WARNING] browser-investigation/spec.md: ADDED "Provide responsive keyboard-accessible play": Requirement text is
+very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that
+each state one behavior.
+✗ change/add-room-based-investigation
+  ⚠ [WARNING] room-investigation/spec.md: ADDED "Own current location and static placements on the server":
+Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into
+separate requirements that each state one behavior.
+  ⚠ [WARNING] room-investigation/spec.md: ADDED "Travel through an authoritative active command": Requirement text is
+very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that
+each state one behavior.
+  ⚠ [WARNING] room-investigation/spec.md: ADDED "Reject remote questioning and inspection in the engine": Requirement
+text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate
+requirements that each state one behavior.
+  ⚠ [WARNING] room-investigation/spec.md: ADDED "Expose only explicitly approved public dossiers and spatial state":
+Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into
+separate requirements that each state one behavior.
+  ⚠ [WARNING] room-investigation/spec.md: ADDED "Extend the existing HTTP command contract safely": Requirement text
+is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements
+that each state one behavior.
+  ⚠ [WARNING] room-investigation/spec.md: ADDED "Provide room-based selection and globally readable notes":
+Requirement text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into
+separate requirements that each state one behavior.
+  ⚠ [WARNING] room-investigation/spec.md: ADDED "Present cinematic person-to-person interrogation": Requirement text
+is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements
+that each state one behavior.
+  ⚠ [WARNING] room-investigation/spec.md: ADDED "Preserve request safety and accessible cinematic play": Requirement
+text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate
+requirements that each state one behavior.
+  ⚠ [WARNING] room-investigation/spec.md: ADDED "Preserve CLI and complete offline mystery compatibility": Requirement
+text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate
+requirements that each state one behavior.
+✓ change/build-mvp-detective-game
+✗ change/enforce-investigation-lifecycle
+  ⚠ [WARNING] investigation-lifecycle/spec.md: ADDED "Reject commands after ending": Requirement text is very long
+(>500 characters). Move examples and edge cases into scenarios, or split it into separate requirements that each state
+one behavior.
+  ⚠ [WARNING] investigation-public-view/spec.md: ADDED "Expose only allowlisted lifecycle information": Requirement
+text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate
+requirements that each state one behavior.
+✗ change/expose-safe-investigation-view
+  ⚠ [WARNING] investigation-public-view/spec.md: ADDED "Provide an allowlisted investigation overview": Requirement
+text is very long (>500 characters). Move examples and edge cases into scenarios, or split it into separate
+requirements that each state one behavior.
+✗ spec/hybrid-dialogue-interface
+  ⚠ [WARNING] requirements[4]: Requirement text is very long (>500 characters). Move examples and edge cases into
+scenarios, or split it into separate requirements that each state one behavior.
+✓ change/measure-real-model-phrasing
+  ℹ [INFO] file: skip_specs is set in .openspec.yaml: change declares no spec-level behavior changes, zero deltas
+accepted
+✗ spec/npc-dialogue-naturalness
+  ⚠ [WARNING] requirements[0]: Requirement text is very long (>500 characters). Move examples and edge cases into
+scenarios, or split it into separate requirements that each state one behavior.
+  ⚠ [WARNING] requirements[1]: Requirement text is very long (>500 characters). Move examples and edge cases into
+scenarios, or split it into separate requirements that each state one behavior.
+  ⚠ [WARNING] requirements[2]: Requirement text is very long (>500 characters). Move examples and edge cases into
+scenarios, or split it into separate requirements that each state one behavior.
+  ⚠ [WARNING] requirements[3]: Requirement text is very long (>500 characters). Move examples and edge cases into
+scenarios, or split it into separate requirements that each state one behavior.
+  ⚠ [WARNING] requirements[4]: Requirement text is very long (>500 characters). Move examples and edge cases into
+scenarios, or split it into separate requirements that each state one behavior.
+  ⚠ [WARNING] requirements[6]: Requirement text is very long (>500 characters). Move examples and edge cases into
+scenarios, or split it into separate requirements that each state one behavior.
+✓ change/reject-internal-prompt-dialogue
+✗ spec/safe-npc-performance
+  ⚠ [WARNING] requirements[0]: Requirement text is very long (>500 characters). Move examples and edge cases into
+scenarios, or split it into separate requirements that each state one behavior.
+  ⚠ [WARNING] requirements[1]: Requirement text is very long (>500 characters). Move examples and edge cases into
+scenarios, or split it into separate requirements that each state one behavior.
+  ⚠ [WARNING] requirements[3]: Requirement text is very long (>500 characters). Move examples and edge cases into
+scenarios, or split it into separate requirements that each state one behavior.
+✗ spec/stateful-npc-dialogue
+  ⚠ [WARNING] requirements[0]: Requirement text is very long (>500 characters). Move examples and edge cases into
+scenarios, or split it into separate requirements that each state one behavior.
+  ⚠ [WARNING] requirements[3]: Requirement text is very long (>500 characters). Move examples and edge cases into
+scenarios, or split it into separate requirements that each state one behavior.
+  ⚠ [WARNING] requirements[5]: Requirement text is very long (>500 characters). Move examples and edge cases into
+scenarios, or split it into separate requirements that each state one behavior.
+  ⚠ [WARNING] requirements[6]: Requirement text is very long (>500 characters). Move examples and edge cases into
+scenarios, or split it into separate requirements that each state one behavior.
+  ⚠ [WARNING] requirements[7]: Requirement text is very long (>500 characters). Move examples and edge cases into
+scenarios, or split it into separate requirements that each state one behavior.
+Totals: 3 passed, 9 failed (12 items)
+Details: openspec validate add-investigation-http-api --type change

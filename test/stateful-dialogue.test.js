@@ -35,7 +35,7 @@ test('catalog has reconciled multidimensional profiles and reviewed core-preserv
     assert.ok(p.conversationalRules.length > 1);
     const g = createInvestigation(); move(g, p.suspectId);
     voices.push((await g.askSuspect(p.suspectId, 'Are you hiding something from me?')).dialogue);
-    for (const core of caseDialogueCatalog.cores.filter((c) => c.suspectId === p.suspectId)) {
+    for (const core of caseDialogueCatalog.cores.filter((c) => c.suspectId === p.suspectId && c.requiredEvidenceId === undefined)) {
       assert.equal(core.approvedContent, caseData.suspects.find((s) => s.id === p.suspectId).responses[core.topic].approvedContent);
       assert.ok(core.variants.length >= 2); assert.equal(core.variants[0].prefix, '');
       assertEquivalent((await ask(g, core.topic, p.suspectId)).dialogue, core.approvedContent);
@@ -68,7 +68,7 @@ for (const count of [8, 12]) test(`authored ${count}-NPC injected catalog and se
   const catalog = { version: 'synthetic-v1', profiles: [], cores: [], evidence: [], comparisons: [] };
   for (const npc of data.suspects) {
     catalog.profiles.push({ ...structuredClone(caseDialogueCatalog.profiles[0]), suspectId: npc.id });
-    for (const c of caseDialogueCatalog.cores.filter((c) => c.suspectId === alice)) catalog.cores.push({ ...structuredClone(c), suspectId: npc.id, id: c.id.replace(alice, npc.id) });
+    for (const c of caseDialogueCatalog.cores.filter((c) => c.suspectId === alice && c.requiredEvidenceId === undefined)) catalog.cores.push({ ...structuredClone(c), suspectId: npc.id, id: c.id.replace(alice, npc.id) });
   }
   const g = createInvestigation({ data, dialogueCatalog: catalog });
   assert.equal(g.getPublicView().dialogue.conversations.length, count);
@@ -248,13 +248,13 @@ test('an accusatory tone cannot replace a valid approved question with arbitrary
   }
 });
 
-test('Alice debt testimony remains exact but inconsistency is unresolved and does not become shared knowledge', async () => {
+test('Alice debt testimony remains exact with consistent concealment and does not become shared knowledge', async () => {
   const g = createInvestigation();
   assert.equal(JSON.stringify(g.getPublicView()).includes('debt'), false);
   const reply = await ask(g, 'motive');
   assert.equal(reply.dialogue, caseData.suspects[0].responses.motive.approvedContent);
   assert.match(reply.dialogue, /My debt was my own problem/);
-  assert.equal(caseData.suspects[0].responses.motive.concealmentReason, 'Alice does not mention the debt.');
+  assert.equal(caseData.suspects[0].responses.motive.concealmentReason, 'Alice acknowledges her debt but conceals the debt letter and that she was in the library during the murder.');
   assert.equal(JSON.stringify(options(g)).includes('debt'), false);
   move(g, ben);
   const before = g.getDialogueDiagnostics();

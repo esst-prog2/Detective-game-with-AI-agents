@@ -1,5 +1,17 @@
 # Advanced-programming-project
 
+## Mystery deduction milestone (2026-11-06)
+
+The current case now has a discoverable, explicitly uncertain cufflink connection. Inspect the silver cufflink in the study, then ask Alice whether she recognizes it using the contextual choice or a cufflink question. She remembers the distinctive design on Clara's dinner accessories, but cannot establish ownership, a witnessed drop, or how/when it reached the study. Generic evidence testimony and all original topic answers/fallbacks are unchanged. Alice's private debt annotation now accurately describes her concealed letter/library activity; her existing debt testimony is verbatim.
+
+Essential unanswered sighting questions receive deterministic priority within the six-choice limit. Evidence questions and established comparisons retain priority; optional topics remain available by text and subsequent choices. The contract, garden-account conflict and uncertain accessory connection together support the accusation circumstantially. Footprints suggest a possible route, not their maker. You need not collect every clue, exhaust all topics or obtain a confession.
+
+Correct endings retain the original verdict and explain only inspected clues and committed testimony. A correct guess or partially investigated case acknowledges incomplete support. Wrong endings retain their private verdict and finality. The engine uses bounded committed-ID summaries even when old dialogue has left the recent eight-turn window; accepted server actions can be recorded despite a lost reply, so a summary does not certify that the browser received every turn. Final text is immutable after closure. No scoring, save feature, deduction board or model access to private solution data is added.
+
+Current status supersedes older statements below that the debt annotation must remain unresolved. Issue #3's exact-output authorization fix is merged; the issue's administrative closure and historical experiments are separate. The new recognition uses that same adapter/engine/cache/final-commit authorization boundary.
+
+Reproduce the deterministic engine and actual CLI walkthrough with `node scripts/walkthrough-mystery-deduction.js`. The full Chromium suite includes real offline browser walkthroughs and writes current desktop/mobile transcripts and screenshots under [docs/mystery-deduction](docs/mystery-deduction/verification.md). User-reported playtest feedback is recorded there: the player solved the case but found it obvious and some clarification replies unhelpful; see the report and retained checklist. Start fresh ephemeral sessions after updating the server/catalog.
+
 ## Illustrated browser game
 
 The current case is playable offline through an illustrated React interface. Use Node 24 LTS (verified with 24.19); the isolated `web/` package uses React 19 and Vite 8. The CLI and API commands below continue to work.

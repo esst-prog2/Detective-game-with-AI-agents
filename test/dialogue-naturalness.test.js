@@ -11,10 +11,10 @@ const ids = ['alice-mercer', 'ben-carter', 'clara-voss'];
 const room = (id) => ({ 'alice-mercer': 'study', 'ben-carter': 'garden', 'clara-voss': 'library' })[id];
 const memory = (g, id = ids[0]) => g.getDialogueDiagnostics().npcs.find((n) => n.id === id);
 
-test('every authored utterance matches a frozen editorial fixture; original records and Alice debt remain unchanged', () => {
+test('every base utterance matches its frozen fixture; Alice speech stays unchanged with corrected concealment annotation', () => {
   assert.deepEqual(validateDialogueCatalog(caseDialogueCatalog, caseData), []);
   assert.equal(Object.keys(reviewedTestimony).length, 18);
-  for (const core of caseDialogueCatalog.cores) {
+  for (const core of caseDialogueCatalog.cores.filter((c) => c.requiredEvidenceId === undefined)) {
     const expected = reviewedTestimony[core.id];
     assert.equal(expected.original, caseData.suspects.find((s) => s.id === core.suspectId).responses[core.topic].approvedContent);
     assert.deepEqual(core.deliveries.map((d) => d.dialogue), expected.speeches);
@@ -22,7 +22,7 @@ test('every authored utterance matches a frozen editorial fixture; original reco
     assert.ok(expected.speeches.every((s) => !/let me answer carefully|plainly put|allow me to be clear/i.test(s)));
   }
   assert.equal(reviewedTestimony['alice-mercer-motive'].speeches.length, 1);
-  assert.equal(caseData.suspects[0].responses.motive.concealmentReason, 'Alice does not mention the debt.');
+  assert.equal(caseData.suspects[0].responses.motive.concealmentReason, 'Alice acknowledges her debt but conceals the debt letter and that she was in the library during the murder.');
 });
 
 test('full-delivery schema rejects missing originals, duplicate text, invalid eligibility/IDs and oversize speech', () => {

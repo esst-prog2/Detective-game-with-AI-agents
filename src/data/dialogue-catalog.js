@@ -43,21 +43,30 @@ export function freezeCatalog(value) {
 }
 
 // Existing response cores are testimony, including intentional lies. They are not global facts.
-// Alice's motive core is deliberately unchanged: its debt/concealment annotation conflict is unresolved.
+// Alice's motive speech is unchanged; its annotation now describes what remains concealed.
+const cufflinkRecognition = 'The distinctive design matches the silver cufflinks I remember Clara wearing at dinner. I cannot be certain this one belongs to her. I did not see her drop it, and I do not know how or when it reached Victor’s study.';
 export const caseDialogueCatalog = freezeCatalog({
-  version: 'ashcroft-dialogue-v2', profiles: styles.map((p) => ({ ...p, socialDeliveries: socialAlternatives[p.suspectId].map((dialogue, i) => ({ id: `social-${i}`, dialogue, mode: i < 2 ? 'ordinary' : 'pressure', structure: ['question', 'request', 'rebuttal', 'clarification'][i], opening: dialogue.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/).slice(0, 4).join(' ') })), mannerisms: [
+  version: 'ashcroft-dialogue-v3', profiles: styles.map((p) => ({ ...p, socialDeliveries: socialAlternatives[p.suspectId].map((dialogue, i) => ({ id: `social-${i}`, dialogue, mode: i < 2 ? 'ordinary' : 'pressure', structure: ['question', 'request', 'rebuttal', 'clarification'][i], opening: dialogue.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/).slice(0, 4).join(' ') })), mannerisms: [
     ...p.mannerisms.map((m, i) => ({ ...m, family: ({ 'alice-mercer': ['hands', 'pause', 'face'], 'ben-carter': ['posture', 'hands', 'pause'], 'clara-voss': ['posture', 'face', 'pause'] })[p.suspectId][i] })),
     { id: 'expression', family: p.suspectId === 'clara-voss' ? 'hands' : 'face', text: p.suspectId === 'alice-mercer' ? 'Alice briefly presses her lips together.' : p.suspectId === 'ben-carter' ? 'Ben draws his brows together briefly.' : 'Clara briefly brings her fingertips together.' },
     { id: 'posture', family: 'posture', text: p.suspectId === 'alice-mercer' ? 'Alice draws her shoulders slightly closer.' : p.suspectId === 'ben-carter' ? 'Ben settles back on his heels.' : 'Clara straightens slightly.' },
   ] })),
   cores: caseData.suspects.flatMap((npc) => TOPICS.map((topic) => ({
     id: `${npc.id}-${topic.replaceAll('_', '-')}`, suspectId: npc.id, topic,
+    suggestionPriority: topic === 'sighting' && ['alice-mercer', 'clara-voss'].includes(npc.id) ? 1 : 0,
     source: { kind: 'authored-testimony', topic },
     approvedContent: npc.responses[topic].approvedContent,
     deliveries: reviewedDeliveries(npc.responses[topic].approvedContent, speechAlternatives[`${npc.id}-${topic.replaceAll('_', '-')}`] ?? []),
     variants: [{ id: 'plain', prefix: '' }, { id: 'considered', prefix: styles.find((p) => p.suspectId === npc.id).framing.calm }],
-  }))),
+  }))).concat([{
+    id: 'alice-mercer-cufflink-recognition', suspectId: 'alice-mercer', topic: 'evidence',
+    source: { kind: 'authored-testimony', topic: 'evidence' },
+    requiredEvidenceId: 'silver-cufflink', approvedContent: cufflinkRecognition,
+    deliveries: reviewedDeliveries(cufflinkRecognition, []),
+    variants: [{ id: 'plain', prefix: '' }, { id: 'considered', prefix: '' }],
+  }]),
   evidence: [
+    { id: 'identify-cufflink', suspectId: 'alice-mercer', evidenceId: 'silver-cufflink', coreId: 'alice-mercer-cufflink-recognition', label: 'Ask whether Alice recognizes the inspected silver cufflink.' },
     { id: 'present-footprints', suspectId: 'alice-mercer', evidenceId: 'muddy-footprints', coreId: 'alice-mercer-evidence', label: 'Ask about the inspected muddy footprints.' },
     { id: 'present-footprints', suspectId: 'ben-carter', evidenceId: 'muddy-footprints', coreId: 'ben-carter-evidence', label: 'Present the inspected muddy footprints.' },
     { id: 'present-cufflink', suspectId: 'clara-voss', evidenceId: 'silver-cufflink', coreId: 'clara-voss-evidence', label: 'Present the inspected silver cufflink.' },
@@ -111,6 +120,9 @@ export function validateDialogueCatalog(catalog, data) {
       || c.variants.some((v) => !slug(v?.id) || typeof v.prefix !== 'string' || [...v.prefix].length > 100
         || [...`${v.prefix}${c.approvedContent}`].length > 1200)) errors.push('Invalid testimony core.');
     if (c?.deliveries !== undefined && !deliveriesValid(c.deliveries, c.approvedContent)) errors.push('Invalid testimony deliveries.');
+    if (c.suggestionPriority !== undefined && (!Number.isInteger(c.suggestionPriority) || c.suggestionPriority < 0 || c.suggestionPriority > 1)) errors.push('Invalid suggestion priority.');
+    if (c.requiredEvidenceId !== undefined && (c.topic !== 'evidence' || !data.evidence.some((e) => e.id === c.requiredEvidenceId)
+      || !catalog.evidence.some((e) => e.coreId === c.id && e.suspectId === c.suspectId && e.evidenceId === c.requiredEvidenceId))) errors.push('Invalid evidence testimony permission.');
     if (c) cores.set(c.id, c);
   }
   const optionIds = new Set();
@@ -120,11 +132,12 @@ export function validateDialogueCatalog(catalog, data) {
       || cores.get(item.coreId)?.suspectId !== item.suspectId) errors.push('Invalid dialogue option.');
     optionIds.add(key);
   }
-  for (const e of catalog.evidence) if (!data.evidence.some(({ id }) => id === e.evidenceId)) errors.push('Invalid dialogue evidence reference.');
+  for (const e of catalog.evidence) if (!data.evidence.some(({ id }) => id === e.evidenceId)
+    || (cores.get(e.coreId)?.requiredEvidenceId !== undefined && cores.get(e.coreId).requiredEvidenceId !== e.evidenceId)) errors.push('Invalid dialogue evidence reference.');
   for (const c of catalog.comparisons) if (!Array.isArray(c.requires) || c.requires.length < 2
     || c.requires.some((id) => !cores.has(id)) || !Array.isArray(c.triggers) || !c.triggers.length
     || c.triggers.some((trigger) => !text(trigger, 100))) errors.push('Invalid comparison prerequisites.');
-  for (const p of profiles.values()) if (TOPICS.some((topic) => catalog.cores.filter((c) => c.suspectId === p.suspectId && c.topic === topic).length !== 1)) errors.push('Incomplete dialogue topics.');
+  for (const p of profiles.values()) if (TOPICS.some((topic) => catalog.cores.filter((c) => c.suspectId === p.suspectId && c.topic === topic && c.requiredEvidenceId === undefined).length !== 1)) errors.push('Incomplete dialogue topics.');
   return errors;
 }
 

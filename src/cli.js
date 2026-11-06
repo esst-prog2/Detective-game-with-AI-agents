@@ -89,6 +89,7 @@ async function accuse(io, investigation) {
   io.write('Choose the murderer:\n');
   const suspect = await chooseSuspect(io, investigation);
   if (!suspect) { io.write('Please choose a valid suspect number.\n'); return true; }
+  io.write('Confirming ends the investigation, whether the accusation is correct or incorrect.\n');
   const confirmation = (await io.ask(`Accuse ${suspect.name}? (yes/no): `)).trim().toLowerCase();
   const result = investigation.resolveAccusation(suspect.id, confirmation === 'yes');
   io.write(`${result.text}\n`);
