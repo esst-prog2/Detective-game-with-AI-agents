@@ -1,5 +1,6 @@
-import { createInvestigation } from './game.js';
+import { caseRegistry } from './cases/registry.js';
 import { createConfiguredNPCPerformer } from './npc-performance.js';
+import { topicQuestions } from './dialogue-state.js';
 
 export const exampleQuestions = [
   'Where were you when Victor died?',
@@ -10,15 +11,27 @@ export const exampleQuestions = [
   'What happened when Victor died?',
 ];
 
-export async function runCli(io, { game = null, createPerformer = createConfiguredNPCPerformer } = {}) {
-  const investigation = game ?? createInvestigation({ performer: await createPerformer() });
+export function parseCaseArguments(args) {
+  if (!args.length) return {};
+  if (args.length === 1 && args[0] === '--list-cases') return { listCases: true };
+  if (args.length === 2 && args[0] === '--case' && caseRegistry.resolve(args[1])) return { caseId: args[1] };
+  throw new Error('Use --list-cases or --case <available-id>.');
+}
+
+export async function runCli(io, { game = null, caseId = 'ashcroft', listCases = false, registry = caseRegistry, createPerformer = createConfiguredNPCPerformer } = {}) {
+  if (listCases) {
+    for (const item of registry.list()) io.write(`${item.id}: ${item.title}\n`);
+    return;
+  }
+  if (!game && !registry.resolve(caseId)) { io.write('That case is not available. Use --list-cases.\n'); return; }
+  const investigation = game ?? registry.createInvestigation(caseId, { performer: await createPerformer() });
   const lifecycle = investigation.getLifecycle();
   if (lifecycle.status === 'ended') {
     io.write(`${lifecycle.finalResult.text}\n`);
     return;
   }
   io.write(`\n${investigation.data.title}\n${investigation.data.victim.description}\n`);
-  io.write('One of the three suspects is the murderer. Inspect evidence, ask questions, then make one final accusation.\n');
+  io.write(`One of the ${caseId === 'ashcroft' ? 'three' : investigation.data.suspects.length} suspects is the murderer. Inspect evidence, ask questions, then make one final accusation.\n`);
   let running = true;
   while (running) {
     const currentLifecycle = investigation.getLifecycle();
@@ -32,7 +45,7 @@ export async function runCli(io, { game = null, createPerformer = createConfigur
     const action = (await io.ask('Choose an action: ')).trim();
     if (action === '1') await questionSuspect(io, investigation);
     else if (action === '2') await inspectEvidence(io, investigation);
-    else if (action === '3') io.write(`${exampleQuestions.map((question) => `- ${question}`).join('\n')}\n`);
+    else if (action === '3') io.write(`${(caseId === 'ashcroft' ? exampleQuestions : Object.values(topicQuestions)).map((question) => `- ${question}`).join('\n')}\n`);
     else if (action === '4') running = await accuse(io, investigation);
     else if (action === '5') { io.write('Investigation closed.\n'); running = false; }
     else if (action === '6') await travel(io, investigation);

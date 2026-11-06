@@ -16,7 +16,7 @@ const response = (revision = 0, snapshot = state, result, sessionId = token) => 
     if (!snapshot.dialogue.conversations.length) snapshot.dialogue.conversations.push({ suspectId: 'guest', demeanor: 'neutral', options: [], recentTurns: [{ turnId: result.turnId, question: 'Where were you?', kind: 'answer', topic: result.topic, narration: result.narration, dialogue: result.dialogue }] });
     result.demeanor ??= 'neutral';
   }
-  return { ok: true, status: 200, json: async () => ({ ok: true, data: { sessionId, revision, state: snapshot, result }, error: null }) };
+  return { ok: true, status: 200, json: async () => ({ ok: true, data: { sessionId, revision, case: { id: 'ashcroft', mode: 'full' }, state: snapshot, result }, error: null }) };
 };
 const error = (code, status = 409) => ({ ok: false, status, json: async () => ({ ok: false, data: null, error: { code, message: 'PRIVATE_CANARY_DO_NOT_RENDER' } }) });
 const deferred = () => { let resolve; const promise = new Promise((done) => { resolve = done; }); return { promise, resolve }; };

@@ -1,5 +1,5 @@
 export const initialState = {
-  generation: 0, revision: 0, snapshot: null, screen: 'menu', scene: null, suspectId: null,
+  generation: 0, revision: 0, case: null, snapshot: null, screen: 'menu', scene: null, suspectId: null,
   transcripts: {}, inspected: {}, drafts: {}, pending: null, error: null, uncertain: false,
   expired: false, endedKnown: false, notice: '',
 };
@@ -24,7 +24,7 @@ export function investigationReducer(state, action) {
   if (action.type === 'BEGIN') return { ...state, generation: action.generation, pending: state.pending?.mutation && !action.mutation ? state.pending : { id: action.id, label: action.label, mutation: action.mutation }, error: null };
   if (action.generation !== undefined && action.generation !== state.generation) return state;
   switch (action.type) {
-    case 'SESSION': return { ...initialState, generation: state.generation, snapshot: action.state, revision: action.revision,
+    case 'SESSION': return { ...initialState, generation: state.generation, case: action.case, snapshot: action.state, revision: action.revision,
       screen: 'room', scene: action.state.currentLocationId, suspectId: null, pending: state.pending, transcripts: mergeHistory({}, action.state) };
     case 'DATA': {
       if (action.revision < state.revision || (state.endedKnown && action.state.lifecycle.status !== 'ended')) return state;

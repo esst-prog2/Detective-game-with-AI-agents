@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto';
-import { createInvestigation } from './game.js';
+import { caseRegistry } from './cases/registry.js';
 
 // Error messages are fixed at the HTTP boundary; never return exception details.
 export class ApiError extends Error {
@@ -10,7 +10,8 @@ export class ApiError extends Error {
 }
 
 export function createSessionStore({
-  investigationFactory = () => createInvestigation(),
+  registry = caseRegistry,
+  investigationFactory = (definition) => registry.createInvestigation(definition.id),
   clock = Date.now,
   generateId = () => randomBytes(32).toString('hex'),
   maxSessions = 100,
@@ -30,7 +31,9 @@ export function createSessionStore({
     }
   }
 
-  function create() {
+  function create(caseId = registry.defaultCaseId) {
+    const definition = registry.resolve(caseId);
+    if (!definition) throw new ApiError('invalid_request');
     prune();
     if (entries.size >= maxSessions) throw new ApiError('session_capacity');
     let id;
@@ -40,7 +43,12 @@ export function createSessionStore({
       if (!entries.has(candidate)) { id = candidate; break; }
     }
     if (!id) throw new ApiError('session_capacity');
-    const entry = { id, game: investigationFactory(), revision: 0, lastAccess: clock(), reservation: null };
+    const entry = { id, game: investigationFactory(definition), revision: 0, lastAccess: clock(), reservation: null };
+    Object.defineProperties(entry, {
+      caseId: { value: definition.id, enumerable: true },
+      caseVersion: { value: definition.version, enumerable: true },
+      case: { value: Object.freeze({ id: definition.id, mode: definition.mode }), enumerable: true },
+    });
     entries.set(id, entry);
     return entry;
   }
@@ -90,7 +98,7 @@ export function createSessionStore({
         result = committed.result;
       }
       entry.revision += 1;
-      return { sessionId: entry.id, revision: entry.revision, state, result };
+      return { sessionId: entry.id, revision: entry.revision, case: entry.case, state, result };
     } finally {
       if (candidate) game.discardDialogue(candidate);
       if (entry.reservation === reservation) entry.reservation = null;
@@ -99,5 +107,5 @@ export function createSessionStore({
     }
   }
 
-  return { create, get, touch, run };
+  return { create, get, touch, run, listCases: () => registry.list() };
 }

@@ -122,7 +122,7 @@ test('HTTP supports a complete offline investigation, cancellation and stable co
     assert.equal(rejected.text.includes(data.sessionId), false);
     assert.equal(rejected.body.error.session.revision, 12);
   }
-  assert.deepEqual((await call('GET', base)).body.data, { sessionId: data.sessionId, revision: 12, state: data.state });
+  assert.deepEqual((await call('GET', base)).body.data, { sessionId: data.sessionId, revision: 12, case: { id: 'ashcroft', mode: 'full' }, state: data.state });
 });
 
 test('HTTP incorrect accusations and independent sessions do not reveal the solution or share caches', async (t) => {
