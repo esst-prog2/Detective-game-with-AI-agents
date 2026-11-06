@@ -1,5 +1,5 @@
 import { normalizeQuestion, classifyQuestion, unsupportedQuestionText } from './question-classifier.js';
-import { initialPolicyState, currentPolicyCore, policyCoreAllowed, policyPlan, stagePolicy, normalizePolicyAlias } from './dialogue-policy.js';
+import { initialPolicyState, currentPolicyCore, policyCoreAllowed, policyPlan, stagePolicy, normalizePolicyAlias, resolveFacet, prioritizeFacetOptions } from './dialogue-policy.js';
 
 export const topicQuestions = {
   alibi: 'Where were you when the victim died?', relationship_with_victim: 'What was your relationship with the victim?',
@@ -41,7 +41,7 @@ export function dialogueOptions(catalog, state, suspectId) {
   }
   for (const c of catalog.comparisons.filter((c) => c.suspectId === suspectId && prerequisites(state, catalog, c))) options.push({ id: c.id, label: c.label, kind: 'contradiction', intent: 'compare_testimony', coreId: c.coreId });
   for (const e of catalog.evidence.filter((e) => e.suspectId === suspectId && state.inspected.has(e.evidenceId))) options.push({ id: e.id, label: e.label, kind: 'evidence', intent: 'present_evidence', coreId: e.coreId, evidenceId: e.evidenceId });
-  if (npc.lastCore) options.push({ id: 'clarify-last', label: 'What do you mean by that?', kind: 'clarify', intent: 'clarify', coreId: npc.lastCore });
+  if (npc.lastCore && !catalog.policy?.facets) options.push({ id: 'clarify-last', label: 'What do you mean by that?', kind: 'clarify', intent: 'clarify', coreId: npc.lastCore });
   options.push({ id: 'ask-hiding', label: 'Are you hiding something from me?', kind: 'social', intent: 'social_challenge', coreId: null });
   const topics = catalog.cores.filter((c) => c.suspectId === suspectId && c.requiredEvidenceId === undefined && (catalog.schemaVersion !== 2 || c.role === 'base'))
     .map((core) => catalog.schemaVersion === 2 ? currentPolicyCore(catalog, state, core) : core);
@@ -49,7 +49,8 @@ export function dialogueOptions(catalog, state, suspectId) {
   const answered = topics.filter((c) => npc.discussed.has(c.id));
   const rotated = answered.slice(npc.deliveries % (answered.length || 1)).concat(answered.slice(0, npc.deliveries % (answered.length || 1)));
   for (const c of [...unanswered, ...rotated]) options.push({ id: `ask-${c.topic.replaceAll('_', '-')}`, label: topicQuestions[c.topic], kind: npc.discussed.has(c.id) ? 'revisit' : 'topic', intent: npc.discussed.has(c.id) ? 'revisit' : 'topic', coreId: c.id });
-  return options.filter((o) => coreAllowed(catalog, state, suspectId, o.coreId, o.ruleId)).slice(0, 6);
+  const allowed = options.filter((o) => coreAllowed(catalog, state, suspectId, o.coreId, o.ruleId));
+  return catalog.policy?.facets ? prioritizeFacetOptions(catalog, state, suspectId, allowed) : allowed.slice(0, 6);
 }
 
 export function resolveDialogue(catalog, state, data, suspectId, input) {
@@ -67,9 +68,18 @@ export function resolveDialogue(catalog, state, data, suspectId, input) {
     return q.includes(e.id.replaceAll('-', ' ')) || (name && q.includes(name)) || (noun && q.split(/[\s?]+/).includes(noun));
   });
   if (named.length) {
+    if (catalog.policy?.facets) {
+      const facet = resolveFacet(catalog, state, suspectId, input.question);
+      if (facet?.ruleId) return facet;
+      if (facet) return { coreId: null, guidance: 'Please choose an available evidence question or ask one specific follow-up about my account.' };
+    }
     if (named.length !== 1 || !state.inspected.has(named[0].id)) return null;
     const e = catalog.evidence.find((item) => item.suspectId === suspectId && item.evidenceId === named[0].id);
     return e ? { intent: 'present_evidence', coreId: e.coreId, evidenceId: e.evidenceId } : null;
+  }
+  if (catalog.policy?.facets) {
+    const facet = resolveFacet(catalog, state, suspectId, input.question);
+    if (facet !== undefined) return facet;
   }
   if (/\b(what do you mean|clarify|explain that|mean by that)\b/.test(q)) return npc.lastCore ? { intent: 'clarify', coreId: npc.lastCore } : null;
   const comparisons = catalog.comparisons.filter((c) => c.suspectId === suspectId && c.triggers.some((trigger) => q.includes(trigger)));
@@ -89,7 +99,7 @@ export function resolveDialogue(catalog, state, data, suspectId, input) {
   return core ? { intent: 'topic', coreId: core.id, accusation, respectful: !accusation && /\b(please|thank you)\b/.test(q) } : null;
 }
 
-export const guidance = () => ({ kind: 'unsupported', topic: 'unsupported', text: unsupportedQuestionText, narration: null, dialogue: unsupportedQuestionText });
+export const guidance = (text = unsupportedQuestionText) => ({ kind: 'unsupported', topic: 'unsupported', text, narration: null, dialogue: text });
 
 export function prepareTurn(catalog, state, suspectId, plan, question) {
   const next = structuredClone(state);
@@ -157,7 +167,8 @@ export function publicDialogue(catalog, state, data, status, locationId) {
 // Trusted diagnostics for deterministic transition/atomicity tests, never serialized by adapters.
 export function dialogueDiagnostics(state) {
   return { turnId: state.turnId, ...(state.policy ? { policy: { caseId: state.policy.caseId, revision: state.policy.revision,
-    accounts: [...state.policy.accounts], receipts: [...state.policy.receipts.values()] } } : {}), npcs: [...state.npcs].map(([id, n]) => ({ id,
+    accounts: [...state.policy.accounts], receipts: [...state.policy.receipts.values()],
+    ...(state.policy.primaryTargets ? { primaryTargets: [...state.policy.primaryTargets] } : {}) } } : {}), npcs: [...state.npcs].map(([id, n]) => ({ id,
     emotion: Object.fromEntries(dimensions.map((d, i) => [d, n.emotion[i]])),
     discussed: [...n.discussed], presented: [...n.presented], repeats: [...n.repeats], cacheSize: n.cache.size,
     lastCore: n.lastCore, gestures: [...n.gestures], gestureFamilies: [...n.gestureFamilies], gestureCursor: n.gestureCursor, recentDeliveries: structuredClone(n.recentDeliveries), speechOnly: n.speechOnly, comparisonReacted: n.comparisonReacted, deliveries: n.deliveries, turns: n.turns, cache: [...n.cache],

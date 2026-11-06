@@ -1,6 +1,6 @@
 # Greyhaven staged implementation roadmap
 
-**Narrative baseline approved on 2026-11-06; execution status updated after separate milestone authorizations.** A is merged through PR #14 at3727a9b. B is implemented and verified on `feature/deterministic-disclosure`, approved for publication and awaiting PR review/manual merge; its specifications and B1-B4 checklist are in [deterministic-disclosure](../deterministic-disclosure/tasks.md). C-F remain proposed, unstarted and unapproved. The overarching planning checklist tracks preparation only; implementation tracking lives in the scoped changes. Narrative canon is unchanged.
+**Narrative baseline approved on 2026-11-06; execution status updated after separate milestone authorizations.** A is merged through PR #14 at3727a9b. B is merged through PR #15 at37d7b26; its specifications and B1-B4 checklist are in [deterministic-disclosure](../deterministic-disclosure/tasks.md). C is implemented and verified on `feature/statement-specific-clarification`, approved for publication and awaiting PR review/manual merge; its C1-C3 checklist is in [statement-specific-clarification](../statement-specific-clarification/tasks.md). D-F remain proposed, unstarted and unapproved. The overarching planning checklist tracks preparation only; implementation tracking lives in the scoped changes. Narrative canon is unchanged.
 
 ## Gates and critical path
 
@@ -34,7 +34,7 @@ Completed packages: **A1** definition/validator/default adapter; **A2** factory/
 
 **Acceptance/definition of done:** synthetic secret accessible through two reviewed branches, impossible through unsupported questions/model inventiveness/mood farming; no partial state installation; original case same fallback/delivery. Complete Node/security tests and source/privacy boundary review. Complexity **high**, technically riskiest,2-3 sessions.
 
-Implemented packages awaiting review: **B1** schema/gate validation; **B2** staged account selection; **B3** cache/commit revalidation; **B4** independent negative/alternate/security matrix. See [Milestone B report](../../../docs/deterministic-disclosure/implementation.md). Informational cores use the `disclosure` role; facet roles/primary targets remain C. No Greyhaven content is publicly registered.
+Merged packages: **B1** schema/gate validation; **B2** staged account selection; **B3** cache/commit revalidation; **B4** independent negative/alternate/security matrix. See [Milestone B report](../../../docs/deterministic-disclosure/implementation.md). Informational cores use the `disclosure` role; C separately adds facet roles/primary targets. No Greyhaven content is publicly registered.
 
 ## Milestone C — Contextual clarification
 
@@ -48,7 +48,7 @@ Implemented packages awaiting review: **B1** schema/gate validation; **B2** stag
 
 **Acceptance/definition of done:** specific questions resolve independently specified ambiguity; unknowns produce useful limits; no permission bypass; essential actions reachable within 6 and optional text retained. Node/client coverage and relevant Chromium mixed text/choice journey. Complexity **medium**,1-2 sessions.
 
-Future packages: **C1** target/facet schema and resolver; **C2** option priorities/overflow; **C3** informational-boundary and original clarification regression. All unstarted.
+Implemented packages awaiting review: **C1** target/facet schema and resolver; **C2** option priorities/overflow; **C3** informational-boundary and original clarification regression. See [Milestone C report](../../../docs/statement-specific-clarification/implementation.md). Commit, push and PR publication are authorized; manual merge remains pending and D-F remain unstarted.
 
 ## Milestone D — Greyhaven browser vertical slice
 

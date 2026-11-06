@@ -1,0 +1,164 @@
+✔ ordinary offline facets answer distinct source, identity and time details and preserve primary (22.918ms)
+✔ finite type/default maps to authored response: What do you mean by entered? (5.8183ms)
+✔ finite type/default maps to authored response: How sure are you about the coat? (4.911ms)
+✔ finite type/default maps to authored response: Are you certain? (4.9108ms)
+✔ finite type/default maps to authored response: How certain are you? (4.3672ms)
+✔ finite type/default maps to authored response: What do you mean by that? (4.774ms)
+✔ finite type/default maps to authored response: Who do you mean? (4.0563ms)
+✔ menu and normalized explicit text aliases select exact authored facet (4.9128ms)
+✔ no context gives safe non-mutating guidance: How do you know? (3.4486ms)
+✔ no context gives safe non-mutating guidance: Who do you mean? (3.2768ms)
+✔ no context gives safe non-mutating guidance: When did that happen? (3.6495ms)
+✔ no context gives safe non-mutating guidance: Are you certain? (3.2327ms)
+✔ no context gives safe non-mutating guidance: What do you mean by that? (2.9168ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: Explain your original pier account. (2.6876ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: How did you observe the visit? (2.7399ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: Who crossed the threshold? (2.7779ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: When did you see the crossing? (2.7075ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: Your earlier alibi? (2.7934ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: How do you know and when did that happen? (2.7908ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: Explain "I saw the visitor cross the store threshold". (2.8132ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: Explain test-keeper-alibi. (2.75ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: Explain foreign:keeper-revised-visit. (2.783ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: Explain the visitor statement. (2.6533ms)
+✖ guessed, foreign, compound or unseen reference grants no receipt: test-keeper-alibi (3.6034ms)
+✖ guessed, foreign, compound or unseen reference grants no receipt: foreign:test-keeper-alibi (2.8654ms)
+✖ guessed, foreign, compound or unseen reference grants no receipt: 'My alibi says something fabricated.' (2.8335ms)
+✔ speaker switch has independent committed context; wrong speaker alias never discloses (3.7788ms)
+✔ historical correction requires old receipt and never restores old account or old time detail (4.5575ms)
+✔ explicit historical facet focuses its received primary without restoring the current account (4.4069ms)
+✔ locked detail stays hidden under pressure and after repeated requests; label appears only after inspection (7.0471ms)
+✔ primary and historical references survive more than eight turns and diagnostics are detached (5.726ms)
+✔ facet schema rejects foreign owner (0.7485ms)
+✔ facet schema rejects foreign primary (0.5269ms)
+✔ facet schema rejects wrong version (0.5189ms)
+✔ facet schema rejects wrong response role (0.7053ms)
+✔ facet schema rejects foreign response (0.5222ms)
+✔ facet schema rejects unknown type (0.473ms)
+✔ facet schema rejects extra field (0.5146ms)
+✔ facet schema rejects unknown predicate (0.5809ms)
+✔ facet schema rejects foreign gate (0.4986ms)
+✔ facet schema rejects self gate cycle (0.5ms)
+✔ facet schema rejects duplicate id (0.6746ms)
+✔ facet schema rejects duplicate alias (0.5965ms)
+✔ facet schema rejects duplicate default (0.5111ms)
+✔ facet schema rejects duplicate type (0.4817ms)
+✔ facet schema rejects malformed history (0.4684ms)
+✔ facet schema rejects facet array null (0.3282ms)
+✔ facet schema rejects essential over budget (0.6513ms)
+✔ facet schema rejects invalid essential (0.7963ms)
+✔ facet/context transaction rolls back on discard: How do you know? (3.8323ms)
+✔ facet/context transaction rolls back on throw: How do you know? (3.8353ms)
+✔ facet/context transaction rolls back on async: How do you know? (3.8194ms)
+✔ facet/context transaction rolls back on reentrant: How do you know? (3.6858ms)
+✔ facet/context transaction rolls back on travel: How do you know? (3.7223ms)
+✔ facet/context transaction rolls back on inspection: How do you know? (3.6854ms)
+✔ facet/context transaction rolls back on end: How do you know? (3.6837ms)
+✔ facet/context transaction rolls back on discard: Explain your original pier account. (3.9833ms)
+✔ facet/context transaction rolls back on throw: Explain your original pier account. (3.9538ms)
+✔ facet/context transaction rolls back on async: Explain your original pier account. (3.6208ms)
+✔ facet/context transaction rolls back on reentrant: Explain your original pier account. (3.8473ms)
+✔ facet/context transaction rolls back on travel: Explain your original pier account. (3.7898ms)
+✔ facet/context transaction rolls back on inspection: Explain your original pier account. (3.2876ms)
+✔ facet/context transaction rolls back on end: Explain your original pier account. (3.6378ms)
+✔ uncommitted primary cannot authorize its own facet and discarded target stays absent (2.8328ms)
+✔ facet exact authority rejects model inventions on legacy (4.2423ms)
+✔ facet exact authority rejects model inventions on structured (3.9291ms)
+✔ facet exact authority rejects model inventions on direct-legacy (3.4716ms)
+✔ facet exact authority rejects model inventions on direct-structured (3.258ms)
+✔ legacy rejects facet old-account (3.8442ms)
+✔ legacy rejects facet other-speaker (3.1397ms)
+✔ legacy rejects facet locked-detail (3.4874ms)
+✔ structured rejects facet old-account (3.6235ms)
+✔ structured rejects facet other-speaker (4.1355ms)
+✔ structured rejects facet locked-detail (3.4853ms)
+✔ direct-legacy rejects facet old-account (3.233ms)
+✔ direct-legacy rejects facet other-speaker (3.2826ms)
+✔ direct-legacy rejects facet locked-detail (3.7072ms)
+✔ direct-structured rejects facet old-account (3.1611ms)
+✔ direct-structured rejects facet other-speaker (3.3201ms)
+✔ direct-structured rejects facet locked-detail (3.7657ms)
+✔ pending facet success after travel installs no private changes (4.0558ms)
+✔ pending facet success after inspection installs no private changes (3.7673ms)
+✔ pending facet success after end installs no private changes (3.3883ms)
+✔ pending facet success after cancel installs no private changes (4.1154ms)
+✔ pending facet failure after travel installs no private changes (3.5241ms)
+✔ pending facet failure after inspection installs no private changes (3.7599ms)
+✔ pending facet failure after end installs no private changes (3.4635ms)
+✔ pending facet failure after cancel installs no private changes (3.3785ms)
+✔ an old account without its committed receipt cannot be clarified after a legitimate revision (2.9239ms)
+✔ stale facet choice is rejected after primary changes; cache never authorizes obsolete account (4.0761ms)
+✔ actual 64-entry cache eviction preserves first receipts and historical clarification authority (17.6308ms)
+✔ unsupported detail types and case-specific patterns give honest guidance without guessing (3.0845ms)
+✔ provider failure commits only the eligible deterministic facet fallback (3.4166ms)
+✔ all four potential essentials validate and eligible essentials precede a facet under overflow (3.972ms)
+✔ real HTTP keeps target/account fields private and rejects client-supplied clarification state (59.9195ms)
+✔ overlapping IDs in concurrent sessions and cases never share clarification authority (9.1799ms)
+✔ six-choice overflow reserves essentials/facet, rotates optional actions, and preserves text access (19.7652ms)
+ℹ tests 97
+ℹ suites 0
+ℹ pass 94
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 520.5641
+
+✖ failing tests:
+
+test at test\clarification.test.js:71:95
+✖ guessed, foreign, compound or unseen reference grants no receipt: test-keeper-alibi (3.6034ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'answer'
+  - 'unsupported'
+
+      at TestContext.<anonymous> (file:///D:/Documents/university/MA/3rd%20semester/advanced%20programming/detective%20game/test/clarification.test.js:73:10)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'answer',
+    expected: 'unsupported',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test\clarification.test.js:71:95
+✖ guessed, foreign, compound or unseen reference grants no receipt: foreign:test-keeper-alibi (2.8654ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'answer'
+  - 'unsupported'
+
+      at TestContext.<anonymous> (file:///D:/Documents/university/MA/3rd%20semester/advanced%20programming/detective%20game/test/clarification.test.js:73:10)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'answer',
+    expected: 'unsupported',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test\clarification.test.js:71:95
+✖ guessed, foreign, compound or unseen reference grants no receipt: 'My alibi says something fabricated.' (2.8335ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'answer'
+  - 'unsupported'
+
+      at TestContext.<anonymous> (file:///D:/Documents/university/MA/3rd%20semester/advanced%20programming/detective%20game/test/clarification.test.js:73:10)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'answer',
+    expected: 'unsupported',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
