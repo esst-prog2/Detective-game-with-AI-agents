@@ -157,10 +157,10 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
     const token = Symbol('dialogue-candidate');
     pendingDialogue = token;
     const candidate = { generation: mutationGeneration, epoch: locationEpoch, suspectId, coreId: plan?.coreId, ruleId: plan?.ruleId,
-      policyRevision: dialogueState.policy?.revision, next: dialogueState, result: guidance(), project, controller: new AbortController() };
+      policyRevision: dialogueState.policy?.revision, next: dialogueState, result: guidance(plan?.guidance), project, controller: new AbortController() };
     candidates.set(token, candidate);
     try {
-      if (plan) {
+      if (plan && !plan.guidance) {
         const question = input.question?.trim() ?? dialogueOptions(catalog, dialogueState, suspectId).find((o) => o.id === input.choiceId).label;
         const turn = prepareTurn(catalog, dialogueState, suspectId, plan, question);
         let { text, narration } = turn.result;
@@ -168,7 +168,8 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
         // Historical injection retains stable strings per core, including gated evidence.
         const legacy = phraser && turn.core;
         const offer = !legacy && (catalog.schemaVersion === 2 || performer || turn.core?.deliveries || (!turn.core && catalog.profiles.find((p) => p.suspectId === suspectId)?.socialDeliveries)) ? offerPerformances(catalog, dialogueState, suspectId, plan, turn) : null;
-        const cacheKey = policyCacheKey(dialogueState, context, legacy ? `legacy:${turn.core.id}` : offer?.cacheKey ?? turn.cacheKey);
+        const poolKey = legacy ? `legacy:${turn.core.id}` : offer?.cacheKey ?? turn.cacheKey;
+        const cacheKey = policyCacheKey(dialogueState, context, catalog.policy?.facets ? `${plan.ruleId ?? 'base'}:${poolKey}` : poolKey);
         const cached = turn.npc.cache.get(cacheKey);
         if (offer) {
           let pair;

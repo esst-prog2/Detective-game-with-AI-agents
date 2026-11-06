@@ -1,0 +1,116 @@
+✔ ordinary offline facets answer distinct source, identity and time details and preserve primary (19.2826ms)
+✔ finite type/default maps to authored response: What do you mean by entered? (5.0808ms)
+✔ finite type/default maps to authored response: How sure are you about the coat? (4.0374ms)
+✔ finite type/default maps to authored response: Are you certain? (4.1374ms)
+✔ finite type/default maps to authored response: How certain are you? (3.8508ms)
+✔ finite type/default maps to authored response: What do you mean by that? (4.2103ms)
+✔ finite type/default maps to authored response: Who do you mean? (3.6501ms)
+✔ menu and normalized explicit text aliases select exact authored facet (4.4476ms)
+✔ no context gives safe non-mutating guidance: How do you know? (3.4428ms)
+✔ no context gives safe non-mutating guidance: Who do you mean? (3.0852ms)
+✔ no context gives safe non-mutating guidance: When did that happen? (3.4463ms)
+✔ no context gives safe non-mutating guidance: Are you certain? (3.0128ms)
+✔ no context gives safe non-mutating guidance: What do you mean by that? (2.7526ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: Explain your original pier account. (2.9291ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: How did you observe the visit? (2.7074ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: Who crossed the threshold? (2.7332ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: When did you see the crossing? (2.9869ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: Your earlier alibi? (2.799ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: How do you know and when did that happen? (2.7471ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: Explain "I saw the visitor cross the store threshold". (2.7869ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: Explain test-keeper-alibi. (2.547ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: Explain foreign:keeper-revised-visit. (2.7921ms)
+✔ guessed, foreign, compound or unseen reference grants no receipt: Explain the visitor statement. (2.8372ms)
+✔ speaker switch has independent committed context; wrong speaker alias never discloses (3.5325ms)
+✔ historical correction requires old receipt and never restores old account or old time detail (4.4906ms)
+✖ explicit historical facet focuses its received primary without restoring the current account (4.4644ms)
+✔ locked detail stays hidden under pressure and after repeated requests; label appears only after inspection (6.9049ms)
+✔ primary and historical references survive more than eight turns and diagnostics are detached (6.1305ms)
+✔ facet schema rejects foreign owner (0.7762ms)
+✔ facet schema rejects foreign primary (0.5014ms)
+✔ facet schema rejects wrong version (0.5468ms)
+✔ facet schema rejects wrong response role (0.5292ms)
+✔ facet schema rejects foreign response (0.6769ms)
+✔ facet schema rejects unknown type (0.4952ms)
+✔ facet schema rejects extra field (0.5072ms)
+✔ facet schema rejects unknown predicate (0.5378ms)
+✔ facet schema rejects foreign gate (0.5011ms)
+✔ facet schema rejects self gate cycle (0.5191ms)
+✔ facet schema rejects duplicate id (0.4271ms)
+✔ facet schema rejects duplicate alias (0.7718ms)
+✔ facet schema rejects duplicate default (0.509ms)
+✔ facet schema rejects duplicate type (0.4973ms)
+✔ facet schema rejects malformed history (0.5763ms)
+✔ facet schema rejects facet array null (0.3318ms)
+✔ facet schema rejects essential over budget (0.6514ms)
+✔ facet schema rejects invalid essential (0.776ms)
+✔ facet/context transaction rolls back on discard (4.3054ms)
+✔ facet/context transaction rolls back on throw (3.874ms)
+✔ facet/context transaction rolls back on async (3.5104ms)
+✔ facet/context transaction rolls back on reentrant (3.8292ms)
+✔ facet/context transaction rolls back on travel (3.8857ms)
+✔ facet/context transaction rolls back on inspection (3.6692ms)
+✔ facet/context transaction rolls back on end (3.6481ms)
+✔ uncommitted primary cannot authorize its own facet and discarded target stays absent (3.3552ms)
+✔ facet exact authority rejects model inventions on legacy (4.2357ms)
+✔ facet exact authority rejects model inventions on structured (4.255ms)
+✔ facet exact authority rejects model inventions on direct-legacy (3.8355ms)
+✔ facet exact authority rejects model inventions on direct-structured (3.8372ms)
+✔ legacy rejects facet old-account (3.6782ms)
+✔ legacy rejects facet other-speaker (3.5534ms)
+✔ legacy rejects facet locked-detail (3.7316ms)
+✔ structured rejects facet old-account (4.0549ms)
+✔ structured rejects facet other-speaker (3.7835ms)
+✔ structured rejects facet locked-detail (4.0652ms)
+✔ direct-legacy rejects facet old-account (3.5205ms)
+✔ direct-legacy rejects facet other-speaker (3.6892ms)
+✔ direct-legacy rejects facet locked-detail (3.3569ms)
+✔ direct-structured rejects facet old-account (3.8329ms)
+✔ direct-structured rejects facet other-speaker (3.5184ms)
+✔ direct-structured rejects facet locked-detail (3.5795ms)
+✔ pending facet success after travel installs no private changes (3.7301ms)
+✔ pending facet success after inspection installs no private changes (3.6279ms)
+✔ pending facet success after end installs no private changes (3.3492ms)
+✔ pending facet success after cancel installs no private changes (3.6096ms)
+✔ pending facet failure after travel installs no private changes (3.4016ms)
+✔ pending facet failure after inspection installs no private changes (3.5724ms)
+✔ pending facet failure after end installs no private changes (3.2443ms)
+✔ pending facet failure after cancel installs no private changes (3.551ms)
+✔ an old account without its committed receipt cannot be clarified after a legitimate revision (3.1431ms)
+✔ stale facet choice is rejected after primary changes; cache never authorizes obsolete account (4.5184ms)
+✔ actual 64-entry cache eviction preserves first receipts and historical clarification authority (19.3444ms)
+✔ unsupported detail types and case-specific patterns give honest guidance without guessing (3.1891ms)
+✔ provider failure commits only the eligible deterministic facet fallback (3.3922ms)
+✔ all four potential essentials validate and eligible essentials precede a facet under overflow (4.0156ms)
+✔ real HTTP keeps target/account fields private and rejects client-supplied clarification state (59.3984ms)
+✔ overlapping IDs in concurrent sessions and cases never share clarification authority (9.4416ms)
+✔ six-choice overflow reserves essentials/facet, rotates optional actions, and preserves text access (20.2345ms)
+ℹ tests 87
+ℹ suites 0
+ℹ pass 86
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 469.4523
+
+✖ failing tests:
+
+test at test\clarification.test.js:94:1
+✖ explicit historical facet focuses its received primary without restoring the current account (4.4644ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'keeper-revised-visit'
+  - 'test-keeper-alibi'
+
+      at TestContext.<anonymous> (file:///D:/Documents/university/MA/3rd%20semester/advanced%20programming/detective%20game/test/clarification.test.js:99:10)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'keeper-revised-visit',
+    expected: 'test-keeper-alibi',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
