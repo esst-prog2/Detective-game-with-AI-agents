@@ -216,7 +216,8 @@ for (let index = 0; index < stages.length; index += 1) {
   }
 }
 const packages = [...roadmap.matchAll(/\*\*([A-F][1-4])\*\*/g)].map((m) => m[1]);
-check(packages.length === 21 && new Set(packages).size === 21, '21 distinct unstarted implementation packages');
+check(packages.length === 21 && new Set(packages).size === 21, '21 distinct roadmap implementation packages');
+check(roadmap.includes('B is implemented and verified') && roadmap.includes('C-F remain proposed, unstarted and unapproved'), 'execution status preserves separate milestone approvals');
 check(!/- \[[x ]\]/.test(roadmap), 'roadmap is not a falsely completed implementation checklist');
 check(roadmap.includes('AC-HIDE') && roadmap.includes('AC-BELL'), 'both explicit narrative acceptance conditions');
 check(decisions.includes('N-01') && decisions.includes('physically unable to leave'), 'narrow concealment limitation recorded');
@@ -260,7 +261,7 @@ if (baselineIndex !== -1) {
 console.log(JSON.stringify({
   result: 'PASS', assertions, files: files.length, events: oracle.events.length,
   observations: oracle.observations.length, routes: 2, facets: 20, futureAcceptanceScenarios: 34,
-  milestones: 6, proposedImplementationPackages: 21, approvedNarrativeHash: narrativeHash,
+  milestones: 6, roadmapImplementationPackages: packages.length, approvedNarrativeHash: narrativeHash,
   pendingPlanningTasks: (tasks.match(/- \[ \]/g) ?? []).length, protectedFiles,
   scope: 'Documentation consistency only; no game tests or human fairness certification',
 }, null, 2));

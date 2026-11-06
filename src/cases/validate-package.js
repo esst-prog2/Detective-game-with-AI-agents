@@ -19,7 +19,7 @@ function plainData(value, ancestors = new Set()) {
   return valid;
 }
 
-// No policy, preview exception or executable loader is accepted in Milestone A.
+// Only catalog-owned, explicitly versioned disclosure is accepted; no preview or executable loader.
 // Errors are intentionally fixed; authoring diagnostics never cross HTTP.
 export function validateCasePackage(definition) {
   try {
@@ -37,7 +37,7 @@ export function validateCasePackage(definition) {
       || data.suspects.some((npc) => !['name', 'personality', 'relationshipToVictim', 'motive'].every((field) => text(npc[field]))
         || !Array.isArray(npc.privateFacts) || !npc.privateFacts.every(text) || !npc.permittedLie
         || TOPICS.some((topic) => !text(npc.responses?.[topic]?.approvedContent) || !text(npc.responses?.[topic]?.fallbackText)))) return ['Invalid case data.'];
-    if (catalog.schemaVersion !== undefined && catalog.schemaVersion !== 1) return ['Unsupported dialogue schema.'];
+    if (catalog.schemaVersion === 2 && catalog.policy?.caseId !== definition.id) return ['Invalid disclosure case identity.'];
     if (validateDialogueCatalog(catalog, data).length || validateAuthoredPerformances(catalog).length
       || catalog.profiles.length !== data.suspects.length
       || data.suspects.some((npc) => !catalog.profiles.some((p) => p.suspectId === npc.id))) return ['Invalid case dialogue.'];

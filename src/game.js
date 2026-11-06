@@ -5,6 +5,7 @@ import { validateAuthoredPerformances, offerPerformances, applyPerformance } fro
 import { validatePerformance } from './npc-performance.js';
 import { legacyPerformances } from './dialogue-phraser.js';
 import { explainAshcroft } from './mystery-conclusion.js';
+import { policyCacheKey } from './dialogue-policy.js';
 
 export function validateSpatialData(data) {
   const slug = (id) => typeof id === 'string' && id.length <= 64 && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id);
@@ -46,12 +47,15 @@ export function validateCase(data = caseData) {
   return errors;
 }
 
-export function createInvestigation({ data = caseData, phraser = null, dialogueCatalog = defaultDialogueCatalog(data), performer = null } = {}) {
+export function createInvestigation({ data = caseData, phraser = null, dialogueCatalog = defaultDialogueCatalog(data), performer = null, caseContext = null } = {}) {
   if (validateSpatialData(data).length) throw new Error('Invalid investigation configuration.');
   if (performer && phraser) throw new Error('Cannot combine dialogue adapters.');
   if (performer && typeof performer.perform !== 'function') throw new Error('Invalid performance adapter.');
   if (validateDialogueCatalog(dialogueCatalog, data).length) throw new Error('Invalid dialogue configuration.');
   if (validateAuthoredPerformances(dialogueCatalog).length) throw new Error('Invalid dialogue configuration.');
+  if (dialogueCatalog.schemaVersion === 2 && (!caseContext || caseContext.id !== dialogueCatalog.policy.caseId
+    || typeof caseContext.version !== 'string' || !caseContext.version)) throw new Error('Invalid disclosure case context.');
+  const context = caseContext ? Object.freeze({ id: caseContext.id, version: caseContext.version }) : null;
   const catalog = freezeCatalog(structuredClone(dialogueCatalog));
   let dialogueState = initialDialogueState(catalog);
   let mutationGeneration = 0;
@@ -129,7 +133,8 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
     if (status === 'ended') return endedError();
     if (!candidate || candidate.generation !== mutationGeneration || candidate.epoch !== locationEpoch
       || findSuspect(candidate.suspectId)?.locationId !== currentLocationId) return commandError('stale_response');
-    if (candidate.coreId && !coreAllowed(catalog, dialogueState, candidate.suspectId, candidate.coreId)) return commandError('stale_response');
+    if (candidate.policyRevision !== dialogueState.policy?.revision) return commandError('stale_response');
+    if (candidate.coreId && !coreAllowed(catalog, dialogueState, candidate.suspectId, candidate.coreId, candidate.ruleId)) return commandError('stale_response');
     return null;
   }
 
@@ -147,11 +152,12 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
       || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(input.choiceId))) return commandError('invalid_request');
     if (pendingDialogue) return commandError('session_busy');
     const resolved = resolveDialogue(catalog, dialogueState, data, suspectId, input);
-    const plan = resolved && coreAllowed(catalog, dialogueState, suspectId, resolved.coreId) ? resolved : null;
+    const plan = resolved && coreAllowed(catalog, dialogueState, suspectId, resolved.coreId, resolved.ruleId) ? resolved : null;
     if (!plan && Object.hasOwn(input, 'choiceId')) return commandError('dialogue_option_unavailable');
     const token = Symbol('dialogue-candidate');
     pendingDialogue = token;
-    const candidate = { generation: mutationGeneration, epoch: locationEpoch, suspectId, coreId: plan?.coreId, next: dialogueState, result: guidance(), project, controller: new AbortController() };
+    const candidate = { generation: mutationGeneration, epoch: locationEpoch, suspectId, coreId: plan?.coreId, ruleId: plan?.ruleId,
+      policyRevision: dialogueState.policy?.revision, next: dialogueState, result: guidance(), project, controller: new AbortController() };
     candidates.set(token, candidate);
     try {
       if (plan) {
@@ -161,8 +167,8 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
         let reused = false;
         // Historical injection retains stable strings per core, including gated evidence.
         const legacy = phraser && turn.core;
-        const offer = !legacy && (performer || turn.core?.deliveries || (!turn.core && catalog.profiles.find((p) => p.suspectId === suspectId)?.socialDeliveries)) ? offerPerformances(catalog, dialogueState, suspectId, plan, turn) : null;
-        const cacheKey = legacy ? `legacy:${turn.core.id}` : offer?.cacheKey ?? turn.cacheKey;
+        const offer = !legacy && (catalog.schemaVersion === 2 || performer || turn.core?.deliveries || (!turn.core && catalog.profiles.find((p) => p.suspectId === suspectId)?.socialDeliveries)) ? offerPerformances(catalog, dialogueState, suspectId, plan, turn) : null;
+        const cacheKey = policyCacheKey(dialogueState, context, legacy ? `legacy:${turn.core.id}` : offer?.cacheKey ?? turn.cacheKey);
         const cached = turn.npc.cache.get(cacheKey);
         if (offer) {
           let pair;

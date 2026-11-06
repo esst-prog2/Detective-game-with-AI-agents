@@ -1,0 +1,17 @@
+# Design
+
+## Scope and compatibility
+Implement roadmap B1-B4 on main merge3727a9b. V1 dispatch remains the legacy implementation. V2 uses the same six base subjects and reviewed whole performances; account and informational disclosure roles are excluded from broad topic enumeration. Facet roles/primary targets belong to C and are not accepted yet. Private known-fact/belief/concealment/motivation annotations are validated owned authoring records, never runtime inference or model context.
+
+## Finite policy
+V2 policy binds caseId, accounts, epistemics and rules. An account owns a speaker/topic through its initial base core and maps finite versions to owned cores. Rules contain a stable option ID, existing public kind, safe label, finite exact normalized aliases, a gate with at most two conjunctions of at most16 inspected/received references, and optional from/to transition. Evidence presentations also require their declared local evidence to be inspected. No mood predicate, scripts, text evaluation, automatic gossip or public rule/core/account payload.
+
+Validate complete base subjects, profile/statement ownership, exact policy/ref keys, finite bounds, local references, alias/option collisions, account graph reachability/acyclicity and gate reachability. Reject unsupported schema/roles and unknown/missing policy rather than silently using legacy authorization. Registered v2 packages must bind policy identity to case identity; trusted raw v2 construction requires matching case context. Original Ashcroft modules remain unchanged.
+
+## State and execution
+Private policy state holds caseId, revision, account-version map and one first-committed semantic receipt per core with speaker, account/version and turn. Historical receipts survive visible-history eviction and supersession. Topics select current account only. A locked core requires an eligible explicit rule; clarification/revisit cannot unlock it. Received informational cores may be revisited while their gate holds. Repeating a completed transition serves the current account without moving backwards or duplicating receipts/revision; normal conversational repeat behavior remains.
+
+Preparation reads committed prerequisites, clones the existing state and stages pointers/receipts together with emotion, text and cache. No staged receipt can satisfy its own request. Candidate checks revalidate the same core/rule predicate and policy revision before and after synchronous projection. V2 cache keys include trusted case/version, current policy identity and existing exact pool keys; provider context is unchanged. Any stale/aborted/travel/inspection/ending/discard/projection failure installs none of the dialogue changes. Inspection/travel that independently committed remain committed.
+
+## Verification and limits
+Independent synthetic literals distinguish a protective false alibi, mistaken belief, withheld known fact, two legitimate revision routes and informational disclosure. Exercise all missing prerequisites, wrong trigger/speaker/case, repeats, mood farming, exact-output attacks through both adapters, concurrency/projection/ending/cache/history eviction and offline operation. Retain every existing regression. No general semantic proof of editorial correctness or human fairness. Browser remains unchanged; policy actions use existing kinds and six-choice cap, with text aliases. C will add statement targeting/facets and richer discoverability, not a new authorization authority.

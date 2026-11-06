@@ -1,0 +1,121 @@
+✔ malformed legacy catalog arrays still return validation errors rather than throwing in schema dispatch (1.4335ms)
+✔ explicit v2 package validates without weakening six base subjects or changing public state shape (7.8508ms)
+✖ disclosure validation rejects explicit null transition (0.7509ms)
+✖ disclosure validation rejects explicit false transition (0.3768ms)
+✖ disclosure validation rejects explicit zero transition (0.3047ms)
+✖ disclosure validation rejects explicit empty transition (0.4969ms)
+✔ disclosure validation rejects missing policy (0.2913ms)
+✔ disclosure validation rejects policy without schema opt-in (0.2476ms)
+✔ disclosure validation rejects unknown schema (0.2191ms)
+✔ disclosure validation rejects future facet role (0.316ms)
+✔ disclosure validation rejects missing base subject (0.4873ms)
+✔ disclosure validation rejects unknown policy field (0.2249ms)
+✔ disclosure validation rejects foreign known-fact owner (0.2283ms)
+✔ disclosure validation rejects foreign basis (0.2361ms)
+✔ disclosure validation rejects foreign reference speaker (0.5218ms)
+✔ disclosure validation rejects foreign reference core (0.3453ms)
+✔ disclosure validation rejects foreign clue (0.318ms)
+✔ disclosure validation rejects unsupported mood predicate (0.3123ms)
+✔ disclosure validation rejects extra gate predicate (0.2887ms)
+✔ disclosure validation rejects extra reference fields (0.4487ms)
+✔ disclosure validation rejects empty conjunction (0.2907ms)
+✔ disclosure validation rejects too many alternatives (0.2877ms)
+✔ disclosure validation rejects too many references (0.345ms)
+✔ disclosure validation rejects missing initial version (0.3262ms)
+✔ disclosure validation rejects duplicate account (0.5201ms)
+✔ disclosure validation rejects foreign account speaker (0.3645ms)
+✔ disclosure validation rejects invalid from version (0.3607ms)
+✔ disclosure validation rejects wrong target core (0.552ms)
+✔ disclosure validation rejects self edge (0.407ms)
+✔ disclosure validation rejects unreachable from state (0.8008ms)
+✔ disclosure validation rejects duplicate normalized aliases (0.3848ms)
+✔ disclosure validation rejects reserved choice ID (0.2875ms)
+✔ disclosure validation rejects duplicate rule IDs (0.1783ms)
+✔ disclosure validation rejects unguarded extra core (0.319ms)
+✔ disclosure validation rejects future transition code (0.4727ms)
+✔ disclosure validation rejects self-receipt requirement (0.5014ms)
+✔ disclosure validation rejects mutually unreachable gates (0.376ms)
+✔ catalog policy identity must match registered case and mutable private annotations are snapshotted (1.2935ms)
+✔ multi-version account cycles are rejected and completed transition aliases select the latest version (7.1757ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 35
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 116.844
+
+✖ failing tests:
+
+test at test\disclosure-validation.test.js:59:55
+✖ disclosure validation rejects explicit null transition (0.7509ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be strictly unequal to: 0
+      at TestContext.<anonymous> (file:///D:/Documents/university/MA/3rd%20semester/advanced%20programming/detective%20game/test/disclosure-validation.test.js:61:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 0,
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }
+
+test at test\disclosure-validation.test.js:59:55
+✖ disclosure validation rejects explicit false transition (0.3768ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be strictly unequal to: 0
+      at TestContext.<anonymous> (file:///D:/Documents/university/MA/3rd%20semester/advanced%20programming/detective%20game/test/disclosure-validation.test.js:61:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 0,
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }
+
+test at test\disclosure-validation.test.js:59:55
+✖ disclosure validation rejects explicit zero transition (0.3047ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be strictly unequal to: 0
+      at TestContext.<anonymous> (file:///D:/Documents/university/MA/3rd%20semester/advanced%20programming/detective%20game/test/disclosure-validation.test.js:61:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 0,
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }
+
+test at test\disclosure-validation.test.js:59:55
+✖ disclosure validation rejects explicit empty transition (0.4969ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be strictly unequal to: 0
+      at TestContext.<anonymous> (file:///D:/Documents/university/MA/3rd%20semester/advanced%20programming/detective%20game/test/disclosure-validation.test.js:61:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1397:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:969:18)
+      at Test.postRun (node:internal/test_runner/test:1537:19)
+      at Test.run (node:internal/test_runner/test:1462:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 0,
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }

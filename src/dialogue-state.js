@@ -1,4 +1,5 @@
 import { normalizeQuestion, classifyQuestion, unsupportedQuestionText } from './question-classifier.js';
+import { initialPolicyState, currentPolicyCore, policyCoreAllowed, policyPlan, stagePolicy, normalizePolicyAlias } from './dialogue-policy.js';
 
 export const topicQuestions = {
   alibi: 'Where were you when the victim died?', relationship_with_victim: 'What was your relationship with the victim?',
@@ -9,17 +10,21 @@ const dimensions = ['cooperation', 'irritation', 'tension'];
 export const demeanor = (v) => v[1] >= 3 ? 'irritated' : v[2] >= 2 ? 'uneasy' : v[0] >= 3 ? 'receptive' : 'neutral';
 
 export function initialDialogueState(catalog) {
-  return { turnId: 0, inspected: new Set(), npcs: new Map(catalog.profiles.map((p) => [p.suspectId, {
+  return { turnId: 0, inspected: new Set(), ...(catalog.schemaVersion === 2 ? { policy: initialPolicyState(catalog) } : {}), npcs: new Map(catalog.profiles.map((p) => [p.suspectId, {
     emotion: [...p.baseline], turns: [], discussed: new Set(), presented: new Set(), repeats: new Map(), lastCore: null,
     gestures: [], gestureFamilies: [], gestureCursor: 0, recentDeliveries: [], speechOnly: 0, comparisonReacted: false, deliveries: 0, cache: new Map(),
   }])) };
 }
 
-const coreFor = (catalog, id, topic) => catalog.cores.find((c) => c.suspectId === id && c.topic === topic && c.requiredEvidenceId === undefined);
-export const coreAllowed = (catalog, state, suspectId, coreId) => {
+const coreFor = (catalog, state, id, topic) => {
+  const base = catalog.cores.find((c) => c.suspectId === id && c.topic === topic && c.requiredEvidenceId === undefined && (catalog.schemaVersion !== 2 || c.role === 'base'));
+  return base && catalog.schemaVersion === 2 ? currentPolicyCore(catalog, state, base) : base;
+};
+export const coreAllowed = (catalog, state, suspectId, coreId, ruleId) => {
   if (coreId === null) return true;
   const core = catalog.cores.find((c) => c.id === coreId && c.suspectId === suspectId);
-  return !!core && (core.requiredEvidenceId === undefined || state.inspected.has(core.requiredEvidenceId));
+  return !!core && (catalog.schemaVersion === 2 ? policyCoreAllowed(catalog, state, suspectId, coreId, ruleId)
+    : core.requiredEvidenceId === undefined || state.inspected.has(core.requiredEvidenceId));
 };
 const prerequisites = (state, catalog, comparison) => comparison.requires.every((id) => {
   const core = catalog.cores.find((c) => c.id === id);
@@ -30,16 +35,21 @@ export function dialogueOptions(catalog, state, suspectId) {
   const npc = state.npcs.get(suspectId);
   if (!npc) return [];
   const options = [];
+  if (catalog.schemaVersion === 2) for (const rule of catalog.policy.rules.filter((rule) => rule.suspectId === suspectId)) {
+    const plan = policyPlan(catalog, state, rule);
+    if (plan) options.push(plan);
+  }
   for (const c of catalog.comparisons.filter((c) => c.suspectId === suspectId && prerequisites(state, catalog, c))) options.push({ id: c.id, label: c.label, kind: 'contradiction', intent: 'compare_testimony', coreId: c.coreId });
   for (const e of catalog.evidence.filter((e) => e.suspectId === suspectId && state.inspected.has(e.evidenceId))) options.push({ id: e.id, label: e.label, kind: 'evidence', intent: 'present_evidence', coreId: e.coreId, evidenceId: e.evidenceId });
   if (npc.lastCore) options.push({ id: 'clarify-last', label: 'What do you mean by that?', kind: 'clarify', intent: 'clarify', coreId: npc.lastCore });
   options.push({ id: 'ask-hiding', label: 'Are you hiding something from me?', kind: 'social', intent: 'social_challenge', coreId: null });
-  const topics = catalog.cores.filter((c) => c.suspectId === suspectId && c.requiredEvidenceId === undefined);
+  const topics = catalog.cores.filter((c) => c.suspectId === suspectId && c.requiredEvidenceId === undefined && (catalog.schemaVersion !== 2 || c.role === 'base'))
+    .map((core) => catalog.schemaVersion === 2 ? currentPolicyCore(catalog, state, core) : core);
   const unanswered = topics.filter((c) => !npc.discussed.has(c.id)).sort((a, b) => (b.suggestionPriority ?? 0) - (a.suggestionPriority ?? 0));
   const answered = topics.filter((c) => npc.discussed.has(c.id));
   const rotated = answered.slice(npc.deliveries % (answered.length || 1)).concat(answered.slice(0, npc.deliveries % (answered.length || 1)));
   for (const c of [...unanswered, ...rotated]) options.push({ id: `ask-${c.topic.replaceAll('_', '-')}`, label: topicQuestions[c.topic], kind: npc.discussed.has(c.id) ? 'revisit' : 'topic', intent: npc.discussed.has(c.id) ? 'revisit' : 'topic', coreId: c.id });
-  return options.filter((o) => coreAllowed(catalog, state, suspectId, o.coreId)).slice(0, 6);
+  return options.filter((o) => coreAllowed(catalog, state, suspectId, o.coreId, o.ruleId)).slice(0, 6);
 }
 
 export function resolveDialogue(catalog, state, data, suspectId, input) {
@@ -47,6 +57,10 @@ export function resolveDialogue(catalog, state, data, suspectId, input) {
   if (!npc) return null;
   if (Object.hasOwn(input, 'choiceId')) return dialogueOptions(catalog, state, suspectId).find((o) => o.id === input.choiceId) ?? null;
   const q = normalizeQuestion(input.question);
+  if (catalog.schemaVersion === 2) {
+    const rule = catalog.policy.rules.find((rule) => rule.suspectId === suspectId && rule.aliases.some((alias) => normalizePolicyAlias(alias) === normalizePolicyAlias(input.question)));
+    if (rule) return policyPlan(catalog, state, rule);
+  }
   const named = data.evidence.filter((e) => {
     const name = normalizeQuestion(e.name);
     const noun = name.split(/\s+/).at(-1);
@@ -70,7 +84,7 @@ export function resolveDialogue(catalog, state, data, suspectId, input) {
   const topics = new Set(parts.map(classify).filter((s) => s !== 'unsupported'));
   if (topics.size > 1) return null;
   const topic = classify(q);
-  const core = coreFor(catalog, suspectId, topic);
+  const core = coreFor(catalog, state, suspectId, topic);
   if (accusation && (!core || !/\b(what|where|when|why|how|did you)\b/.test(q))) return { intent: 'social_challenge', coreId: null, accusation: true };
   return core ? { intent: 'topic', coreId: core.id, accusation, respectful: !accusation && /\b(please|thank you)\b/.test(q) } : null;
 }
@@ -111,6 +125,7 @@ export function prepareTurn(catalog, state, suspectId, plan, question) {
   if (plan.evidenceId) npc.presented.add(plan.evidenceId);
   npc.deliveries += 1;
   next.turnId += 1;
+  if (catalog.schemaVersion === 2) stagePolicy(catalog, next, plan, suspectId);
   const result = { kind: 'answer', topic: core?.topic ?? 'social', text: dialogue, cached: false, turnId: next.turnId, narration, dialogue, demeanor: mood };
   const record = { turnId: result.turnId, question, inputRole: 'player', intent: plan.intent,
     coreId: core?.id ?? null, presentedEvidenceId: plan.evidenceId ?? null,
@@ -141,7 +156,8 @@ export function publicDialogue(catalog, state, data, status, locationId) {
 
 // Trusted diagnostics for deterministic transition/atomicity tests, never serialized by adapters.
 export function dialogueDiagnostics(state) {
-  return { turnId: state.turnId, npcs: [...state.npcs].map(([id, n]) => ({ id,
+  return { turnId: state.turnId, ...(state.policy ? { policy: { caseId: state.policy.caseId, revision: state.policy.revision,
+    accounts: [...state.policy.accounts], receipts: [...state.policy.receipts.values()] } } : {}), npcs: [...state.npcs].map(([id, n]) => ({ id,
     emotion: Object.fromEntries(dimensions.map((d, i) => [d, n.emotion[i]])),
     discussed: [...n.discussed], presented: [...n.presented], repeats: [...n.repeats], cacheSize: n.cache.size,
     lastCore: n.lastCore, gestures: [...n.gestures], gestureFamilies: [...n.gestureFamilies], gestureCursor: n.gestureCursor, recentDeliveries: structuredClone(n.recentDeliveries), speechOnly: n.speechOnly, comparisonReacted: n.comparisonReacted, deliveries: n.deliveries, turns: n.turns, cache: [...n.cache],
