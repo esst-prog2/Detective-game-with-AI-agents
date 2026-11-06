@@ -1,5 +1,13 @@
 # Advanced-programming-project
 
+## Multi-case foundation (Milestone A)
+
+Ashcroft remains the only published case and the default. The start screen loads a safe case list; Greyhaven and synthetic isolation fixtures are not playable selections. Restart the API after updating, then reload the browser. The new client checks case identity before accepting a response, so it requires the updated API.
+
+CLI defaults and menus are preserved. Use `npm.cmd start -- --list-cases` to list available cases or `npm.cmd start -- --case ashcroft` to select explicitly. HTTP clients can still create with `{}`; alternatively send `{"caseId":"ashcroft"}` to `POST /api/investigations`. `GET /api/cases` lists public `id`, `title`, and `mode` only. Session responses add `data.case: {id,mode}` beside the unchanged nested state/results. Session commands cannot switch cases.
+
+[Milestone A contract, verification and remaining limits](docs/multi-case-foundation/implementation.md) records the private package boundary and test-only second-case proof. Relationship disclosure, contextual clarification and Greyhaven content remain later milestones.
+
 ## Mystery deduction milestone (2026-11-06)
 
 The current case now has a discoverable, explicitly uncertain cufflink connection. Inspect the silver cufflink in the study, then ask Alice whether she recognizes it using the contextual choice or a cufflink question. She remembers the distinctive design on Clara's dinner accessories, but cannot establish ownership, a witnessed drop, or how/when it reached the study. Generic evidence testimony and all original topic answers/fallbacks are unchanged. Alice's private debt annotation now accurately describes her concealed letter/library activity; her existing debt testimony is verbatim.

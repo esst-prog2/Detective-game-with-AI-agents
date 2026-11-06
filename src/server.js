@@ -2,13 +2,13 @@ import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { createInvestigationServer } from './http-api.js';
 import { createSessionStore } from './investigation-sessions.js';
-import { createInvestigation } from './game.js';
+import { caseRegistry } from './cases/registry.js';
 import { createConfiguredNPCPerformer } from './npc-performance.js';
 
 export async function startApi({ port = process.env.API_PORT ?? '3001', createPerformer = createConfiguredNPCPerformer } = {}) {
   if (!/^\d{1,5}$/.test(String(port)) || Number(port) < 1 || Number(port) > 65535) throw new Error('Invalid API port');
   const performer = await createPerformer();
-  const store = createSessionStore({ investigationFactory: () => createInvestigation({ performer }) });
+  const store = createSessionStore({ investigationFactory: (definition) => caseRegistry.createInvestigation(definition.id, { performer }) });
   const server = createInvestigationServer({ store });
   await new Promise((resolveListen, reject) => {
     server.once('error', reject);

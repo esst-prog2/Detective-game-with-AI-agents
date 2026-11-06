@@ -33,6 +33,7 @@ function fail(code) { throw new ApiError(code); }
 
 function route(path) {
   if (!path || !path.startsWith('/') || /[%?#\\]|\/\.|\/\//.test(path)) fail('invalid_route');
+  if (path === '/api/cases') return { action: 'cases', method: 'GET' };
   if (path === '/api/investigations') return { action: 'create', method: 'POST' };
   const match = /^\/api\/investigations\/([^/]+)(?:\/(questions|evidence\/inspect|accusations|travel))?$/.exec(path);
   if (!match) fail('route_not_found');
@@ -42,13 +43,16 @@ function route(path) {
 
 function validateBody(action, body) {
   const keys = {
-    create: [], questions: ['suspectId', Object.hasOwn(body ?? {}, 'choiceId') ? 'choiceId' : 'question', 'expectedRevision'],
+    create: Object.hasOwn(body ?? {}, 'caseId') ? ['caseId'] : [], questions: ['suspectId', Object.hasOwn(body ?? {}, 'choiceId') ? 'choiceId' : 'question', 'expectedRevision'],
     'evidence/inspect': ['evidenceId', 'expectedRevision'], accusations: ['suspectId', 'confirmed', 'expectedRevision'],
     travel: ['locationId', 'expectedRevision'],
   }[action];
   if (!body || Array.isArray(body) || typeof body !== 'object'
     || Object.keys(body).length !== keys.length || keys.some((key) => !Object.hasOwn(body, key))) fail('invalid_request');
-  if (action === 'create') return;
+  if (action === 'create') {
+    if (Object.hasOwn(body, 'caseId') && (typeof body.caseId !== 'string' || body.caseId.length > 64 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(body.caseId))) fail('invalid_request');
+    return;
+  }
   if (!Number.isSafeInteger(body.expectedRevision) || body.expectedRevision < 0) fail('invalid_request');
   const id = action === 'travel' ? body.locationId : action === 'evidence/inspect' ? body.evidenceId : body.suspectId;
   if (typeof id !== 'string' || id.length > 64 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)) fail('invalid_id');
@@ -150,15 +154,19 @@ export function createInvestigationServer({ store = createSessionStore(), bodyLi
         validateBody(target.action, body);
       } else if (req.headers['transfer-encoding'] || Number(req.headers['content-length'] ?? 0) !== 0) fail('invalid_request');
       if (req.aborted || res.destroyed) return; // Incomplete/disconnected input is not admitted.
+      if (target.action === 'cases') {
+        send(res, 200, { ok: true, data: { cases: store.listCases() }, error: null });
+        return;
+      }
       if (target.action === 'create') {
-        entry = store.create();
-        send(res, 201, { ok: true, data: { sessionId: entry.id, revision: 0, state: entry.game.getPublicView() }, error: null });
+        entry = store.create(body.caseId);
+        send(res, 201, { ok: true, data: { sessionId: entry.id, revision: 0, case: entry.case, state: entry.game.getPublicView() }, error: null });
         return;
       }
       entry = store.get(target.id);
       if (target.action === 'read') {
         store.touch(entry);
-        send(res, 200, { ok: true, data: { sessionId: entry.id, revision: entry.revision, state: entry.game.getPublicView() }, error: null });
+        send(res, 200, { ok: true, data: { sessionId: entry.id, revision: entry.revision, case: entry.case, state: entry.game.getPublicView() }, error: null });
         return;
       }
       const action = target.action;

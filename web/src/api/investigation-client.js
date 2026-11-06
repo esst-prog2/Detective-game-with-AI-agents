@@ -38,6 +38,7 @@ function dialogueView(value, suspects, evidence, locationId, ended) {
   return { inspectedEvidenceIds, conversations };
 }
 const identity = (value) => ({ id: slug(value.id), name: string(value.name) });
+const caseIdentity = (value) => ({ id: slug(value?.id), mode: enumeration(value?.mode, ['full']) });
 const dossier = (value) => ({ role: string(value.role), relationshipToVictim: string(value.relationshipToVictim), background: string(value.background),
   relationships: value.relationships.map((edge) => { if (!['family', 'social'].includes(edge.kind)) throw new Error('protocol'); return { targetSuspectId: string(edge.targetSuspectId), kind: edge.kind, label: string(edge.label) }; }) });
 export function publicState(value) {
@@ -95,9 +96,13 @@ export function createInvestigationClient({ emit, fetchImpl = globalThis.fetch, 
   let currentRoom = null;
   let roomGeneration = 0;
   let acceptedDialogue = null;
+  let selectedCase = null;
   const controllers = new Set();
 
   async function request(command, input = {}) {
+    if (command === 'create' && input.caseId !== undefined) {
+      try { slug(input.caseId); } catch { return false; }
+    }
     if (command === 'questions') {
       try {
         slug(input.suspectId);
@@ -113,6 +118,7 @@ export function createInvestigationClient({ emit, fetchImpl = globalThis.fetch, 
     if (command === 'create') generation += 1;
     const currentGeneration = generation;
     const currentCapability = capability;
+    const requestedCase = command === 'create' ? { id: input.caseId ?? 'ashcroft', mode: 'full' } : selectedCase;
     const requestedRoom = currentRoom;
     const requestedRoomGeneration = roomGeneration;
     const controller = new AbortController();
@@ -121,7 +127,7 @@ export function createInvestigationClient({ emit, fetchImpl = globalThis.fetch, 
     emit({ type: 'BEGIN', id, generation, mutation, label: command === 'create' ? 'Opening the caseâ€¦' : command === 'read' ? 'Refreshing the investigationâ€¦' : command === 'travel' ? 'Travelling through the manorâ€¦' : command === 'questions' ? 'Questioningâ€¦' : command === 'accusations' ? 'Recording your decisionâ€¦' : 'Examining the evidenceâ€¦' });
     try {
       let body;
-      if (command === 'create') body = {};
+      if (command === 'create') body = input.caseId === undefined ? {} : { caseId: input.caseId };
       if (command === 'questions') body = { suspectId: input.suspectId, ...(Object.hasOwn(input, 'choiceId') ? { choiceId: input.choiceId } : { question: input.question.trim() }), expectedRevision: revision };
       if (command === 'evidence/inspect') body = { evidenceId: input.evidenceId, expectedRevision: revision };
       if (command === 'accusations') body = { suspectId: input.suspectId, confirmed: input.confirmed, expectedRevision: revision };
@@ -144,6 +150,8 @@ export function createInvestigationClient({ emit, fetchImpl = globalThis.fetch, 
       const data = envelope.data;
       if (envelope.error !== null || !/^[a-f0-9]{64}$/.test(data?.sessionId) || !Number.isSafeInteger(data.revision) || data.revision < 0) throw new Error('protocol');
       if (command !== 'create' && data.sessionId !== capability) throw new Error('protocol');
+      const receivedCase = caseIdentity(data.case);
+      if (!requestedCase || receivedCase.id !== requestedCase.id || receivedCase.mode !== requestedCase.mode) throw new Error('protocol');
       const state = publicState(data.state);
       if (command !== 'create' && (data.revision < revision || (ended && state.lifecycle.status !== 'ended'))) return false;
       if (command === 'questions' && state.lifecycle.status !== 'ended' && (requestedRoomGeneration !== roomGeneration || requestedRoom !== state.currentLocationId)) {
@@ -159,13 +167,13 @@ export function createInvestigationClient({ emit, fetchImpl = globalThis.fetch, 
         const received = state.dialogue.conversations.find((item) => item.suspectId === input.suspectId)?.recentTurns.find((turn) => turn.turnId === result.turnId);
         if (!received || received.dialogue !== result.dialogue || received.narration !== result.narration || received.topic !== result.topic) throw new Error('protocol');
       }
-      if (command === 'create') { capability = data.sessionId; ended = false; }
+      if (command === 'create') { capability = data.sessionId; ended = false; selectedCase = Object.freeze(receivedCase); }
       revision = data.revision;
       if (command === 'create' || currentRoom !== state.currentLocationId) roomGeneration += 1;
       currentRoom = state.currentLocationId;
       ended = ended || state.lifecycle.status === 'ended';
       acceptedDialogue = state.dialogue;
-      emit({ type: command === 'create' ? 'SESSION' : 'DATA', id, generation, state, revision, result, command, input: body ?? input });
+      emit({ type: command === 'create' ? 'SESSION' : 'DATA', id, generation, case: receivedCase, state, revision, result, command, input: body ?? input });
       return true;
     } catch {
       if (currentGeneration === generation) emit({ type: 'FAIL', generation, code: 'connection', uncertain: command !== 'create',
@@ -179,7 +187,20 @@ export function createInvestigationClient({ emit, fetchImpl = globalThis.fetch, 
     }
   }
   return {
-    start: () => request('create'), refresh: () => request('read'),
+    async listCases() {
+      const controller = new AbortController();
+      controllers.add(controller);
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetchImpl('/api/cases', { method: 'GET', signal: controller.signal, cache: 'no-store' });
+        const envelope = await response.json();
+        if (!response.ok || envelope.ok !== true || envelope.error !== null || !Array.isArray(envelope.data?.cases)) throw new Error('protocol');
+        const cases = envelope.data.cases.map((item) => ({ ...caseIdentity(item), title: bounded(item.title, 200) }));
+        if (!cases.length || new Set(cases.map((item) => item.id)).size !== cases.length) throw new Error('protocol');
+        return cases;
+      } finally { clearTimeout(timer); controllers.delete(controller); }
+    },
+    start: (caseId) => request('create', { caseId }), refresh: () => request('read'),
     ask: (suspectId, question) => request('questions', { suspectId, question }),
     choose: (suspectId, choiceId) => request('questions', { suspectId, choiceId }),
     inspect: (evidenceId) => request('evidence/inspect', { evidenceId }),

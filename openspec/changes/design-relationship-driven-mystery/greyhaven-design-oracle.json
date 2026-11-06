@@ -1,0 +1,522 @@
+{
+  "status": "Approved narrative baseline for technical implementation planning on2026-11-06; not runtime data or production implementation authorization",
+  "clock": "ferry-office clock, fictional 17 October 2026",
+  "locations": [
+    "R",
+    "C",
+    "B",
+    "F",
+    "T"
+  ],
+  "clues": [
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6",
+    "G7",
+    "G8"
+  ],
+  "statements": [
+    "M0",
+    "M1",
+    "M2",
+    "M-S",
+    "O0",
+    "O1",
+    "O-S",
+    "I0",
+    "I-S",
+    "I-F",
+    "I-P",
+    "R0",
+    "R-F",
+    "R-H",
+    "R-D",
+    "J-B",
+    "J-P",
+    "J-C"
+  ],
+  "events": [
+    {
+      "id": "T01",
+      "publishedTime": "20:26-20:29",
+      "start": 1226,
+      "end": 1229
+    },
+    {
+      "id": "T02",
+      "publishedTime": "20:30",
+      "start": 1230,
+      "end": 1230
+    },
+    {
+      "id": "T03",
+      "publishedTime": "20:32-20:41",
+      "start": 1232,
+      "end": 1241
+    },
+    {
+      "id": "T04",
+      "publishedTime": "20:35-20:41",
+      "start": 1235,
+      "end": 1241
+    },
+    {
+      "id": "T05",
+      "publishedTime": "20:36",
+      "start": 1236,
+      "end": 1236
+    },
+    {
+      "id": "T06",
+      "publishedTime": "20:36-20:37",
+      "start": 1236,
+      "end": 1237
+    },
+    {
+      "id": "T07",
+      "publishedTime": "20:37",
+      "start": 1237,
+      "end": 1237
+    },
+    {
+      "id": "T08",
+      "publishedTime": "20:38",
+      "start": 1238,
+      "end": 1238
+    },
+    {
+      "id": "T09",
+      "publishedTime": "20:39",
+      "start": 1239,
+      "end": 1239
+    },
+    {
+      "id": "T10",
+      "publishedTime": "20:40",
+      "start": 1240,
+      "end": 1240
+    },
+    {
+      "id": "T11",
+      "publishedTime": "20:41",
+      "start": 1241,
+      "end": 1241
+    },
+    {
+      "id": "T12",
+      "publishedTime": "20:42",
+      "start": 1242,
+      "end": 1242
+    },
+    {
+      "id": "T13",
+      "publishedTime": "20:43",
+      "start": 1243,
+      "end": 1243
+    }
+  ],
+  "occupancyCriticalMinutes": {
+    "Adrian": [
+      [
+        1225,
+        1243,
+        "C"
+      ]
+    ],
+    "Mara": [
+      [
+        1225,
+        1235,
+        "R"
+      ],
+      [
+        1235,
+        1241,
+        "T"
+      ],
+      [
+        1241,
+        1243,
+        "R"
+      ]
+    ],
+    "Owen": [
+      [
+        1225,
+        1226,
+        "R"
+      ],
+      [
+        1226,
+        1229,
+        "C"
+      ],
+      [
+        1229,
+        1230,
+        "R"
+      ],
+      [
+        1230,
+        1231,
+        "travel:R-B"
+      ],
+      [
+        1231,
+        1241,
+        "B"
+      ],
+      [
+        1241,
+        1242,
+        "F"
+      ],
+      [
+        1242,
+        1243,
+        "travel:F-C"
+      ]
+    ],
+    "Iris": [
+      [
+        1225,
+        1230,
+        "R"
+      ],
+      [
+        1230,
+        1231,
+        "travel:R-T"
+      ],
+      [
+        1231,
+        1241,
+        "T"
+      ],
+      [
+        1241,
+        1243,
+        "R"
+      ]
+    ],
+    "Ruth": [
+      [
+        1225,
+        1237,
+        "R"
+      ],
+      [
+        1237,
+        1240,
+        "C"
+      ],
+      [
+        1240,
+        1241,
+        "T"
+      ],
+      [
+        1241,
+        1243,
+        "R"
+      ]
+    ],
+    "Jonah": [
+      [
+        1225,
+        1232,
+        "F"
+      ],
+      [
+        1232,
+        1242,
+        "F"
+      ],
+      [
+        1242,
+        1243,
+        "travel:F-C"
+      ]
+    ]
+  },
+  "routes": {
+    "A": {
+      "clues": [
+        "G3",
+        "G4",
+        "G5",
+        "G6"
+      ],
+      "statements": [
+        "O0",
+        "J-B",
+        "J-P",
+        "I0",
+        "I-S",
+        "I-F",
+        "R0",
+        "R-F"
+      ],
+      "omits": [
+        "M0",
+        "M1",
+        "M2",
+        "M-S",
+        "J-C",
+        "G1",
+        "G2",
+        "G7",
+        "G8"
+      ]
+    },
+    "B": {
+      "clues": [
+        "G1",
+        "G3",
+        "G4",
+        "G6"
+      ],
+      "statements": [
+        "O0",
+        "J-B",
+        "J-P",
+        "J-C",
+        "I0",
+        "M-S",
+        "R0",
+        "R-F"
+      ],
+      "omits": [
+        "I-S",
+        "I-F",
+        "M1",
+        "M2",
+        "O1",
+        "G2",
+        "G5",
+        "G7",
+        "G8"
+      ]
+    }
+  },
+  "gates": {
+    "M1": {
+      "all": [
+        "M0",
+        "O0",
+        "G3",
+        "J-B"
+      ],
+      "any": [
+        "I-S",
+        "J-C"
+      ],
+      "explicitPresentation": true
+    },
+    "M2": {
+      "all": [
+        "M1",
+        "G4",
+        "J-P"
+      ],
+      "any": [],
+      "explicitPresentation": true
+    },
+    "O1": {
+      "all": [
+        "O0",
+        "G4"
+      ],
+      "any": [
+        "G8",
+        "M1"
+      ],
+      "explicitPresentation": true
+    },
+    "I-F": {
+      "all": [
+        "I-S",
+        "G5"
+      ],
+      "any": [],
+      "explicitPresentation": true
+    },
+    "I-P": {
+      "all": [
+        "G7"
+      ],
+      "any": [],
+      "explicitPresentation": true
+    },
+    "R-F": {
+      "all": [
+        "G6"
+      ],
+      "any": [],
+      "explicitPresentation": true
+    }
+  },
+  "utterances": {
+    "O0": "I was working at the boathouse between the bells. Jonah was at the office hatch during the test. I saw him answer the telephone while I held the pressure lever, but I could not hear the caller. Adrian and I had words about work earlier; I left him standing at his desk.",
+    "M-S": "After the first bell and before the second, Ruth brought a grey folder into reception. I was beside the linen table and read forty-one and Bell original on its cover before she wrapped it in a dry cloth and put it on the lower cupboard shelf. I thought she was keeping archive papers dry.",
+    "J-C": "Adrian called the office on the direct chart-room house line while Owen was testing the pump. I answered at the hatch and checked the office clock: twenty thirty-six. He asked us to collect the archive box after his meeting and said the Bell original was still sealed on his desk. Near the end I heard him say, Come in, Ruth, and a voice I recognized as Ruth answer, I came for the original, Adrian. I wrote the collection instruction and the call interval in the watchbook. I did not see into the chart room.",
+    "R-F": "I collected that folder at our earlier tea visit, before the first bell. I put it in the cupboard later to keep it dry; I did not collect it during the interval between the bells.",
+    "I-F": "I walked to the glazed door. He looked up and raised a hand to me from the desk; the white band on the grey folder had a large forty-one on it. I returned to the sheltered bench. Later I saw Ruth's face under the porch lamp as she came through that door with a grey edge under her shawl. I did not read a number on what she carried. From the bench I could see the threshold, not the desk or the inner doorway behind the chart rack."
+  },
+  "call": {
+    "initiator": "Adrian",
+    "origin": "C",
+    "answerer": "Jonah",
+    "answerLocation": "F",
+    "start": 1236,
+    "end": 1237,
+    "medium": "fixed two-handset C-F house telephone; labeled at both ends",
+    "recorded": [
+      "minute interval",
+      "box collection instruction"
+    ],
+    "heard": [
+      "Adrian familiar voice",
+      "sealed-original statement",
+      "Come in, Ruth",
+      "I came for the original, Adrian"
+    ],
+    "notEstablished": [
+      "visual folder location",
+      "actual strike",
+      "precise death time",
+      "infallible identity"
+    ],
+    "publicSources": [
+      "G1",
+      "G3",
+      "J-C",
+      "O0"
+    ],
+    "precision": "Start/end minute labels; not exact-second half-open bounds. Ruth speaks near the end of the20:37 minute, before the20:38 strike."
+  },
+  "observations": [
+    {
+      "id": "S1",
+      "observer": "Mara",
+      "at": "R",
+      "subject": "Owen",
+      "subjectAt": "C",
+      "start": 1226,
+      "end": 1229,
+      "kind": "visual brief",
+      "source": "M2"
+    },
+    {
+      "id": "S2",
+      "observer": "Owen",
+      "at": "B",
+      "subject": "Jonah",
+      "subjectAt": "F",
+      "start": 1236,
+      "end": 1237,
+      "kind": "visual receiver pickup, no caller audio",
+      "source": "O0"
+    },
+    {
+      "id": "S3",
+      "observer": "Jonah",
+      "at": "F",
+      "subject": "Adrian",
+      "subjectAt": "C",
+      "start": 1236,
+      "end": 1237,
+      "kind": "telephone auditory",
+      "source": "J-C"
+    },
+    {
+      "id": "S4",
+      "observer": "Iris",
+      "at": "T",
+      "subject": "Adrian",
+      "subjectAt": "C",
+      "start": 1236,
+      "end": 1237,
+      "kind": "visual close door",
+      "source": "I-F"
+    },
+    {
+      "id": "S5",
+      "observer": "Iris",
+      "at": "T",
+      "subject": "Mara",
+      "subjectAt": "T",
+      "start": 1235,
+      "end": 1241,
+      "kind": "mutual company",
+      "source": "I0"
+    },
+    {
+      "id": "S6",
+      "observer": "Iris",
+      "at": "T",
+      "subject": "Ruth",
+      "subjectAt": "T",
+      "start": 1240,
+      "end": 1241,
+      "kind": "visual threshold",
+      "source": "I-S"
+    },
+    {
+      "id": "S7",
+      "observer": "Mara",
+      "at": "T",
+      "subject": "Ruth",
+      "subjectAt": "T",
+      "start": 1240,
+      "end": 1241,
+      "kind": "partial crossing, no doorway identification",
+      "source": null,
+      "release": "developer-only remembered crossing; not a route premise"
+    },
+    {
+      "id": "S8",
+      "observer": "Mara",
+      "at": "R",
+      "subject": "Ruth",
+      "subjectAt": "R",
+      "start": 1241,
+      "end": 1242,
+      "kind": "visual cover identification and shelving",
+      "source": "M-S"
+    },
+    {
+      "id": "S9",
+      "observer": "Owen",
+      "at": "C",
+      "subject": "Adrian",
+      "subjectAt": "C",
+      "start": 1243,
+      "end": 1244,
+      "kind": "joint discovery",
+      "source": "O-S"
+    }
+  ],
+  "publicTiming": {
+    "recorded": [
+      "20:30 signal",
+      "20:36-20:37 call interval",
+      "20:42 departure",
+      "20:32-20:41 test endpoints"
+    ],
+    "recalled": [
+      "Iris clock20:36",
+      "Ruth exit before second bell",
+      "Mara placement between bells"
+    ],
+    "developerOnly": [
+      "20:38 murder",
+      "20:39 removal",
+      "20:40 exit",
+      "20:41 placement"
+    ]
+  }
+}
