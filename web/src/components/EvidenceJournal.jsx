@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useInvestigation } from '../state/InvestigationProvider.jsx';
 import { evidenceFor, genericEvidence } from '../presentation/asset-manifest.js';
 import Artwork from './Artwork.jsx';
+import ReadingDialog from './ReadingDialog.jsx';
 export default function EvidenceJournal() {
   const { state, client, canAct, dispatch } = useInvestigation();
   const [selected, setSelected] = useState(null);
@@ -14,8 +15,9 @@ export default function EvidenceJournal() {
       return <article className="evidence-card" data-reviewed={selected === clue.id} key={clue.id}><div className="clue-top"><span className="catalog-number">EXHIBIT / 0{i + 1} · {room.name}</span><span className="clue-status">{received ? 'Inspected in this browser session' : inspected ? 'Inspected in this investigation; description not received here' : 'Available in ' + room.name}</span></div>
         <Artwork asset={evidenceFor(clue.id)} fallback={genericEvidence} decorative /><h2>{clue.name}</h2>
         {received ? <p className="evidence-description">{received.description}</p> : <p className="empty-description">Examine this clue in {room.name} to add its description to your notes.</p>}
-        <button className="ink-button" disabled={!received && !canAct} onClick={async () => { setSelected(clue.id); if (!received) { if (present) await client.inspect(clue.id); else await client.travel(room.id); } }}>{received ? 'Review observation' : present ? 'Inspect evidence' : 'Travel to ' + room.name} <span aria-hidden="true">→</span></button>
+        <button className="ink-button" disabled={!received && !canAct} onClick={async () => { if (received) setSelected(clue.id); else if (present) await client.inspect(clue.id); else await client.travel(room.id); }}>{received ? 'Review observation' : present ? 'Inspect evidence' : 'Travel to ' + room.name} <span aria-hidden="true">→</span></button>
       </article>;
     })}</div><button className="back-button" onClick={() => dispatch({ type: 'NAVIGATE', screen: state.endedKnown ? 'conclusion' : 'room' })}>← {state.endedKnown ? 'Case conclusion' : 'Return to current room'}</button>
+    {selected && state.inspected[selected] && <ReadingDialog title={'Observation — ' + state.inspected[selected].name} onClose={() => setSelected(null)}><p>{state.inspected[selected].description}</p></ReadingDialog>}
   </section>;
 }

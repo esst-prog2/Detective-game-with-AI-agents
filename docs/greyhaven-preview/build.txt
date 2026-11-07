@@ -1,0 +1,19 @@
+
+> detective-game-with-ai-agents@0.1.0 build:web
+> npm --prefix web run build
+
+
+> ashcroft-browser@0.1.0 build
+> vite build && node scripts/check-boundary.mjs
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 41 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.61 kB │ gzip:  0.37 kB
+dist/assets/index-BNf_lzT7.css   26.33 kB │ gzip:  6.38 kB
+dist/assets/index-BqQtoyi4.js   264.41 kB │ gzip: 81.03 kB
+
+✓ built in 115ms
+Built artifact privacy boundary passed; no source maps or forbidden server markers.

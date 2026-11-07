@@ -2,11 +2,17 @@
 
 ## Multi-case foundation (Milestone A)
 
-Ashcroft remains the only published case and the default. The start screen loads a safe case list; Greyhaven and synthetic isolation fixtures are not playable selections. Restart the API after updating, then reload the browser. The new client checks case identity before accepting a response, so it requires the updated API.
+Ashcroft remains the default full case. The start screen also offers the separately labeled Greyhaven repair-dispute preview. The complete Greyhaven mystery and synthetic isolation fixtures are not playable selections. Restart the API after updating, then reload the browser. The client checks case identity and mode before accepting a response, so it requires the updated API.
 
 CLI defaults and menus are preserved. Use `npm.cmd start -- --list-cases` to list available cases or `npm.cmd start -- --case ashcroft` to select explicitly. HTTP clients can still create with `{}`; alternatively send `{"caseId":"ashcroft"}` to `POST /api/investigations`. `GET /api/cases` lists public `id`, `title`, and `mode` only. Session responses add `data.case: {id,mode}` beside the unchanged nested state/results. Session commands cannot switch cases.
 
-[Milestone A contract, verification and remaining limits](docs/multi-case-foundation/implementation.md) records the private package boundary and test-only second-case proof. Relationship disclosure, contextual clarification and Greyhaven content remain later milestones.
+[Milestone A contract, verification and remaining limits](docs/multi-case-foundation/implementation.md) records the original package boundary and test-only second-case proof. Milestones B/C supply deterministic disclosure and contextual clarification; D now exercises them in the bounded preview below.
+
+## Greyhaven repair-dispute preview (Milestone D)
+
+Select **The Last Bell at Greyhaven — Repair Dispute Preview** on the browser start screen. Only Mara/Owen, reception/boathouse and two repair records are included. Inspect both boathouse records, hear Owen's account and use an available evidence question. Suggested choices and free text both work offline. The preview stays open after the explanation; it has no final murder accusation or verdict. Use its Ashcroft button to start a fresh original investigation with new notes.
+
+For the CLI, run `npm.cmd start -- --case greyhaven-preview`; `/choices` lists eligible questions. Reproduce the public engine/actual CLI journey with `node scripts/walkthrough-greyhaven-preview.js`. See the [implementation and narrative audit](docs/greyhaven-preview/implementation.md) and [human-playtest checklist](docs/greyhaven-preview/playtest.md). Full Greyhaven content and endings remain Milestones E/F, requiring separate approval.
 
 ## Mystery deduction milestone (2026-11-06)
 

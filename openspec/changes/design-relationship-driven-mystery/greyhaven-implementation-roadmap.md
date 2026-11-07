@@ -1,6 +1,6 @@
 # Greyhaven staged implementation roadmap
 
-**Narrative baseline approved on 2026-11-06; execution status updated after separate milestone authorizations.** A is merged through PR #14 at3727a9b. B is merged through PR #15 at37d7b26; its specifications and B1-B4 checklist are in [deterministic-disclosure](../deterministic-disclosure/tasks.md). C is implemented and verified on `feature/statement-specific-clarification`, approved for publication and awaiting PR review/manual merge; its C1-C3 checklist is in [statement-specific-clarification](../statement-specific-clarification/tasks.md). D-F remain proposed, unstarted and unapproved. The overarching planning checklist tracks preparation only; implementation tracking lives in the scoped changes. Narrative canon is unchanged.
+**Narrative baseline approved on 2026-11-06; execution status updated after separate milestone authorizations.** A is merged through PR #14 at3727a9b. B is merged through PR #15 at37d7b26; its specifications and B1-B4 checklist are in [deterministic-disclosure](../deterministic-disclosure/tasks.md). C is merged through PR #16 at2003b1b; its C1-C3 checklist is in [statement-specific-clarification](../statement-specific-clarification/tasks.md). D is implemented and verified on `feature/greyhaven-vertical-slice`, approved for commit, push and PR creation after final verification and user-confirmed manual playtesting; manual PR review/merge remain pending. E-F remain proposed, unstarted and unapproved. Its D1-D5 checklist is in [greyhaven-vertical-slice](../greyhaven-vertical-slice/tasks.md). The overarching planning checklist tracks preparation only; implementation tracking lives in the scoped changes. Narrative canon is unchanged.
 
 ## Gates and critical path
 
@@ -48,7 +48,7 @@ Merged packages: **B1** schema/gate validation; **B2** staged account selection;
 
 **Acceptance/definition of done:** specific questions resolve independently specified ambiguity; unknowns produce useful limits; no permission bypass; essential actions reachable within 6 and optional text retained. Node/client coverage and relevant Chromium mixed text/choice journey. Complexity **medium**,1-2 sessions.
 
-Implemented packages awaiting review: **C1** target/facet schema and resolver; **C2** option priorities/overflow; **C3** informational-boundary and original clarification regression. See [Milestone C report](../../../docs/statement-specific-clarification/implementation.md). Commit, push and PR publication are authorized; manual merge remains pending and D-F remain unstarted.
+Merged packages: **C1** target/facet schema and resolver; **C2** option priorities/overflow; **C3** informational-boundary and original clarification regression. See [Milestone C report](../../../docs/statement-specific-clarification/implementation.md). C was merged; D is separately authorized and E-F remain unstarted.
 
 ## Milestone D — Greyhaven browser vertical slice
 
@@ -62,7 +62,7 @@ Implemented packages awaiting review: **C1** target/facet schema and resolver; *
 
 **Acceptance/definition of done:** actual browser demonstrates relationship-motivated omission, evidence revision, clarification and readable contradictory accounts. No hidden solution/name-as-verdict leaks, false promise of full solvability or new plot facts. Complete Node, relevant Chromium, production/privacy build, manual keyboard/mobile review. Complexity **medium**,1-2 sessions. This is the practical honest demonstration stopping point.
 
-Future packages: **D1** approved subset authoring; **D2** preview mode/UI integration; **D3** deterministic browser/CLI/HTTP proof and review. All unstarted.
+Implemented packages awaiting review: **D1** approved subset authoring; **D2** preview mode/UI integration; **D3** deterministic browser/CLI/HTTP proof and review. See [Milestone D report](../../../docs/greyhaven-preview/implementation.md). Human playtesting remains pending; no commit, push, merge or archive is authorized.
 
 ## Milestone E — Complete approved Greyhaven content
 

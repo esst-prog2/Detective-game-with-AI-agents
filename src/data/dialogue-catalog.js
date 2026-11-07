@@ -86,17 +86,32 @@ const text = (s, max = 1200) => typeof s === 'string' && s.trim().length > 0 && 
 const vector = (v, baseline = false) => Array.isArray(v) && v.length === 3
   && v.every((n) => Number.isInteger(n) && n >= (baseline ? 0 : -4) && n <= 4);
 
-export function validateDialogueCatalog(catalog, data) {
+export function previewSubjects(profile, data) {
+  if (!profile || typeof profile !== 'object' || Object.keys(profile).length !== 1 || !Array.isArray(profile.subjects)
+    || profile.subjects.length !== data.suspects.length || profile.subjects.length > 64) return null;
+  const subjects = new Map();
+  for (const row of profile.subjects) {
+    if (!row || Object.keys(row).length !== 2 || !data.suspects.some((npc) => npc.id === row.suspectId) || subjects.has(row.suspectId)
+      || !Array.isArray(row.topics) || !row.topics.length || row.topics.length > TOPICS.length
+      || new Set(row.topics).size !== row.topics.length || ![...row.topics].every((topic) => TOPICS.includes(topic))) return null;
+    subjects.set(row.suspectId, row.topics);
+  }
+  return subjects;
+}
+
+export function validateDialogueCatalog(catalog, data, previewProfile = null) {
+  const subjects = previewProfile === null ? null : previewSubjects(previewProfile, data);
+  if (previewProfile !== null && (!subjects || catalog?.schemaVersion !== 2)) return ['Invalid preview subjects.'];
   if (catalog?.schemaVersion === 2) {
     const errors = validateDisclosurePolicy(catalog, data);
-    return errors.length ? errors : validateCatalogStructure(catalog, data);
+    return errors.length ? errors : validateCatalogStructure(catalog, data, subjects);
   }
   if ((catalog?.schemaVersion !== undefined && catalog.schemaVersion !== 1) || catalog?.policy !== undefined
     || (Array.isArray(catalog?.cores) && catalog.cores.some((core) => core?.role !== undefined))) return ['Unsupported dialogue schema.'];
   return validateCatalogStructure(catalog, data);
 }
 
-function validateCatalogStructure(catalog, data) {
+function validateCatalogStructure(catalog, data, subjects = null) {
   const errors = [];
   if (!catalog || !slug(catalog.version) || !['profiles', 'cores', 'evidence', 'comparisons'].every((key) => Array.isArray(catalog[key]))) return ['Invalid dialogue catalog.'];
   if (['profiles', 'cores', 'evidence', 'comparisons'].some((key) => catalog[key].some((v) => !v || typeof v !== 'object' || Array.isArray(v)))) return ['Invalid dialogue catalog record.'];
@@ -149,7 +164,7 @@ function validateCatalogStructure(catalog, data) {
     || c.requires.some((id) => !cores.has(id)) || !Array.isArray(c.triggers) || !c.triggers.length
     || c.triggers.some((trigger) => !text(trigger, 100))) errors.push('Invalid comparison prerequisites.');
   for (const p of profiles.values()) if (TOPICS.some((topic) => catalog.cores.filter((c) => c.suspectId === p.suspectId && c.topic === topic && c.requiredEvidenceId === undefined
-    && (catalog.schemaVersion !== 2 || c.role === 'base')).length !== 1)) errors.push('Incomplete dialogue topics.');
+    && (catalog.schemaVersion !== 2 || c.role === 'base')).length !== (subjects && !subjects.get(p.suspectId)?.includes(topic) ? 0 : 1))) errors.push('Incomplete dialogue topics.');
   return errors;
 }
 

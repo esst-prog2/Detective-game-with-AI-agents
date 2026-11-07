@@ -6,8 +6,8 @@ import { validateCasePackage } from '../src/cases/validate-package.js';
 import { secondCase } from '../test-support/second-case.js';
 import { createInvestigation } from '../src/game.js';
 
-test('production manifest publishes only Ashcroft; unavailable inputs never become loaders', () => {
-  assert.deepEqual(caseRegistry.list(), [{ id: 'ashcroft', title: 'The Ashcroft Manor Murder', mode: 'full' }]);
+test('production manifest keeps Ashcroft default and publishes the bounded preview; unavailable inputs never become loaders', () => {
+  assert.deepEqual(caseRegistry.list(), [{ id: 'ashcroft', title: 'The Ashcroft Manor Murder', mode: 'full' }, { id: 'greyhaven-preview', title: 'The Last Bell at Greyhaven — Repair Dispute Preview', mode: 'preview' }]);
   for (const id of ['greyhaven', 'test-harbor', '../data/case.js', 'C:\\case.js', '', null, 4, {}, '__proto__']) assert.equal(caseRegistry.resolve(id), null);
   assert.deepEqual(caseRegistry.createInvestigation().getPublicView(), createInvestigation().getPublicView());
 });

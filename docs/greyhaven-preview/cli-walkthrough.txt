@@ -1,0 +1,144 @@
+
+The Last Bell at Greyhaven — Repair Dispute Preview
+Adrian Vale has been found dead in the chart room. This preview covers the repair dispute in reception and the boathouse. Inspect the pump records, question Mara and Owen, and compare their accounts. The full murder investigation and final accusation are not included.
+Preview objective: inspect both boathouse records, question Mara and Owen, and use an available evidence question. This excerpt has no murder verdict. Continue exploring after the repair explanation.
+
+Current room: reception
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Final accusation unavailable in this preview
+5. Quit
+6. Travel to another room
+Choose an action: 1
+1. Mara Vale
+Choose a suspect: 1
+Ask Mara Vale (or /choices): Where were you?
+Mara Vale: Owen waited with me in reception between the two bells. He did not go in to Adrian after supper.
+
+Current room: reception
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Final accusation unavailable in this preview
+5. Quit
+6. Travel to another room
+Choose an action: 6
+1. reception
+2. the boathouse
+Choose a room: 2
+You are in the boathouse.
+
+Current room: the boathouse
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Final accusation unavailable in this preview
+5. Quit
+6. Travel to another room
+Choose an action: 1
+1. Owen Vale
+Choose a suspect: 1
+Ask Owen Vale (or /choices): Where were you?
+Owen Vale: I was working at the boathouse between the bells. Jonah was at the office hatch during the test. I saw him answer the telephone while I held the pressure lever, but I could not hear the caller. Adrian and I had words about work earlier; I left him standing at his desk.
+
+Current room: the boathouse
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Final accusation unavailable in this preview
+5. Quit
+6. Travel to another room
+Choose an action: 1
+1. Owen Vale
+Choose a suspect: 1
+Ask Owen Vale (or /choices): What work?
+*Owen pauses before answering.*
+Owen Vale: To be precise, The rescue launch's cooling pump. I held the test pressure at the bench while Jonah watched from the office hatch. Ask him what he saw; I am not asking you to take my word for all of it.
+
+Current room: the boathouse
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Final accusation unavailable in this preview
+5. Quit
+6. Travel to another room
+Choose an action: 2
+1. Pump pressure-test worksheet
+2. Repayment demand
+Choose evidence to inspect: 1
+Pump pressure-test worksheet: On the bench, a sheet initialed by Owen and Jonah records a pressure test from 20:32 to 20:41, pressure readings and red-primer work. A parts receipt dated 16 October references a £480 maintenance-fund payment. A before-supper note agrees a witnessed test during the evening departure period. The pump bench faces the ferry-office hatch. These records describe work and payment; they are not a tamper-proof alibi or identification of a stain.
+
+Current room: the boathouse
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Final accusation unavailable in this preview
+5. Quit
+6. Travel to another room
+Choose an action: 2
+1. Pump pressure-test worksheet
+2. Repayment demand
+Choose evidence to inspect: 2
+Repayment demand: In the tool tin is Adrian's folded note: “£480 from the maintenance fund is to be restored before tomorrow's handover. We discuss it 20:25.” It records a demand and deadline, not violent intent.
+
+Current room: the boathouse
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Final accusation unavailable in this preview
+5. Quit
+6. Travel to another room
+Choose an action: 1
+1. Owen Vale
+Choose a suspect: 1
+Ask Owen Vale (or /choices): /choices
+1. Ask Owen to explain the maintenance-fund payment and the argument.
+2. What do you mean by work?
+3. Where were you when the victim died?
+4. Are you hiding something from me?
+Choose a question: 1
+Owen Vale: I went in at about twenty twenty-six and left before the first bell. He wanted the four hundred and eighty pounds restored before the archive handover. I used the maintenance fund for the rescue pump without permission. I meant to replace it from invoices. Jonah watched the later test; that does not make taking the money right.
+
+Current room: the boathouse
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Final accusation unavailable in this preview
+5. Quit
+6. Travel to another room
+Choose an action: 1
+1. Owen Vale
+Choose a suspect: 1
+Ask Owen Vale (or /choices): Why hide a repair that helped someone?
+Owen Vale: To be precise, Because doing useful work did not give me permission to take entrusted money. I expected another lecture, and I kept digging the hole.
+
+Current room: the boathouse
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Final accusation unavailable in this preview
+5. Quit
+6. Travel to another room
+Choose an action: 4
+This preview has no final accusation. Continue investigating the repair dispute.
+
+Current room: the boathouse
+
+1. Question a suspect
+2. Inspect evidence
+3. Show example questions
+4. Final accusation unavailable in this preview
+5. Quit
+6. Travel to another room
+Choose an action: 5
+Investigation closed.

@@ -173,5 +173,5 @@ test('real revisioned HTTP actions exercise two-route disclosure without adding 
     assert.equal(ended.body.data.result.text, 'Incorrect. Test Visitor is innocent. The investigation is over.');
     assert.doesNotMatch(JSON.stringify(ended.body), /murdered|DISCLOSURE_PRIVATE_CANARY/);
   }
-  assert.deepEqual(caseRegistry.list(), [{ id: 'ashcroft', title: 'The Ashcroft Manor Murder', mode: 'full' }]);
+  assert.deepEqual(caseRegistry.list(), [{ id: 'ashcroft', title: 'The Ashcroft Manor Murder', mode: 'full' }, { id: 'greyhaven-preview', title: 'The Last Bell at Greyhaven — Repair Dispute Preview', mode: 'preview' }]);
 });

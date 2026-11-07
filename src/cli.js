@@ -31,7 +31,9 @@ export async function runCli(io, { game = null, caseId = 'ashcroft', listCases =
     return;
   }
   io.write(`\n${investigation.data.title}\n${investigation.data.victim.description}\n`);
-  io.write(`One of the ${caseId === 'ashcroft' ? 'three' : investigation.data.suspects.length} suspects is the murderer. Inspect evidence, ask questions, then make one final accusation.\n`);
+  const preview = investigation.getCaseMode?.() === 'preview';
+  io.write(preview ? 'Preview objective: inspect both boathouse records, question Mara and Owen, and use an available evidence question. This excerpt has no murder verdict. Continue exploring after the repair explanation.\n'
+    : `One of the ${caseId === 'ashcroft' ? 'three' : investigation.data.suspects.length} suspects is the murderer. Inspect evidence, ask questions, then make one final accusation.\n`);
   let running = true;
   while (running) {
     const currentLifecycle = investigation.getLifecycle();
@@ -41,12 +43,12 @@ export async function runCli(io, { game = null, caseId = 'ashcroft', listCases =
     }
     const view = investigation.getPublicView();
     io.write(`\nCurrent room: ${view.rooms.find((room) => room.id === view.currentLocationId).name}\n`);
-    io.write('\n1. Question a suspect\n2. Inspect evidence\n3. Show example questions\n4. Make an accusation\n5. Quit\n6. Travel to another room\n');
+    io.write(`\n1. Question a suspect\n2. Inspect evidence\n3. Show example questions\n${preview ? '4. Final accusation unavailable in this preview' : '4. Make an accusation'}\n5. Quit\n6. Travel to another room\n`);
     const action = (await io.ask('Choose an action: ')).trim();
     if (action === '1') await questionSuspect(io, investigation);
     else if (action === '2') await inspectEvidence(io, investigation);
-    else if (action === '3') io.write(`${(caseId === 'ashcroft' ? exampleQuestions : Object.values(topicQuestions)).map((question) => `- ${question}`).join('\n')}\n`);
-    else if (action === '4') running = await accuse(io, investigation);
+    else if (action === '3') io.write(`${(preview ? view.dialogue.conversations.flatMap((conversation) => conversation.options.map((option) => option.label)) : caseId === 'ashcroft' ? exampleQuestions : Object.values(topicQuestions)).map((question) => `- ${question}`).join('\n')}\n`);
+    else if (action === '4') { if (preview) io.write(`${investigation.resolveAccusation(null, true).text}\n`); else running = await accuse(io, investigation); }
     else if (action === '5') { io.write('Investigation closed.\n'); running = false; }
     else if (action === '6') await travel(io, investigation);
     else io.write('Please choose a number from 1 to 6.\n');

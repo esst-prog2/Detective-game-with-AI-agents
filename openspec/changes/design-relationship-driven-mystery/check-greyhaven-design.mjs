@@ -217,7 +217,7 @@ for (let index = 0; index < stages.length; index += 1) {
 }
 const packages = [...roadmap.matchAll(/\*\*([A-F][1-4])\*\*/g)].map((m) => m[1]);
 check(packages.length === 21 && new Set(packages).size === 21, '21 distinct roadmap implementation packages');
-check(roadmap.includes('B is merged through PR #15') && roadmap.includes('C is implemented and verified') && roadmap.includes('D-F remain proposed, unstarted and unapproved'), 'execution status preserves separate milestone approvals');
+check(roadmap.includes('C is merged through PR #16') && roadmap.includes('D is implemented and verified') && roadmap.includes('E-F remain proposed, unstarted and unapproved'), 'execution status preserves separate milestone approvals');
 check(!/- \[[x ]\]/.test(roadmap), 'roadmap is not a falsely completed implementation checklist');
 check(roadmap.includes('AC-HIDE') && roadmap.includes('AC-BELL'), 'both explicit narrative acceptance conditions');
 check(decisions.includes('N-01') && decisions.includes('physically unable to leave'), 'narrow concealment limitation recorded');

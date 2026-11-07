@@ -51,7 +51,9 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
   if (validateSpatialData(data).length) throw new Error('Invalid investigation configuration.');
   if (performer && phraser) throw new Error('Cannot combine dialogue adapters.');
   if (performer && typeof performer.perform !== 'function') throw new Error('Invalid performance adapter.');
-  if (validateDialogueCatalog(dialogueCatalog, data).length) throw new Error('Invalid dialogue configuration.');
+  const mode = caseContext?.mode ?? 'full';
+  if (!['full', 'preview'].includes(mode) || (mode === 'preview' && (!caseContext.previewProfile || Object.hasOwn(data, 'murdererId')))
+    || validateDialogueCatalog(dialogueCatalog, data, mode === 'preview' ? caseContext.previewProfile : null).length) throw new Error('Invalid dialogue configuration.');
   if (validateAuthoredPerformances(dialogueCatalog).length) throw new Error('Invalid dialogue configuration.');
   if (dialogueCatalog.schemaVersion === 2 && (!caseContext || caseContext.id !== dialogueCatalog.policy.caseId
     || typeof caseContext.version !== 'string' || !caseContext.version)) throw new Error('Invalid disclosure case context.');
@@ -279,6 +281,7 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
   }
 
   function resolveAccusation(suspectId, confirmed) {
+    if (mode === 'preview') return rejected('accusation_unavailable', 'This preview has no final accusation. Continue investigating the repair dispute.');
     if (status === 'ended') return { ...endedError(), ended: true, result: 'rejected' };
     if (confirmed !== true) { invalidateDialogue(); return { ended: false, result: 'cancelled', text: 'The accusation was cancelled. Continue investigating.' }; }
     const suspect = findSuspect(suspectId);
@@ -298,7 +301,7 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
 
   // data, findSuspect and inspectEvidence remain trusted internal APIs for CLI compatibility.
   return {
-    data, findSuspect, askSuspect, listEvidence, inspectEvidence, resolveAccusation,
+    data, findSuspect, askSuspect, listEvidence, inspectEvidence, resolveAccusation, getCaseMode: () => mode,
     getPublicView, getPublicSuspect, inspectPublicEvidence, getLifecycle,
     travelTo, getLocationContext,
     interact, prepareDialogue, commitDialogue, discardDialogue,

@@ -1,6 +1,6 @@
 import { TOPICS } from '../data/case.js';
 import { validateSpatialData } from '../game.js';
-import { validateDialogueCatalog, freezeCatalog } from '../data/dialogue-catalog.js';
+import { validateDialogueCatalog, freezeCatalog, previewSubjects } from '../data/dialogue-catalog.js';
 import { validateAuthoredPerformances } from '../authored-performances.js';
 
 export const isCaseId = (id) => typeof id === 'string' && id.length <= 64 && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id);
@@ -19,26 +19,31 @@ function plainData(value, ancestors = new Set()) {
   return valid;
 }
 
-// Only catalog-owned, explicitly versioned disclosure is accepted; no preview or executable loader.
+// Preview incompleteness is declared explicitly; no executable loader or validation bypass.
 // Errors are intentionally fixed; authoring diagnostics never cross HTTP.
 export function validateCasePackage(definition) {
   try {
-    if (!plainData(definition) || !definition || Object.keys(definition).some((key) => !['id', 'version', 'mode', 'publicMetadata', 'data', 'catalog', 'solution', 'privateCanon'].includes(key))
-      || !isCaseId(definition.id) || !isCaseId(definition.version) || definition.mode !== 'full'
+    if (!plainData(definition) || !definition || Object.keys(definition).some((key) => !['id', 'version', 'mode', 'publicMetadata', 'data', 'catalog', 'solution', 'privateCanon', 'previewProfile'].includes(key))
+      || !isCaseId(definition.id) || !isCaseId(definition.version) || !['full', 'preview'].includes(definition.mode)
       || !keysAre(definition.publicMetadata, ['id', 'title', 'mode'])
-      || definition.publicMetadata.id !== definition.id || definition.publicMetadata.mode !== 'full'
-      || !text(definition.publicMetadata.title) || [...definition.publicMetadata.title].length > 200
-      || !keysAre(definition.solution, ['murdererId'])) return ['Invalid case package.'];
+      || definition.publicMetadata.id !== definition.id || definition.publicMetadata.mode !== definition.mode
+      || !text(definition.publicMetadata.title) || [...definition.publicMetadata.title].length > 200) return ['Invalid case package.'];
     const { data, catalog, solution } = definition;
+    const preview = definition.mode === 'preview';
+    const subjects = preview ? previewSubjects(definition.previewProfile, data) : null;
+    if (preview ? !subjects || Object.hasOwn(definition, 'solution') || Object.hasOwn(definition, 'privateCanon')
+      || Object.keys(data).some((key) => !['title', 'victim', 'rooms', 'locations', 'initialLocationId', 'suspects', 'evidence'].includes(key))
+      || data.suspects.some((npc) => Object.keys(npc.responses ?? {}).some((topic) => !subjects.get(npc.id)?.includes(topic)))
+      : Object.hasOwn(definition, 'previewProfile') || !keysAre(solution, ['murdererId'])
+        || !data.suspects.some(({ id }) => id === solution.murdererId) || data.murdererId !== solution.murdererId) return ['Invalid case profile.'];
     if (validateSpatialData(data).length || !text(data.title) || data.title !== definition.publicMetadata.title
       || !text(data.victim?.name) || !text(data.victim?.description) || !data.suspects.length
-      || !data.suspects.some(({ id }) => id === solution.murdererId) || data.murdererId !== solution.murdererId
       || data.evidence.some((item) => !text(item.name) || !text(item.description))
       || data.suspects.some((npc) => !['name', 'personality', 'relationshipToVictim', 'motive'].every((field) => text(npc[field]))
         || !Array.isArray(npc.privateFacts) || !npc.privateFacts.every(text) || !npc.permittedLie
-        || TOPICS.some((topic) => !text(npc.responses?.[topic]?.approvedContent) || !text(npc.responses?.[topic]?.fallbackText)))) return ['Invalid case data.'];
+        || (subjects?.get(npc.id) ?? TOPICS).some((topic) => !text(npc.responses?.[topic]?.approvedContent) || !text(npc.responses?.[topic]?.fallbackText)))) return ['Invalid case data.'];
     if (catalog.schemaVersion === 2 && catalog.policy?.caseId !== definition.id) return ['Invalid disclosure case identity.'];
-    if (validateDialogueCatalog(catalog, data).length || validateAuthoredPerformances(catalog).length
+    if (validateDialogueCatalog(catalog, data, preview ? definition.previewProfile : null).length || validateAuthoredPerformances(catalog).length
       || catalog.profiles.length !== data.suspects.length
       || data.suspects.some((npc) => !catalog.profiles.some((p) => p.suspectId === npc.id))) return ['Invalid case dialogue.'];
     // The raw engine's historical Ashcroft ending guard must not attach to another package.

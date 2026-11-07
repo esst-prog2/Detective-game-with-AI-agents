@@ -22,7 +22,7 @@ test('manifest client validates and projects safe metadata without starting a se
   assert.deepEqual(await application.client.listCases(), registry.list());
   assert.equal(calls[0][0], '/api/cases'); assert.equal(calls[0][1].method, 'GET');
   assert.equal(application.state.snapshot, null);
-  for (const cases of [[], [{ id: '../case', title: 'Bad', mode: 'full' }], [{ id: 'bad', title: '', mode: 'full' }], [{ id: 'bad', title: 'Bad', mode: 'preview' }], [...caseRegistry.list(), ...caseRegistry.list()]]) {
+  for (const cases of [[], [{ id: '../case', title: 'Bad', mode: 'full' }], [{ id: 'bad', title: '', mode: 'full' }], [{ id: 'bad', title: 'Bad', mode: 'unsupported' }], [...caseRegistry.list(), ...caseRegistry.list()]]) {
     await assert.rejects(app(async () => response({ cases })).client.listCases());
   }
 });
