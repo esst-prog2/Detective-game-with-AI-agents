@@ -1,16 +1,16 @@
 import { test, expect } from '@playwright/test';
 
-test('public manifest offers only Ashcroft and explicit selection keeps the offline experience', async ({ page }) => {
+test('public manifest offers Ashcroft and preview and explicit selection keeps the offline experience', async ({ page }) => {
   const creations = [];
   page.on('request', (request) => { if (request.method() === 'POST' && request.url().endsWith('/api/investigations')) creations.push(request.postDataJSON()); });
   await page.goto('/');
   const selector = page.getByRole('combobox', { name: 'Case', exact: true });
   await expect(selector).toBeVisible();
-  await expect(selector.locator('option')).toHaveCount(1);
+  await expect(selector.locator('option')).toHaveCount(2);
   await expect(selector).toHaveValue('ashcroft');
-  await expect(selector.locator('option')).toHaveText('The Ashcroft Manor Murder');
+  await expect(selector.locator('option')).toHaveText(['The Ashcroft Manor Murder', 'The Last Bell at Greyhaven — Repair Dispute Preview']);
   const manifest = await page.request.get('/api/cases');
-  expect(await manifest.json()).toEqual({ ok: true, data: { cases: [{ id: 'ashcroft', title: 'The Ashcroft Manor Murder', mode: 'full' }] }, error: null });
+  expect(await manifest.json()).toEqual({ ok: true, data: { cases: [{ id: 'ashcroft', title: 'The Ashcroft Manor Murder', mode: 'full' }, { id: 'greyhaven-preview', title: 'The Last Bell at Greyhaven — Repair Dispute Preview', mode: 'preview' }] }, error: null });
   await page.getByRole('button', { name: 'Start investigation' }).click();
   await expect(page.getByRole('heading', { name: 'the study', exact: true })).toBeVisible();
   expect(creations).toEqual([{ caseId: 'ashcroft' }]);

@@ -1,0 +1,103 @@
+
+> detective-game-with-ai-agents@0.1.0 test:web
+> npm --prefix web run test:e2e
+
+
+> ashcroft-browser@0.1.0 test:e2e
+> playwright test
+
+npm.cmd : [WebServer] (node:30132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+At line:2 char:50
++ ... OLATED='1'; npm.cmd run test:web *> "$env:TEMP\milestone-d-final-chro ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([WebServer] (no... env being set.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:9296) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 62 tests using 1 worker
+
+(node:31484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [desktop] › e2e\case-selection.spec.js:3:1 › public manifest offers Ashcroft and preview and explicit selection keeps the offline experience (1.2s)
+  ok  2 [desktop] › e2e\case-selection.spec.js:23:1 › manifest failure is recoverable and unavailable selection never installs a session (560ms)
+  ok  3 [desktop] › e2e\case-selection.spec.js:42:1 › mismatched session metadata is rejected before gameplay is installed (476ms)
+  ok  4 [desktop] › e2e\clarification.spec.js:19:1 › contextual menu and text clarify revised testimony without exposing private targets (1.5s)
+  ok  5 [desktop] › e2e\game.spec.js:34:1 › complete real offline room investigation, cancellation, both verdicts and local reset (2.5s)
+  ok  6 [desktop] › e2e\game.spec.js:87:51 › lost accusation reply permits Escape without replay and reconciles the real ending (670ms)
+  ok  7 [desktop] › e2e\game.spec.js:87:51 › lost accusation reply permits Close dialog without replay and reconciles the real ending (676ms)
+  ok  8 [desktop] › e2e\game.spec.js:109:1 › pending actions gate travel and retain original attribution while reading another dossier (843ms)
+  ok  9 [desktop] › e2e\game.spec.js:127:1 › stale revision and network loss retain drafts and require explicit refresh (952ms)
+  ok 10 [desktop] › e2e\game.spec.js:146:1 › expiry keeps known notes, disables commands and permits explicit replacement (637ms)
+[WebServer] The request id "D:\Documents\university\MA\3rd semester\advanced programming\detective
+game\src\data\case.js" is outside of Vite serving allow list.
+[WebServer]
+[WebServer] - D:/Documents/university/MA/3rd semester/advanced programming/detective game/web
+[WebServer]
+[WebServer] Refer to docs https://vite.dev/config/server-options.html#server-fs-allow for configurations and more
+details.
+[WebServer]
+[WebServer] The request id "D:\Documents\university\MA\3rd semester\advanced programming\detective
+game\web\e2e\offline-api.mjs" is outside of Vite serving allow list.
+  ok 11 [desktop] › e2e\game.spec.js:159:1 › public-only extended collection, artwork fallbacks, escaped text and runtime privacy (750ms)
+  ok 12 [desktop] › e2e\game.spec.js:188:1 › keyboard modal focus, responsive layouts, target size and reduced motion (782ms)
+  ok 13 [desktop] › e2e\game.spec.js:209:1 › failed travel retains current room and empty-room fixtures offer navigation without invented people (630ms)
+  ok 14 [desktop] › e2e\game.spec.js:223:1 › long received testimony remains readable and direct browser requests cannot bypass room rules (851ms)
+  ok 15 [desktop] › e2e\game.spec.js:241:1 › an investigation ended outside the page reconciles to its authoritative conclusion (543ms)
+  ok 16 [desktop] › e2e\greyhaven-preview.spec.js:25:1 › offline preview earns the admission through visible investigation and returns cleanly to Ashcroft (2.1s)
+  ok 17 [desktop] › e2e\greyhaven-preview.spec.js:64:1 › evidence-first reverse order still requires received O0 and supports text presentation (891ms)
+  ok 18 [desktop] › e2e\hybrid-dialogue.spec.js:9:1 › mixed dialogue modes preserve drafts, structured performance, useful followups, evidence and reviewed comparison (1.6s)
+  ok 19 [desktop] › e2e\hybrid-dialogue.spec.js:50:1 › stale choices keep drafts and received history without replay; refresh restores current options (744ms)
+  ok 20 [desktop] › e2e\hybrid-dialogue.spec.js:63:1 › lost committed dialogue and inspection reconcile honestly; independent sessions remain untouched (1.0s)
+  ok 21 [desktop] › e2e\hybrid-dialogue.spec.js:82:1 › delayed dialogue attached to an ended snapshot cannot append narration or testimony (513ms)
+  ok 22 [desktop] › e2e\hybrid-dialogue.spec.js:101:1 › twelve-contact long-label and no-option/null-narration fixtures reflow and preserve neutral art (721ms)
+  ok 23 [desktop] › e2e\hybrid-dialogue.spec.js:119:1 › topic revisits remain useful and suggested questions are keyboard operable with accessible targets (1.0s)
+  ok 24 [desktop] › e2e\mystery-deduction.spec.js:28:1 › public offline clue chain supports a circumstantial accusation and readable conclusion (2.4s)
+  ok 25 [desktop] › e2e\mystery-deduction.spec.js:74:1 › correct guess and partial evidence remain incomplete; wrong verdict stays private (1.1s)
+  ok 26 [desktop] › e2e\mystery-deduction.spec.js:87:1 › core evidence suffices without collecting every clue or asking every topic (1.1s)
+  ok 27 [desktop] › e2e\playtest-repairs.spec.js:25:1 › new-case selection remains available across active, preview and ended investigations (1.4s)
+  ok 28 [desktop] › e2e\playtest-repairs.spec.js:58:1 › journal and room observation reviews visibly reopen received details without commands (1.1s)
+  ok 29 [desktop] › e2e\playtest-repairs.spec.js:81:1 › preview explains unavailable accusations at the action location and server stays unchanged (615ms)
+  ok 30 [desktop] › e2e\relationship-labels.spec.js:15:1 › public relationships identify Mara and Owen targets consistently in room, reader and overview (518ms)
+  ok 31 [desktop] › e2e\relationship-labels.spec.js:34:1 › Ashcroft retains public descriptions without repeating the same victim relationship (360ms)
+(node:27916) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 32 [mobile] › e2e\case-selection.spec.js:3:1 › public manifest offers Ashcroft and preview and explicit selection keeps the offline experience (431ms)
+  ok 33 [mobile] › e2e\case-selection.spec.js:23:1 › manifest failure is recoverable and unavailable selection never installs a session (402ms)
+  ok 34 [mobile] › e2e\case-selection.spec.js:42:1 › mismatched session metadata is rejected before gameplay is installed (337ms)
+  ok 35 [mobile] › e2e\clarification.spec.js:19:1 › contextual menu and text clarify revised testimony without exposing private targets (1.4s)
+  ok 36 [mobile] › e2e\game.spec.js:34:1 › complete real offline room investigation, cancellation, both verdicts and local reset (2.3s)
+  ok 37 [mobile] › e2e\game.spec.js:87:51 › lost accusation reply permits Escape without replay and reconciles the real ending (597ms)
+  ok 38 [mobile] › e2e\game.spec.js:87:51 › lost accusation reply permits Close dialog without replay and reconciles the real ending (644ms)
+  ok 39 [mobile] › e2e\game.spec.js:109:1 › pending actions gate travel and retain original attribution while reading another dossier (673ms)
+  ok 40 [mobile] › e2e\game.spec.js:127:1 › stale revision and network loss retain drafts and require explicit refresh (798ms)
+  ok 41 [mobile] › e2e\game.spec.js:146:1 › expiry keeps known notes, disables commands and permits explicit replacement (574ms)
+[WebServer] The request id "D:\Documents\university\MA\3rd semester\advanced programming\detective
+game\src\data\case.js" is outside of Vite serving allow list.
+[WebServer] The request id "D:\Documents\university\MA\3rd semester\advanced programming\detective
+game\web\e2e\offline-api.mjs" is outside of Vite serving allow list.
+  ok 42 [mobile] › e2e\game.spec.js:159:1 › public-only extended collection, artwork fallbacks, escaped text and runtime privacy (600ms)
+  ok 43 [mobile] › e2e\game.spec.js:188:1 › keyboard modal focus, responsive layouts, target size and reduced motion (772ms)
+  ok 44 [mobile] › e2e\game.spec.js:209:1 › failed travel retains current room and empty-room fixtures offer navigation without invented people (504ms)
+  ok 45 [mobile] › e2e\game.spec.js:223:1 › long received testimony remains readable and direct browser requests cannot bypass room rules (574ms)
+  ok 46 [mobile] › e2e\game.spec.js:241:1 › an investigation ended outside the page reconciles to its authoritative conclusion (484ms)
+  ok 47 [mobile] › e2e\greyhaven-preview.spec.js:25:1 › offline preview earns the admission through visible investigation and returns cleanly to Ashcroft (1.9s)
+  ok 48 [mobile] › e2e\greyhaven-preview.spec.js:64:1 › evidence-first reverse order still requires received O0 and supports text presentation (877ms)
+  ok 49 [mobile] › e2e\hybrid-dialogue.spec.js:9:1 › mixed dialogue modes preserve drafts, structured performance, useful followups, evidence and reviewed comparison (1.4s)
+  ok 50 [mobile] › e2e\hybrid-dialogue.spec.js:50:1 › stale choices keep drafts and received history without replay; refresh restores current options (656ms)
+  ok 51 [mobile] › e2e\hybrid-dialogue.spec.js:63:1 › lost committed dialogue and inspection reconcile honestly; independent sessions remain untouched (1.0s)
+  ok 52 [mobile] › e2e\hybrid-dialogue.spec.js:82:1 › delayed dialogue attached to an ended snapshot cannot append narration or testimony (487ms)
+  ok 53 [mobile] › e2e\hybrid-dialogue.spec.js:101:1 › twelve-contact long-label and no-option/null-narration fixtures reflow and preserve neutral art (735ms)
+  ok 54 [mobile] › e2e\hybrid-dialogue.spec.js:119:1 › topic revisits remain useful and suggested questions are keyboard operable with accessible targets (894ms)
+  ok 55 [mobile] › e2e\mystery-deduction.spec.js:28:1 › public offline clue chain supports a circumstantial accusation and readable conclusion (2.3s)
+  ok 56 [mobile] › e2e\mystery-deduction.spec.js:74:1 › correct guess and partial evidence remain incomplete; wrong verdict stays private (955ms)
+  ok 57 [mobile] › e2e\mystery-deduction.spec.js:87:1 › core evidence suffices without collecting every clue or asking every topic (1.0s)
+  ok 58 [mobile] › e2e\playtest-repairs.spec.js:25:1 › new-case selection remains available across active, preview and ended investigations (1.2s)
+  ok 59 [mobile] › e2e\playtest-repairs.spec.js:58:1 › journal and room observation reviews visibly reopen received details without commands (989ms)
+  ok 60 [mobile] › e2e\playtest-repairs.spec.js:81:1 › preview explains unavailable accusations at the action location and server stays unchanged (526ms)
+  ok 61 [mobile] › e2e\relationship-labels.spec.js:15:1 › public relationships identify Mara and Owen targets consistently in room, reader and overview (507ms)
+  ok 62 [mobile] › e2e\relationship-labels.spec.js:34:1 › Ashcroft retains public descriptions without repeating the same victim relationship (318ms)
+
+  62 passed (1.0m)

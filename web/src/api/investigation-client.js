@@ -1,4 +1,5 @@
 const messages = {
+  accusation_unavailable: 'This preview has no final accusation. Continue investigating the repair dispute.',
   dialogue_option_unavailable: 'That conversation option is no longer available. Refresh the investigation to see current options.',
   suspect_not_present: 'That person is in another room. Refresh the investigation before travelling there.',
   evidence_not_here: 'That evidence is in another room. Refresh the investigation before travelling there.',
@@ -38,7 +39,7 @@ function dialogueView(value, suspects, evidence, locationId, ended) {
   return { inspectedEvidenceIds, conversations };
 }
 const identity = (value) => ({ id: slug(value.id), name: string(value.name) });
-const caseIdentity = (value) => ({ id: slug(value?.id), mode: enumeration(value?.mode, ['full']) });
+const caseIdentity = (value) => ({ id: slug(value?.id), mode: enumeration(value?.mode, ['full', 'preview']) });
 const dossier = (value) => ({ role: string(value.role), relationshipToVictim: string(value.relationshipToVictim), background: string(value.background),
   relationships: value.relationships.map((edge) => { if (!['family', 'social'].includes(edge.kind)) throw new Error('protocol'); return { targetSuspectId: string(edge.targetSuspectId), kind: edge.kind, label: string(edge.label) }; }) });
 export function publicState(value) {
@@ -97,6 +98,7 @@ export function createInvestigationClient({ emit, fetchImpl = globalThis.fetch, 
   let roomGeneration = 0;
   let acceptedDialogue = null;
   let selectedCase = null;
+  const manifestModes = new Map([['ashcroft', 'full']]);
   const controllers = new Set();
 
   async function request(command, input = {}) {
@@ -118,7 +120,7 @@ export function createInvestigationClient({ emit, fetchImpl = globalThis.fetch, 
     if (command === 'create') generation += 1;
     const currentGeneration = generation;
     const currentCapability = capability;
-    const requestedCase = command === 'create' ? { id: input.caseId ?? 'ashcroft', mode: 'full' } : selectedCase;
+    const requestedCase = command === 'create' ? { id: input.caseId ?? 'ashcroft', mode: manifestModes.get(input.caseId ?? 'ashcroft') ?? 'full' } : selectedCase;
     const requestedRoom = currentRoom;
     const requestedRoomGeneration = roomGeneration;
     const controller = new AbortController();
@@ -197,6 +199,7 @@ export function createInvestigationClient({ emit, fetchImpl = globalThis.fetch, 
         if (!response.ok || envelope.ok !== true || envelope.error !== null || !Array.isArray(envelope.data?.cases)) throw new Error('protocol');
         const cases = envelope.data.cases.map((item) => ({ ...caseIdentity(item), title: bounded(item.title, 200) }));
         if (!cases.length || new Set(cases.map((item) => item.id)).size !== cases.length) throw new Error('protocol');
+        for (const item of cases) manifestModes.set(item.id, item.mode);
         return cases;
       } finally { clearTimeout(timer); controllers.delete(controller); }
     },

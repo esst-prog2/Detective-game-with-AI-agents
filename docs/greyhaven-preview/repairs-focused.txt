@@ -1,0 +1,33 @@
+
+> detective-game-with-ai-agents@0.1.0 test:web
+> npm --prefix web run test:e2e playtest-repairs.spec.js
+
+
+> ashcroft-browser@0.1.0 test:e2e
+> playwright test playtest-repairs.spec.js
+
+npm.cmd : [WebServer] (node:20128) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+At line:2 char:50
++ ... OLATED='1'; npm.cmd run test:web -- playtest-repairs.spec.js *> "$env ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([WebServer] (no... env being set.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:4320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:3960) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [desktop] › e2e\playtest-repairs.spec.js:25:1 › new-case selection remains available across active, preview and ended investigations (1.4s)
+  ok 2 [desktop] › e2e\playtest-repairs.spec.js:58:1 › journal and room observation reviews visibly reopen received details without commands (1.2s)
+  ok 3 [desktop] › e2e\playtest-repairs.spec.js:81:1 › preview explains unavailable accusations at the action location and server stays unchanged (604ms)
+(node:3812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [mobile] › e2e\playtest-repairs.spec.js:25:1 › new-case selection remains available across active, preview and ended investigations (1.3s)
+  ok 5 [mobile] › e2e\playtest-repairs.spec.js:58:1 › journal and room observation reviews visibly reopen received details without commands (986ms)
+  ok 6 [mobile] › e2e\playtest-repairs.spec.js:81:1 › preview explains unavailable accusations at the action location and server stays unchanged (547ms)
+
+  6 passed (8.2s)

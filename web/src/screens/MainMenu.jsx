@@ -22,7 +22,7 @@ export default function MainMenu() {
     <div className="title-shade" />
     <div className="title-content"><p className="eyebrow">AN ILLUSTRATED DETECTIVE MYSTERY</p><div className="ornament" aria-hidden="true">─ ◆ ─</div>
       {selectedCase === 'ashcroft' ? <h1>Ashcroft<br /><em>Manor</em></h1> : <h1>{cases?.find((item) => item.id === selectedCase)?.title}</h1>}<p className="title-subtitle">Every answer leaves a shadow.</p>
-      <p className="title-intro">Listen to the suspects. Follow the evidence.<br />Make the accusation that closes the case.</p>
+      <p className="title-intro">{cases?.find((item) => item.id === selectedCase)?.mode === 'preview' ? 'A repair-dispute excerpt with two witnesses and two rooms. Explore and question; no final murder verdict is available.' : <>Listen to the suspects. Follow the evidence.<br />Make the accusation that closes the case.</>}</p>
       {cases && <label>Case <select aria-label="Case" value={selectedCase} disabled={!!state.pending} onChange={(event) => setSelectedCase(event.target.value)}>
         {cases.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}
       </select></label>}

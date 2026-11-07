@@ -1,0 +1,242 @@
+[
+  {},
+  {
+    "case": {
+      "id": "greyhaven-preview",
+      "mode": "preview"
+    },
+    "revision": 0
+  },
+  {
+    "case": {
+      "id": "greyhaven-preview",
+      "mode": "preview"
+    },
+    "revision": 1,
+    "result": {
+      "kind": "answer",
+      "text": "Owen waited with me in reception between the two bells. He did not go in to Adrian after supper.",
+      "topic": "alibi",
+      "cached": false,
+      "narration": null,
+      "dialogue": "Owen waited with me in reception between the two bells. He did not go in to Adrian after supper.",
+      "turnId": 1,
+      "demeanor": "neutral"
+    }
+  },
+  {
+    "case": {
+      "id": "greyhaven-preview",
+      "mode": "preview"
+    },
+    "revision": 2,
+    "result": {
+      "kind": "answer",
+      "text": "To be precise, That is the account I am giving you. If you want to challenge it, tell me which observation you want me to answer.",
+      "topic": "alibi",
+      "cached": false,
+      "narration": "Mara pauses before answering.",
+      "dialogue": "To be precise, That is the account I am giving you. If you want to challenge it, tell me which observation you want me to answer.",
+      "turnId": 2,
+      "demeanor": "neutral"
+    }
+  },
+  {
+    "case": {
+      "id": "greyhaven-preview",
+      "mode": "preview"
+    },
+    "revision": 3,
+    "result": {
+      "kind": "travel",
+      "locationId": "boathouse",
+      "changed": true
+    }
+  },
+  {
+    "case": {
+      "id": "greyhaven-preview",
+      "mode": "preview"
+    },
+    "revision": 4,
+    "result": {
+      "kind": "unsupported",
+      "text": "I’m not sure what you mean. Try asking about an alibi, relationship with the victim, motive, sightings, evidence, or the crime.",
+      "topic": "unsupported",
+      "narration": null,
+      "dialogue": "I’m not sure what you mean. Try asking about an alibi, relationship with the victim, motive, sightings, evidence, or the crime."
+    }
+  },
+  {
+    "case": {
+      "id": "greyhaven-preview",
+      "mode": "preview"
+    },
+    "revision": 5,
+    "result": {
+      "kind": "answer",
+      "text": "I was working at the boathouse between the bells. Jonah was at the office hatch during the test. I saw him answer the telephone while I held the pressure lever, but I could not hear the caller. Adrian and I had words about work earlier; I left him standing at his desk.",
+      "topic": "alibi",
+      "cached": false,
+      "narration": null,
+      "dialogue": "I was working at the boathouse between the bells. Jonah was at the office hatch during the test. I saw him answer the telephone while I held the pressure lever, but I could not hear the caller. Adrian and I had words about work earlier; I left him standing at his desk.",
+      "turnId": 3,
+      "demeanor": "neutral"
+    }
+  },
+  {
+    "case": {
+      "id": "greyhaven-preview",
+      "mode": "preview"
+    },
+    "revision": 6,
+    "result": {
+      "kind": "answer",
+      "text": "To be precise, The rescue launch's cooling pump. I held the test pressure at the bench while Jonah watched from the office hatch. Ask him what he saw; I am not asking you to take my word for all of it.",
+      "topic": "alibi",
+      "cached": false,
+      "narration": "Owen pauses before answering.",
+      "dialogue": "To be precise, The rescue launch's cooling pump. I held the test pressure at the bench while Jonah watched from the office hatch. Ask him what he saw; I am not asking you to take my word for all of it.",
+      "turnId": 4,
+      "demeanor": "neutral"
+    }
+  },
+  {
+    "case": {
+      "id": "greyhaven-preview",
+      "mode": "preview"
+    },
+    "revision": 7,
+    "result": {
+      "id": "pump-worksheet",
+      "name": "Pump pressure-test worksheet",
+      "description": "On the bench, a sheet initialed by Owen and Jonah records a pressure test from 20:32 to 20:41, pressure readings and red-primer work. A parts receipt dated 16 October references a £480 maintenance-fund payment. A before-supper note agrees a witnessed test during the evening departure period. The pump bench faces the ferry-office hatch. These records describe work and payment; they are not a tamper-proof alibi or identification of a stain."
+    }
+  },
+  {
+    "case": {
+      "id": "greyhaven-preview",
+      "mode": "preview"
+    },
+    "revision": 8,
+    "result": {
+      "id": "repayment-demand",
+      "name": "Repayment demand",
+      "description": "In the tool tin is Adrian's folded note: “£480 from the maintenance fund is to be restored before tomorrow's handover. We discuss it 20:25.” It records a demand and deadline, not violent intent."
+    }
+  },
+  {
+    "case": {
+      "id": "greyhaven-preview",
+      "mode": "preview"
+    },
+    "revision": 9,
+    "result": {
+      "kind": "answer",
+      "text": "I went in at about twenty twenty-six and left before the first bell. He wanted the four hundred and eighty pounds restored before the archive handover. I used the maintenance fund for the rescue pump without permission. I meant to replace it from invoices. Jonah watched the later test; that does not make taking the money right.",
+      "topic": "alibi",
+      "cached": false,
+      "narration": null,
+      "dialogue": "I went in at about twenty twenty-six and left before the first bell. He wanted the four hundred and eighty pounds restored before the archive handover. I used the maintenance fund for the rescue pump without permission. I meant to replace it from invoices. Jonah watched the later test; that does not make taking the money right.",
+      "turnId": 5,
+      "demeanor": "neutral"
+    }
+  },
+  {
+    "case": {
+      "id": "greyhaven-preview",
+      "mode": "preview"
+    },
+    "revision": 10,
+    "result": {
+      "kind": "answer",
+      "text": "To be precise, Because doing useful work did not give me permission to take entrusted money. I expected another lecture, and I kept digging the hole.",
+      "topic": "alibi",
+      "cached": false,
+      "narration": null,
+      "dialogue": "To be precise, Because doing useful work did not give me permission to take entrusted money. I expected another lecture, and I kept digging the hole.",
+      "turnId": 6,
+      "demeanor": "neutral"
+    }
+  },
+  {
+    "case": {
+      "id": "greyhaven-preview",
+      "mode": "preview"
+    },
+    "revision": 11,
+    "result": {
+      "kind": "answer",
+      "text": "To be precise, I went in at about twenty twenty-six and left before the first bell. He wanted the four hundred and eighty pounds restored before the archive handover. I used the maintenance fund for the rescue pump without permission. I meant to replace it from invoices. Jonah watched the later test; that does not make taking the money right.",
+      "topic": "alibi",
+      "cached": false,
+      "narration": null,
+      "dialogue": "To be precise, I went in at about twenty twenty-six and left before the first bell. He wanted the four hundred and eighty pounds restored before the archive handover. I used the maintenance fund for the rescue pump without permission. I meant to replace it from invoices. Jonah watched the later test; that does not make taking the money right.",
+      "turnId": 7,
+      "demeanor": "neutral"
+    }
+  },
+  {
+    "case": {
+      "id": "greyhaven-preview",
+      "mode": "preview"
+    },
+    "revision": 12,
+    "result": {
+      "kind": "answer",
+      "text": "To be precise, I went in at about twenty twenty-six and left before the first bell. He wanted the four hundred and eighty pounds restored before the archive handover. I used the maintenance fund for the rescue pump without permission. I meant to replace it from invoices. Jonah watched the later test; that does not make taking the money right.",
+      "topic": "alibi",
+      "cached": false,
+      "narration": null,
+      "dialogue": "To be precise, I went in at about twenty twenty-six and left before the first bell. He wanted the four hundred and eighty pounds restored before the archive handover. I used the maintenance fund for the rescue pump without permission. I meant to replace it from invoices. Jonah watched the later test; that does not make taking the money right.",
+      "turnId": 8,
+      "demeanor": "neutral"
+    }
+  },
+  {
+    "case": {
+      "id": "greyhaven-preview",
+      "mode": "preview"
+    },
+    "revision": 13,
+    "result": {
+      "kind": "answer",
+      "text": "As I said, I went in at about twenty twenty-six and left before the first bell. He wanted the four hundred and eighty pounds restored before the archive handover. I used the maintenance fund for the rescue pump without permission. I meant to replace it from invoices. Jonah watched the later test; that does not make taking the money right.",
+      "topic": "alibi",
+      "cached": false,
+      "narration": null,
+      "dialogue": "As I said, I went in at about twenty twenty-six and left before the first bell. He wanted the four hundred and eighty pounds restored before the archive handover. I used the maintenance fund for the rescue pump without permission. I meant to replace it from invoices. Jonah watched the later test; that does not make taking the money right.",
+      "turnId": 9,
+      "demeanor": "neutral"
+    }
+  },
+  {
+    "case": {
+      "id": "greyhaven-preview",
+      "mode": "preview"
+    },
+    "revision": 14,
+    "result": {
+      "kind": "travel",
+      "locationId": "reception",
+      "changed": true
+    }
+  },
+  {
+    "case": {
+      "id": "greyhaven-preview",
+      "mode": "preview"
+    },
+    "revision": 15,
+    "result": {
+      "kind": "answer",
+      "text": "As I said, Owen waited with me in reception between the two bells. He did not go in to Adrian after supper.",
+      "topic": "alibi",
+      "cached": false,
+      "narration": null,
+      "dialogue": "As I said, Owen waited with me in reception between the two bells. He did not go in to Adrian after supper.",
+      "turnId": 10,
+      "demeanor": "neutral"
+    }
+  }
+]

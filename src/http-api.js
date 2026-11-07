@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import { ApiError, createSessionStore } from './investigation-sessions.js';
 
 const errors = {
+  accusation_unavailable: [409, 'This preview has no final accusation. Continue investigating the repair dispute.'],
   invalid_request: [400, 'Invalid request.'], invalid_json: [400, 'Invalid JSON body.'],
   invalid_session_id: [400, 'Invalid session identifier.'], invalid_id: [400, 'Invalid entity identifier.'],
   invalid_route: [400, 'Invalid route.'], forbidden_origin: [403, 'Origin is not permitted.'],
@@ -179,7 +180,7 @@ export function createInvestigationServer({ store = createSessionStore(), bodyLi
         if (!entry.game.getPublicView().rooms.some(({ id }) => id === body.locationId)) fail('location_not_found');
       } else if (action === 'evidence/inspect') {
         if (!entry.game.listEvidence().some(({ id }) => id === body.evidenceId)) fail('evidence_not_found');
-      } else if (!entry.game.getPublicSuspect(body.suspectId)) fail('suspect_not_found');
+      } else if (!(action === 'accusations' && entry.case.mode === 'preview') && !entry.game.getPublicSuspect(body.suspectId)) fail('suspect_not_found');
       const data = await store.run(entry, body.expectedRevision, action === 'questions', async () => {
         const result = await invoke();
         if (result?.code === 'investigation_ended') return result;

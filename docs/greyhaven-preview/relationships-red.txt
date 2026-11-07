@@ -1,0 +1,162 @@
+
+> detective-game-with-ai-agents@0.1.0 test:web
+> npm --prefix web run test:e2e relationship-labels.spec.js
+
+
+> ashcroft-browser@0.1.0 test:e2e
+> playwright test relationship-labels.spec.js
+
+npm.cmd : [WebServer] (node:31108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+At line:2 char:50
++ ... OLATED='1'; npm.cmd run test:web -- relationship-labels.spec.js *> "$ ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([WebServer] (no... env being set.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:31048) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:31696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [desktop] › e2e\relationship-labels.spec.js:15:1 › public relationships identify Mara and Owen targets consistently in room, reader and overview (6.6s)
+(node:27096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [desktop] › e2e\relationship-labels.spec.js:34:1 › Ashcroft retains public descriptions without repeating the same victim relationship (5.5s)
+(node:8136) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [mobile] › e2e\relationship-labels.spec.js:15:1 › public relationships identify Mara and Owen targets consistently in room, reader and overview (5.4s)
+(node:5080) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [mobile] › e2e\relationship-labels.spec.js:34:1 › Ashcroft retains public descriptions without repeating the same victim relationship (5.4s)
+
+
+  1) [desktop] › e2e\relationship-labels.spec.js:15:1 › public relationships identify Mara and Owen targets consistently in room, reader and overview
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.room-person .public-dossier').getByText('Relationships', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('.room-person .public-dossier').getByText('Relationships', { exact: true }) with timeout 5000ms
+      - waiting for locator('.room-person .public-dossier').getByText('Relationships', { exact: true })
+
+
+       8 | }
+       9 | async function checkMara(dossier) {
+    > 10 |   await expect(dossier.getByText('Relationships', { exact: true })).toBeVisible();
+         |                                                                     ^
+      11 |   await expect(dossier.locator('li')).toHaveText(['Adrian Vale — Brother', 'Owen Vale — Son']);
+      12 |   await expect(dossier.getByText('Her son', { exact: true })).toHaveCount(0);
+      13 | }
+        at checkMara (D:\Documents\university\MA\3rd semester\advanced programming\detective game\web\e2e\relationship-labels.spec.js:10:69)
+        at D:\Documents\university\MA\3rd semester\advanced programming\detective game\web\e2e\relationship-labels.spec.js:19:9
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\relationship-labels-public-48b53-in-room-reader-and-overview-desktop\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\relationship-labels-public-48b53-in-room-reader-and-overview-desktop\error-context.md
+
+  2) [desktop] › e2e\relationship-labels.spec.js:34:1 › Ashcroft retains public descriptions without repeating the same victim relationship
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.suspect-card').filter({ has: getByRole('heading', { name: 'Ben Carter', exact: true }) }).getByText('Employed by Victor Hale.', { exact: true })
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.suspect-card').filter({ has: getByRole('heading', { name: 'Ben Carter', exact: true }) }).getByText('Employed by Victor Hale.', { exact: true }) with timeout 5000ms
+      - waiting for locator('.suspect-card').filter({ has: getByRole('heading', { name: 'Ben Carter', exact: true }) }).getByText('Employed by Victor Hale.', { exact: true })
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      38 |   const clara = page.locator('.suspect-card').filter({ has: page.getByRole('heading', { name: 'Clara Voss', exact: true }) });
+      39 |   await expect(ben).toContainText("Ben Carter works as Victor Hale's gardener.");
+    > 40 |   await expect(ben.getByText('Employed by Victor Hale.', { exact: true })).toHaveCount(0);
+         |                                                                            ^
+      41 |   await expect(clara).toContainText("Clara Voss is Victor Hale's business partner and a frequent guest at Ashcroft Manor.");
+      42 |   await expect(clara.getByText('Business partner of Victor Hale.', { exact: true })).toHaveCount(0);
+      43 |   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+        at D:\Documents\university\MA\3rd semester\advanced programming\detective game\web\e2e\relationship-labels.spec.js:40:76
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\relationship-labels-Ashcro-65ba0-he-same-victim-relationship-desktop\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\relationship-labels-Ashcro-65ba0-he-same-victim-relationship-desktop\error-context.md
+
+  3) [mobile] › e2e\relationship-labels.spec.js:15:1 › public relationships identify Mara and Owen targets consistently in room, reader and overview
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.room-person .public-dossier').getByText('Relationships', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('.room-person .public-dossier').getByText('Relationships', { exact: true }) with timeout 5000ms
+      - waiting for locator('.room-person .public-dossier').getByText('Relationships', { exact: true })
+
+
+       8 | }
+       9 | async function checkMara(dossier) {
+    > 10 |   await expect(dossier.getByText('Relationships', { exact: true })).toBeVisible();
+         |                                                                     ^
+      11 |   await expect(dossier.locator('li')).toHaveText(['Adrian Vale — Brother', 'Owen Vale — Son']);
+      12 |   await expect(dossier.getByText('Her son', { exact: true })).toHaveCount(0);
+      13 | }
+        at checkMara (D:\Documents\university\MA\3rd semester\advanced programming\detective game\web\e2e\relationship-labels.spec.js:10:69)
+        at D:\Documents\university\MA\3rd semester\advanced programming\detective game\web\e2e\relationship-labels.spec.js:19:9
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\relationship-labels-public-48b53-in-room-reader-and-overview-mobile\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\relationship-labels-public-48b53-in-room-reader-and-overview-mobile\error-context.md
+
+  4) [mobile] › e2e\relationship-labels.spec.js:34:1 › Ashcroft retains public descriptions without repeating the same victim relationship
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.suspect-card').filter({ has: getByRole('heading', { name: 'Ben Carter', exact: true }) }).getByText('Employed by Victor Hale.', { exact: true })
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.suspect-card').filter({ has: getByRole('heading', { name: 'Ben Carter', exact: true }) }).getByText('Employed by Victor Hale.', { exact: true }) with timeout 5000ms
+      - waiting for locator('.suspect-card').filter({ has: getByRole('heading', { name: 'Ben Carter', exact: true }) }).getByText('Employed by Victor Hale.', { exact: true })
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      38 |   const clara = page.locator('.suspect-card').filter({ has: page.getByRole('heading', { name: 'Clara Voss', exact: true }) });
+      39 |   await expect(ben).toContainText("Ben Carter works as Victor Hale's gardener.");
+    > 40 |   await expect(ben.getByText('Employed by Victor Hale.', { exact: true })).toHaveCount(0);
+         |                                                                            ^
+      41 |   await expect(clara).toContainText("Clara Voss is Victor Hale's business partner and a frequent guest at Ashcroft Manor.");
+      42 |   await expect(clara.getByText('Business partner of Victor Hale.', { exact: true })).toHaveCount(0);
+      43 |   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+        at D:\Documents\university\MA\3rd semester\advanced programming\detective game\web\e2e\relationship-labels.spec.js:40:76
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\relationship-labels-Ashcro-65ba0-he-same-victim-relationship-mobile\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\relationship-labels-Ashcro-65ba0-he-same-victim-relationship-mobile\error-context.md
+
+  4 failed
+    [desktop] › e2e\relationship-labels.spec.js:15:1 › public relationships identify Mara and Owen targets consistently in room, reader and overview
+    [desktop] › e2e\relationship-labels.spec.js:34:1 › Ashcroft retains public descriptions without repeating the same victim relationship
+    [mobile] › e2e\relationship-labels.spec.js:15:1 › public relationships identify Mara and Owen targets consistently in room, reader and overview
+    [mobile] › e2e\relationship-labels.spec.js:34:1 › Ashcroft retains public descriptions without repeating the same victim relationship

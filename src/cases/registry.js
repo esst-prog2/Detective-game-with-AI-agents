@@ -1,8 +1,9 @@
 import { ashcroft } from './ashcroft.js';
+import { greyhavenPreview } from './greyhaven-preview.js';
 import { isCaseId, snapshotCasePackage } from './validate-package.js';
 import { createInvestigation } from '../game.js';
 
-export function createCaseRegistry({ definitions = [ashcroft], publishedIds = definitions.map((item) => item.id), defaultCaseId = 'ashcroft' } = {}) {
+export function createCaseRegistry({ definitions = [ashcroft, greyhavenPreview], publishedIds = definitions.map((item) => item.id), defaultCaseId = 'ashcroft' } = {}) {
   const packages = new Map();
   for (const input of definitions) {
     const definition = snapshotCasePackage(input);
@@ -26,7 +27,8 @@ export function createCaseRegistry({ definitions = [ashcroft], publishedIds = de
       const definition = resolve(caseId);
       if (!definition) throw new Error('Unavailable case.');
       return createInvestigation({ data: definition.data, dialogueCatalog: definition.catalog, performer, phraser,
-        caseContext: { id: definition.id, version: definition.version } });
+        caseContext: { id: definition.id, version: definition.version, mode: definition.mode,
+          ...(definition.mode === 'preview' ? { previewProfile: definition.previewProfile } : {}) } });
     },
   });
 }

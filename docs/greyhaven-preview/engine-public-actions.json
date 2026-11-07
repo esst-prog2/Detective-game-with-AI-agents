@@ -1,0 +1,245 @@
+{
+  "caseId": "greyhaven-preview",
+  "actions": [
+    {
+      "action": {
+        "question": "Where were you?",
+        "speaker": "mara-vale"
+      },
+      "result": {
+        "kind": "answer",
+        "topic": "alibi",
+        "text": "Owen waited with me in reception between the two bells. He did not go in to Adrian after supper.",
+        "cached": false,
+        "turnId": 1,
+        "narration": null,
+        "dialogue": "Owen waited with me in reception between the two bells. He did not go in to Adrian after supper.",
+        "demeanor": "neutral"
+      }
+    },
+    {
+      "action": {
+        "question": "How do you know?",
+        "speaker": "mara-vale"
+      },
+      "result": {
+        "kind": "answer",
+        "topic": "alibi",
+        "text": "To be precise, That is the account I am giving you. If you want to challenge it, tell me which observation you want me to answer.",
+        "cached": false,
+        "turnId": 2,
+        "narration": "Mara pauses before answering.",
+        "dialogue": "To be precise, That is the account I am giving you. If you want to challenge it, tell me which observation you want me to answer.",
+        "demeanor": "neutral"
+      }
+    },
+    {
+      "action": {
+        "travel": "boathouse"
+      },
+      "result": {
+        "kind": "travel",
+        "locationId": "boathouse",
+        "changed": true
+      }
+    },
+    {
+      "action": {
+        "question": "Ask Owen to explain the maintenance-fund payment and the argument.",
+        "speaker": "owen-vale"
+      },
+      "result": {
+        "kind": "unsupported",
+        "topic": "unsupported",
+        "text": "I’m not sure what you mean. Try asking about an alibi, relationship with the victim, motive, sightings, evidence, or the crime.",
+        "narration": null,
+        "dialogue": "I’m not sure what you mean. Try asking about an alibi, relationship with the victim, motive, sightings, evidence, or the crime."
+      }
+    },
+    {
+      "action": {
+        "question": "Where were you?",
+        "speaker": "owen-vale"
+      },
+      "result": {
+        "kind": "answer",
+        "topic": "alibi",
+        "text": "I was working at the boathouse between the bells. Jonah was at the office hatch during the test. I saw him answer the telephone while I held the pressure lever, but I could not hear the caller. Adrian and I had words about work earlier; I left him standing at his desk.",
+        "cached": false,
+        "turnId": 3,
+        "narration": null,
+        "dialogue": "I was working at the boathouse between the bells. Jonah was at the office hatch during the test. I saw him answer the telephone while I held the pressure lever, but I could not hear the caller. Adrian and I had words about work earlier; I left him standing at his desk.",
+        "demeanor": "neutral"
+      }
+    },
+    {
+      "action": {
+        "question": "What do you mean by work?",
+        "speaker": "owen-vale"
+      },
+      "result": {
+        "kind": "answer",
+        "topic": "alibi",
+        "text": "To be precise, The rescue launch's cooling pump. I held the test pressure at the bench while Jonah watched from the office hatch. Ask him what he saw; I am not asking you to take my word for all of it.",
+        "cached": false,
+        "turnId": 4,
+        "narration": "Owen pauses before answering.",
+        "dialogue": "To be precise, The rescue launch's cooling pump. I held the test pressure at the bench while Jonah watched from the office hatch. Ask him what he saw; I am not asking you to take my word for all of it.",
+        "demeanor": "neutral"
+      }
+    },
+    {
+      "action": {
+        "inspect": "pump-worksheet"
+      },
+      "result": {
+        "id": "pump-worksheet",
+        "name": "Pump pressure-test worksheet",
+        "description": "On the bench, a sheet initialed by Owen and Jonah records a pressure test from 20:32 to 20:41, pressure readings and red-primer work. A parts receipt dated 16 October references a £480 maintenance-fund payment. A before-supper note agrees a witnessed test during the evening departure period. The pump bench faces the ferry-office hatch. These records describe work and payment; they are not a tamper-proof alibi or identification of a stain."
+      }
+    },
+    {
+      "action": {
+        "question": "Ask Owen to explain the maintenance-fund payment and the argument.",
+        "speaker": "owen-vale"
+      },
+      "result": {
+        "kind": "unsupported",
+        "topic": "unsupported",
+        "text": "I’m not sure what you mean. Try asking about an alibi, relationship with the victim, motive, sightings, evidence, or the crime.",
+        "narration": null,
+        "dialogue": "I’m not sure what you mean. Try asking about an alibi, relationship with the victim, motive, sightings, evidence, or the crime."
+      }
+    },
+    {
+      "action": {
+        "inspect": "repayment-demand"
+      },
+      "result": {
+        "id": "repayment-demand",
+        "name": "Repayment demand",
+        "description": "In the tool tin is Adrian's folded note: “£480 from the maintenance fund is to be restored before tomorrow's handover. We discuss it 20:25.” It records a demand and deadline, not violent intent."
+      }
+    },
+    {
+      "action": {
+        "choiceId": "present-pump-payment",
+        "speaker": "owen-vale"
+      },
+      "result": {
+        "kind": "answer",
+        "topic": "alibi",
+        "text": "I went in at about twenty twenty-six and left before the first bell. He wanted the four hundred and eighty pounds restored before the archive handover. I used the maintenance fund for the rescue pump without permission. I meant to replace it from invoices. Jonah watched the later test; that does not make taking the money right.",
+        "cached": false,
+        "turnId": 5,
+        "narration": null,
+        "dialogue": "I went in at about twenty twenty-six and left before the first bell. He wanted the four hundred and eighty pounds restored before the archive handover. I used the maintenance fund for the rescue pump without permission. I meant to replace it from invoices. Jonah watched the later test; that does not make taking the money right.",
+        "demeanor": "neutral"
+      }
+    },
+    {
+      "action": {
+        "question": "Why hide a repair that helped someone?",
+        "speaker": "owen-vale"
+      },
+      "result": {
+        "kind": "answer",
+        "topic": "alibi",
+        "text": "To be precise, Because doing useful work did not give me permission to take entrusted money. I expected another lecture, and I kept digging the hole.",
+        "cached": false,
+        "turnId": 6,
+        "narration": null,
+        "dialogue": "To be precise, Because doing useful work did not give me permission to take entrusted money. I expected another lecture, and I kept digging the hole.",
+        "demeanor": "neutral"
+      }
+    },
+    {
+      "action": {
+        "question": "Explain your earlier work account.",
+        "speaker": "owen-vale"
+      },
+      "result": {
+        "kind": "answer",
+        "topic": "alibi",
+        "text": "To be precise, I went in at about twenty twenty-six and left before the first bell. He wanted the four hundred and eighty pounds restored before the archive handover. I used the maintenance fund for the rescue pump without permission. I meant to replace it from invoices. Jonah watched the later test; that does not make taking the money right.",
+        "cached": false,
+        "turnId": 7,
+        "narration": null,
+        "dialogue": "To be precise, I went in at about twenty twenty-six and left before the first bell. He wanted the four hundred and eighty pounds restored before the archive handover. I used the maintenance fund for the rescue pump without permission. I meant to replace it from invoices. Jonah watched the later test; that does not make taking the money right.",
+        "demeanor": "neutral"
+      }
+    },
+    {
+      "action": {
+        "question": "What do you mean by that?",
+        "speaker": "owen-vale"
+      },
+      "result": {
+        "kind": "answer",
+        "topic": "alibi",
+        "text": "To be precise, I went in at about twenty twenty-six and left before the first bell. He wanted the four hundred and eighty pounds restored before the archive handover. I used the maintenance fund for the rescue pump without permission. I meant to replace it from invoices. Jonah watched the later test; that does not make taking the money right.",
+        "cached": false,
+        "turnId": 8,
+        "narration": null,
+        "dialogue": "To be precise, I went in at about twenty twenty-six and left before the first bell. He wanted the four hundred and eighty pounds restored before the archive handover. I used the maintenance fund for the rescue pump without permission. I meant to replace it from invoices. Jonah watched the later test; that does not make taking the money right.",
+        "demeanor": "neutral"
+      }
+    },
+    {
+      "action": {
+        "question": "Where were you?",
+        "speaker": "owen-vale"
+      },
+      "result": {
+        "kind": "answer",
+        "topic": "alibi",
+        "text": "As I said, I went in at about twenty twenty-six and left before the first bell. He wanted the four hundred and eighty pounds restored before the archive handover. I used the maintenance fund for the rescue pump without permission. I meant to replace it from invoices. Jonah watched the later test; that does not make taking the money right.",
+        "cached": false,
+        "turnId": 9,
+        "narration": null,
+        "dialogue": "As I said, I went in at about twenty twenty-six and left before the first bell. He wanted the four hundred and eighty pounds restored before the archive handover. I used the maintenance fund for the rescue pump without permission. I meant to replace it from invoices. Jonah watched the later test; that does not make taking the money right.",
+        "demeanor": "neutral"
+      }
+    },
+    {
+      "action": {
+        "travel": "reception"
+      },
+      "result": {
+        "kind": "travel",
+        "locationId": "reception",
+        "changed": true
+      }
+    },
+    {
+      "action": {
+        "question": "Where were you?",
+        "speaker": "mara-vale"
+      },
+      "result": {
+        "kind": "answer",
+        "topic": "alibi",
+        "text": "As I said, Owen waited with me in reception between the two bells. He did not go in to Adrian after supper.",
+        "cached": false,
+        "turnId": 10,
+        "narration": null,
+        "dialogue": "As I said, Owen waited with me in reception between the two bells. He did not go in to Adrian after supper.",
+        "demeanor": "neutral"
+      }
+    },
+    {
+      "action": {
+        "accuse": "owen-vale"
+      },
+      "result": {
+        "kind": "error",
+        "code": "accusation_unavailable",
+        "text": "This preview has no final accusation. Continue investigating the repair dispute."
+      }
+    }
+  ],
+  "finalLifecycle": {
+    "status": "active",
+    "finalResult": null
+  }
+}

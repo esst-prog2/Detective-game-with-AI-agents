@@ -1,0 +1,222 @@
+
+> detective-game-with-ai-agents@0.1.0 test:web
+> npm --prefix web run test:e2e playtest-repairs.spec.js
+
+
+> ashcroft-browser@0.1.0 test:e2e
+> playwright test playtest-repairs.spec.js
+
+npm.cmd : [WebServer] (node:23308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+At line:2 char:50
++ ... OLATED='1'; npm.cmd run test:web -- playtest-repairs.spec.js *> "$env ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([WebServer] (no... env being set.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11108) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:27364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [desktop] › e2e\playtest-repairs.spec.js:25:1 › new-case selection remains available across active, preview and ended investigations (2.0s)
+(node:15468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [desktop] › e2e\playtest-repairs.spec.js:48:1 › journal and room observation reviews visibly reopen received details without commands (2.0s)
+(node:2748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [desktop] › e2e\playtest-repairs.spec.js:71:1 › preview explains unavailable accusations at the action location and server stays unchanged (2.0s)
+(node:9740) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [mobile] › e2e\playtest-repairs.spec.js:25:1 › new-case selection remains available across active, preview and ended investigations (1.8s)
+(node:23588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [mobile] › e2e\playtest-repairs.spec.js:48:1 › journal and room observation reviews visibly reopen received details without commands (2.0s)
+(node:27388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  6 [mobile] › e2e\playtest-repairs.spec.js:71:1 › preview explains unavailable accusations at the action location and server stays unchanged (1.9s)
+
+
+  1) [desktop] › e2e\playtest-repairs.spec.js:25:1 › new-case selection remains available across active, preview and ended investigations
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('navigation').getByRole('button', { name: 'Start another case', exact: true })
+    Expected: visible
+    Timeout: 1500ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('navigation').getByRole('button', { name: 'Start another case', exact: true }) with timeout 1500ms
+      - waiting for getByRole('navigation').getByRole('button', { name: 'Start another case', exact: true })
+
+
+      28 |   await start(page);
+      29 |   // Reading/canceling the chooser must retain this session and its notes.
+    > 30 |   const chooser = nav(page, 'Start another case'); await expect(chooser).toBeVisible({ timeout: 1500 }); await chooser.focus(); await page.keyboard.press('Enter');
+         |                                                                          ^
+      31 |   await expect(page.getByRole('dialog', { name: 'Start a new investigation' })).toBeVisible();
+      32 |   await page.keyboard.press('Escape'); await expect(chooser).toBeFocused();
+      33 |   await another(page, 'greyhaven-preview');
+        at D:\Documents\university\MA\3rd semester\advanced programming\detective game\web\e2e\playtest-repairs.spec.js:30:74
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\playtest-repairs-new-case--92942-ew-and-ended-investigations-desktop\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\playtest-repairs-new-case--92942-ew-and-ended-investigations-desktop\error-context.md
+
+  2) [desktop] › e2e\playtest-repairs.spec.js:48:1 › journal and room observation reviews visibly reopen received details without commands
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('dialog', { name: 'Observation — Silver cufflink' })
+    Expected: visible
+    Timeout: 1500ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('dialog', { name: 'Observation — Silver cufflink' }) with timeout 1500ms
+      - waiting for getByRole('dialog', { name: 'Observation — Silver cufflink' })
+
+
+      60 |     const review = page.locator('.evidence-card').filter({ has: page.getByRole('heading', { name: clue, exact: true }) }).getByRole('button', { name: 'Review observation' });
+      61 |     await review.focus(); await page.keyboard.press('Enter');
+    > 62 |     const dialog = page.getByRole('dialog', { name: 'Observation — ' + clue }); await expect(dialog).toBeVisible({ timeout: 1500 });
+         |                                                                                                      ^
+      63 |     await expect(dialog).toContainText(text); await expect(dialog.getByRole('button', { name: 'Close', exact: true })).toBeFocused();
+      64 |     await page.keyboard.press('Escape'); await expect(review).toBeFocused();
+      65 |     await nav(page, 'Current room').click(); await object.click();
+        at D:\Documents\university\MA\3rd semester\advanced programming\detective game\web\e2e\playtest-repairs.spec.js:62:102
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\playtest-repairs-journal-a-a8bf5-ed-details-without-commands-desktop\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\playtest-repairs-journal-a-a8bf5-ed-details-without-commands-desktop\error-context.md
+
+  3) [desktop] › e2e\playtest-repairs.spec.js:71:1 › preview explains unavailable accusations at the action location and server stays unchanged
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.room-exits').getByRole('note', { name: 'Final accusation unavailable' })
+    Expected: visible
+    Timeout: 1500ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('.room-exits').getByRole('note', { name: 'Final accusation unavailable' }) with timeout 1500ms
+      - waiting for locator('.room-exits').getByRole('note', { name: 'Final accusation unavailable' })
+
+
+      72 |   await start(page, true);
+      73 |   const explanation = page.locator('.room-exits').getByRole('note', { name: 'Final accusation unavailable' });
+    > 74 |   await expect(explanation).toBeVisible({ timeout: 1500 }); await expect(explanation).toContainText('cannot be solved');
+         |                             ^
+      75 |   await expect(page.getByRole('button', { name: 'Make an accusation', exact: true })).toHaveCount(0);
+      76 |   const created = await page.request.post('/api/investigations', { data: { caseId: 'greyhaven-preview' } }); const before = (await created.json()).data;
+      77 |   const rejected = await page.request.post(`/api/investigations/${before.sessionId}/accusations`, { data: { suspectId: 'owen-vale', confirmed: true, expectedRevision: before.revision } });
+        at D:\Documents\university\MA\3rd semester\advanced programming\detective game\web\e2e\playtest-repairs.spec.js:74:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\playtest-repairs-preview-e-b47d7--and-server-stays-unchanged-desktop\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\playtest-repairs-preview-e-b47d7--and-server-stays-unchanged-desktop\error-context.md
+
+  4) [mobile] › e2e\playtest-repairs.spec.js:25:1 › new-case selection remains available across active, preview and ended investigations
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('navigation').getByRole('button', { name: 'Start another case', exact: true })
+    Expected: visible
+    Timeout: 1500ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('navigation').getByRole('button', { name: 'Start another case', exact: true }) with timeout 1500ms
+      - waiting for getByRole('navigation').getByRole('button', { name: 'Start another case', exact: true })
+
+
+      28 |   await start(page);
+      29 |   // Reading/canceling the chooser must retain this session and its notes.
+    > 30 |   const chooser = nav(page, 'Start another case'); await expect(chooser).toBeVisible({ timeout: 1500 }); await chooser.focus(); await page.keyboard.press('Enter');
+         |                                                                          ^
+      31 |   await expect(page.getByRole('dialog', { name: 'Start a new investigation' })).toBeVisible();
+      32 |   await page.keyboard.press('Escape'); await expect(chooser).toBeFocused();
+      33 |   await another(page, 'greyhaven-preview');
+        at D:\Documents\university\MA\3rd semester\advanced programming\detective game\web\e2e\playtest-repairs.spec.js:30:74
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\playtest-repairs-new-case--92942-ew-and-ended-investigations-mobile\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\playtest-repairs-new-case--92942-ew-and-ended-investigations-mobile\error-context.md
+
+  5) [mobile] › e2e\playtest-repairs.spec.js:48:1 › journal and room observation reviews visibly reopen received details without commands
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('dialog', { name: 'Observation — Silver cufflink' })
+    Expected: visible
+    Timeout: 1500ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('dialog', { name: 'Observation — Silver cufflink' }) with timeout 1500ms
+      - waiting for getByRole('dialog', { name: 'Observation — Silver cufflink' })
+
+
+      60 |     const review = page.locator('.evidence-card').filter({ has: page.getByRole('heading', { name: clue, exact: true }) }).getByRole('button', { name: 'Review observation' });
+      61 |     await review.focus(); await page.keyboard.press('Enter');
+    > 62 |     const dialog = page.getByRole('dialog', { name: 'Observation — ' + clue }); await expect(dialog).toBeVisible({ timeout: 1500 });
+         |                                                                                                      ^
+      63 |     await expect(dialog).toContainText(text); await expect(dialog.getByRole('button', { name: 'Close', exact: true })).toBeFocused();
+      64 |     await page.keyboard.press('Escape'); await expect(review).toBeFocused();
+      65 |     await nav(page, 'Current room').click(); await object.click();
+        at D:\Documents\university\MA\3rd semester\advanced programming\detective game\web\e2e\playtest-repairs.spec.js:62:102
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\playtest-repairs-journal-a-a8bf5-ed-details-without-commands-mobile\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\playtest-repairs-journal-a-a8bf5-ed-details-without-commands-mobile\error-context.md
+
+  6) [mobile] › e2e\playtest-repairs.spec.js:71:1 › preview explains unavailable accusations at the action location and server stays unchanged
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.room-exits').getByRole('note', { name: 'Final accusation unavailable' })
+    Expected: visible
+    Timeout: 1500ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('.room-exits').getByRole('note', { name: 'Final accusation unavailable' }) with timeout 1500ms
+      - waiting for locator('.room-exits').getByRole('note', { name: 'Final accusation unavailable' })
+
+
+      72 |   await start(page, true);
+      73 |   const explanation = page.locator('.room-exits').getByRole('note', { name: 'Final accusation unavailable' });
+    > 74 |   await expect(explanation).toBeVisible({ timeout: 1500 }); await expect(explanation).toContainText('cannot be solved');
+         |                             ^
+      75 |   await expect(page.getByRole('button', { name: 'Make an accusation', exact: true })).toHaveCount(0);
+      76 |   const created = await page.request.post('/api/investigations', { data: { caseId: 'greyhaven-preview' } }); const before = (await created.json()).data;
+      77 |   const rejected = await page.request.post(`/api/investigations/${before.sessionId}/accusations`, { data: { suspectId: 'owen-vale', confirmed: true, expectedRevision: before.revision } });
+        at D:\Documents\university\MA\3rd semester\advanced programming\detective game\web\e2e\playtest-repairs.spec.js:74:29
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\playtest-repairs-preview-e-b47d7--and-server-stays-unchanged-mobile\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\playtest-repairs-preview-e-b47d7--and-server-stays-unchanged-mobile\error-context.md
+
+  6 failed
+    [desktop] › e2e\playtest-repairs.spec.js:25:1 › new-case selection remains available across active, preview and ended investigations
+    [desktop] › e2e\playtest-repairs.spec.js:48:1 › journal and room observation reviews visibly reopen received details without commands
+    [desktop] › e2e\playtest-repairs.spec.js:71:1 › preview explains unavailable accusations at the action location and server stays unchanged
+    [mobile] › e2e\playtest-repairs.spec.js:25:1 › new-case selection remains available across active, preview and ended investigations
+    [mobile] › e2e\playtest-repairs.spec.js:48:1 › journal and room observation reviews visibly reopen received details without commands
+    [mobile] › e2e\playtest-repairs.spec.js:71:1 › preview explains unavailable accusations at the action location and server stays unchanged

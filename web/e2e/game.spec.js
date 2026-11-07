@@ -60,6 +60,8 @@ test('complete real offline room investigation, cancellation, both verdicts and 
   const beforeReview = mutations.length;
   await page.getByRole('button', { name: 'Review observation' }).first().click();
   expect(mutations).toHaveLength(beforeReview);
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await page.getByRole('button', { name: 'Close', exact: true }).click();
   await dialog(page); await expect(page.getByRole('button', { name: 'Cancel accusation' })).toBeFocused();
   await page.getByRole('button', { name: 'Cancel accusation' }).click();
   await expect(page.getByRole('dialog')).toHaveCount(0); await expect(page.getByText('Investigation open', { exact: true })).toBeVisible();
