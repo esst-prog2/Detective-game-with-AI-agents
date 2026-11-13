@@ -77,7 +77,16 @@ if __name__ == '__main__':
         else:
             checked('/repos/'+REPO+'/git/refs/heads/gh-pages','PATCH',{'sha':commit['sha'],'force':False})
         if status==404:
-            pages=checked('/repos/'+REPO+'/pages','POST',{'build_type':'legacy','source':{'branch':'gh-pages','path':'/'}})
+            enabled, response = request('/repos/'+REPO+'/pages','POST',{'build_type':'legacy','source':{'branch':'gh-pages','path':'/'}})
+            if enabled==409:
+                # Creating gh-pages can auto-enable Pages before this request.
+                pages=checked('/repos/'+REPO+'/pages')
+                if pages.get('source') != {'branch':'gh-pages','path':'/'}:
+                    raise SystemExit('Publication blocked: automatic Pages source differs')
+            elif enabled==201:
+                pages=response
+            else:
+                raise RuntimeError(f'Pages setup returned HTTP {enabled}: {response.get("message")}')
         report={'source_commit':source,'deployment_commit':commit['sha'],'branch':'gh-pages','files':list(sorted(files)),'url':pages.get('html_url'),'method':'GitHub Pages branch publishing; isolated static root; no inherited game history'}
         (root/'docs/homework-9/deployment.json').write_text(json.dumps(report,indent=2))
         print(json.dumps(report))

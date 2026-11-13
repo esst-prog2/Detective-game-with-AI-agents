@@ -1,5 +1,7 @@
 # Homework 9 — Promotional page process
 
+**Final status, 2026-11-13:** published and verified at https://esst-prog2.github.io/Detective-game-with-AI-agents/. Earlier pending/unpublished statements below describe their historical step, not the final state. User selected variant 2 and approved all four critique refinements.
+
 This record describes actual work. Required tool workflows have not yet run. Installation approval and the user's later design selection are separate gates. No page has been published.
 
 | Step | What the tool did | What I decided | Commit |
@@ -79,3 +81,33 @@ Selected implementation commit: `60ca21f199553aa845f0cfa5d4890733d43ad094`.
 Full record: docs/homework-9/critique.md, critique-design.md, critique-fix-verdict.md and mechanical/critique-mechanical.md. Main report was presented in chat before snapshot persistence. First run, no trend yet. Reviewer disposition is **ship within the four-fix design scope**; no native screen-reader or cross-browser certification is claimed. User questions were answered before fixes. All historical screenshots/proof reports are retained outside the deployable artifact.
 
 Verification after fixes: production Vite build passes; project-prefix smoke at 360/390/768/1440 widths passes all six images, hash destinations, keyboard skip/setup, no duplicate IDs, no helper scaffolding, no game API requests, zero page/network errors and real CSS 200% reflow. Node regression suite passes 656/656; src/, web/ and package files are unchanged. Audited production artifact has six files, 256,232 bytes; zero findings across exact artifact bytes, all reachable historical promo text/assets, and tracked .env history. It contains no JavaScript or source maps. Existing repository game source contains solutions and is intentionally excluded from the artifact and its new branch history.
+
+Critique/improvement commit: `78f5c18cf2a4d2ff42c5e1e706ba632d28e2fa59`. Follow-up `244ec61c8221ccf16ec8bad104303f6ab0acc96a` normalized two trailing blank lines and refreshed the history audit; the published artifact was unchanged.
+
+## Step 7 — GitHub Pages publication and public verification (2026-11-13)
+
+| Step | What the tool did | What I decided | Commit |
+|---|---|---|---|
+| 7. Publication | Uploaded only the audited six-file build to a new independent gh-pages root through the authenticated GitHub Git API. GitHub auto-enabled Pages on branch creation; the explicit setup POST returned409 already enabled. Read-only follow-up confirmed gh-pages /, completed successful workflow43492475698 and built status. Actual HTTPS browser smoke passed360/390/768/1440 widths, all6 images, anchors, keyboard,200%reflow, no API calls or runtime errors; every served file's SHA256 matches the audit. | User already authorized publication after selecting the design. Assistant preserved existing public visibility and main/game source, did not force-push or rewrite history, and resumed the existing deployment after409 instead of uploading another build. Final page is ready for the user to submit its URL on Canvas; no Canvas submission is claimed. | Deployment root `c1230608987a2fcda603f72bbe020dc921eb717d`, built from source `244ec61c8221ccf16ec8bad104303f6ab0acc96a`. |
+
+Public URL: https://esst-prog2.github.io/Detective-game-with-AI-agents/
+
+Successful workflow: https://github.com/esst-prog2/Detective-game-with-AI-agents/actions/runs/43492475698
+
+Evidence: docs/homework-9/deployment.json, publication-audit.json, verification/public-smoke.json and public-*.png. GitHub/requisite links independently returned200. Full-size screenshot links were browser-tested by the independent reviewer. Review records are outside the deployed artifact; server modules, private case solution fields, credentials and live-helper state are absent from Pages. Original game source is unchanged; the existing repository still contains its source and ordinary Git author metadata. No native screen-reader/cross-browser certification or clean-machine reinstall is claimed; current offline game startup and real Ashcroft evidence/dialogue plus Greyhaven selection were exercised. No video, slides or new mechanics were implemented.
+
+## Commit index
+
+| Step | Real commit |
+|---|---|
+| Preflight | ac2fe9c (+362c281 hash reference) |
+| Approved tool installation | 6788ba6 |
+| gstack content + product context | dc789b8 |
+| Impeccable shape | 06fed5b; user confirmation205d09b |
+| Impeccable generate, three browser variants | 636fd35 |
+| Selected variant2 | 60ca21f |
+| Three-perspective critique and fixes | 78f5c18 |
+| Final audit/whitespace | 244ec61 |
+| Published Pages artifact | c123060 (separate gh-pages root) |
+
+Final verification/documentation commits follow this index in Git history and are listed in the final handoff. All original planning-log lines remain append-only.

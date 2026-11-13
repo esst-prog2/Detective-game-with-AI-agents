@@ -1,4 +1,4 @@
-# Impeccable browser variants — awaiting selection
+# Impeccable browser variants — historical generation record
 
 2026-11-13. User approved the shape brief before any page markup. Approval commit: `205d09b`.
 
@@ -30,3 +30,5 @@ The seed-stage planning structures remain the same three families in the approve
 ## User decision
 
 Pending. Review the page in the browser, cycle through the floating bar's variants and tune controls, then select a variant in chat or use Accept. The page will not be published before that choice.
+
+**Resolved:** user selected variant2 in the real browser and confirmed in chat. Its density/proof values were1/1. Impeccable live-complete confirmed completed after the selected design was converted to permanent source; helper stopped. Selected-design commit60ca21f; later critique improvements preserve that layout. Public result: https://esst-prog2.github.io/Detective-game-with-AI-agents/.

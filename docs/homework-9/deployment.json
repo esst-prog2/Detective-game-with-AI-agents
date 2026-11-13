@@ -1,0 +1,50 @@
+{
+  "source_commit": "244ec61c8221ccf16ec8bad104303f6ab0acc96a",
+  "deployment_commit": "c1230608987a2fcda603f72bbe020dc921eb717d",
+  "branch": "gh-pages",
+  "url": "https://esst-prog2.github.io/Detective-game-with-AI-agents/",
+  "method": "GitHub Pages branch publishing, six-file independent root artifact",
+  "workflow": {
+    "id": 43492475698,
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/esst-prog2/Detective-game-with-AI-agents/actions/runs/43492475698"
+  },
+  "public_file_checks": [
+    {
+      "path": ".nojekyll",
+      "status": 200,
+      "sha256_match": true
+    },
+    {
+      "path": "assets/dialogue-C9zKcuzf.webp",
+      "status": 200,
+      "sha256_match": true
+    },
+    {
+      "path": "assets/evidence-BzI0SqBd.webp",
+      "status": 200,
+      "sha256_match": true
+    },
+    {
+      "path": "assets/index-ChEaTma-.css",
+      "status": 200,
+      "sha256_match": true
+    },
+    {
+      "path": "assets/study-DFyXsIxj.webp",
+      "status": 200,
+      "sha256_match": true
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "sha256_match": true
+    }
+  ],
+  "pages_source": {
+    "branch": "gh-pages",
+    "path": "/"
+  },
+  "note": "gh-pages creation auto-enabled Pages; POST returned409, confirmed correct source and resumed existing successful deployment without another upload"
+}
