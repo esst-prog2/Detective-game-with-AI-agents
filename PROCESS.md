@@ -19,3 +19,11 @@ This record describes actual work. Required tool workflows have not yet run. Ins
 - No gstack content, Impeccable brief, design variants, critique, publication, or completed security review is claimed at this stage.
 
 Preflight commit: ac2fe9cda4f333c45c7970e02ae868354b495ba5 (docs: record homework 9 preflight and required tool setup).
+
+## Step 1 — Approved tool installation (2026-11-13)
+
+| Step | What the tool did | What I decided | Commit |
+|---|---|---|---|
+| 1. Tool installation | Installed Bun 1.4.4 using its documented npm global install; cloned official garrytan/gstack at 6b033e79fa06477cbec44875209db65a281e0718 and ran ./setup --host codex --no-team through Git Bash; installed Impeccable 4.9.0 with its official CLI for Codex globally, without optional hooks. gstack setup reports version 1.99.3.0 and downloaded its Chromium tooling. setup --status verifies the global router and all 74 section links. Impeccable --version and context execute successfully (engine 0.1.23, Windows x64). | User explicitly approved all three installations and selected gstack Builder mode for the university demo. Assistant kept installers outside the game checkout, used Codex-only scope, and left optional Impeccable hooks and gstack team auto-update disabled. | Installation commit is the commit introducing this section; its hash will be recorded with the next completed step. |
+
+Compatibility notes: gstack labels Codex support experimental. Its optional CSO scanner is unavailable without the Windows MSVC C++ toolchain; no additional toolchain was installed. This does not prevent office-hours or the required Impeccable workflows. Bun works via bun.cmd in PowerShell and bun in Git Bash without changing PowerShell execution policy. gstack's local brain cache is unavailable because no gbrain service is configured; no prior product/goals digest was claimed. Impeccable's context loader ran; init/shape interviews and confirmation are pending, and no UI implementation has started.

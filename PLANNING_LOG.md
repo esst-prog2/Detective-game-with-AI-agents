@@ -626,3 +626,6 @@ In my real offline game session, I questioned Ben Carter, inspected all three ev
 
 - 2026-11-13 - User decision: complete Homework 9 as a GitHub Pages promotional page using genuine gstack office-hours and Impeccable shape/generate/critique, separate step commits and PROCESS.md; require approval before software installation and stop for the user's variant selection; no game mechanics, video or slides work.
 - 2026-11-13 - Assistant decision: start feature/homework-9-promo-page from verified origin/main 2c9d0ba, preserve the unrelated demeanor worktree, isolate the future static promo from the local game API, and pause required tool execution until installation approval; official Codex setup requires missing Bun and gstack/Impeccable installations.
+
+- 2026-11-13 - User decision: approved installation of Bun, official gstack for Codex and official Impeccable for Codex; selected Builder mode for the university demo and approved general-category research for office-hours.
+- 2026-11-13 - Assistant decision/results: installed Bun1.4.4, gstack1.99.3.0 (official6b033e79) with Codex-only solo setup and Chromium, and Impeccable4.9.0/engine0.1.23 globally without optional hooks; verified74 gstack section links. Optional CSO/MSVC and gbrain remain unavailable and are outside the required promo workflow.
