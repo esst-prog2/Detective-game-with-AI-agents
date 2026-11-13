@@ -49,3 +49,11 @@ Content commit: `dc789b861fdb7f97c1ab9281d53f335b8023f9f4`.
 Operational note: an earlier attempt to inspect concept-seed help returned an unscoped/degraded roll because this engine treats that argument as a command invocation. It did not determine a design. The subsequent explicit surface/persuade invocation with network access succeeded and is the only concept result used in the brief. No generated browser session, overlay, sketch or variant exists yet. The shape skill explicitly stops for confirmation of the brief before code.
 
 Shape draft commit: `06fed5b`. User approved the brief on 2026-11-13 with "I approve". Shape is now confirmed; proceed to actual Impeccable generate browser variants, with visual selection still pending.
+
+## Step 4 — Impeccable generate (2026-11-13)
+
+| Step | What the tool did | What I decided | Commit |
+|---|---|---|---|
+| 4. Browser variants | Installed Impeccable live-generate opened the isolated localhost:5174 page and created real session 7426b21b, action layout, count 3. Agent wrote three complete page replacements into the returned scaffold atomically, with scoped CSS and working Tune parameters, then published them to the actual overlay using live-poll done/then-poll. Details and provenance are in docs/homework-9/generated-variants.md. | User approved the shape brief (205d09b) but has not chosen a visual variant. Assistant preserves the illustrated charcoal/brass identity and presents case-file spread, gameplay walkthrough and room-led theatre layouts. Stop here for selection; no selected-design finalization, critique or publication. | Generation commit is the commit introducing promo/ and this record; its hash will be appended with the next completed step. |
+
+Preview limitations are explicit: no variant screenshot or QA was run because the installed workflow makes the overlay the pre-accept review channel. Game source is untouched. Historical screenshots still need final freshness/size review and an evidence-inspection image. Local overlay credentials are excluded from committed source and runtime records are ignored. The final static deployment must exclude all helper scaffolding.
