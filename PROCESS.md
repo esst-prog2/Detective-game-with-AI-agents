@@ -17,3 +17,5 @@ This record describes actual work. Required tool workflows have not yet run. Ins
 - Official Impeccable installation: https://impeccable.style/tutorials/getting-started/ uses npx impeccable install, selecting Codex and installation scope. It supports Node 18.19+ and may require reloading the coding tool. The required shape, generate and critique workflows are documented at https://impeccable.style/docs/.
 - The Sites skill was inspected for website guidance; the user's explicit GitHub Pages destination and genuine-tool requirements take precedence over Sites hosting defaults. No Sites project was created.
 - No gstack content, Impeccable brief, design variants, critique, publication, or completed security review is claimed at this stage.
+
+Preflight commit: ac2fe9cda4f333c45c7970e02ae868354b495ba5 (docs: record homework 9 preflight and required tool setup).
