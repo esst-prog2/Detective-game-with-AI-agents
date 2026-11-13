@@ -42,4 +42,3 @@ Mutable preflight succeeded: set title to `[Human] The Ashcroft Manor Murder —
 Stopped helper successfully with `live-server stop --keep-inject` (reported “Stopped live server on port 8400”). No HTML injection/removal command was used. Existing promo dev server remains running. Browser closed. Evidence scripts retained as reproducible artifacts rather than temporary files. Parent owns target slug, ignore-list, combined snapshot, trend, and final metadata steps.
 
 Artifacts: `detector.json`, `browser-evidence.json`, `mechanical-check.mjs`, `keyboard-check.mjs`, `mechanical-360.png`, `mechanical-390.png`, `mechanical-768.png`, `mechanical-1440.png`, `mechanical-zoom200.png`, `mechanical-focus.png`, `mechanical-cta.png`, `mechanical-overlay.png`.
-
