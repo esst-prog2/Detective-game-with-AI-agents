@@ -5,3 +5,8 @@ node_modules/
 web/dist/
 web/test-results/
 web/playwright-report/
+promo/dist/
+promo/.impeccable/live/server.json
+promo/.impeccable/live/roots.json
+promo/.impeccable/live/inject-journal.json
+promo/.impeccable/live/sessions/

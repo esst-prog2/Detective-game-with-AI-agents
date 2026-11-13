@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-13T19:26:13.834552+00:00",
+  "title": "Design System: The Ashcroft Manor Murder",
+  "extensions": {
+    "shadows": [],
+    "motion": [
+      {
+        "name": "anchor-scroll",
+        "value": "smooth",
+        "purpose": "Anchor navigation; auto when prefers-reduced-motion is reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "800px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "description": "Primary action extracted from the shipped promo.",
+      "html": "<a class=\"ds-action\" href=\"#try\">Try it locally</a>",
+      "css": ".ds-action{display:inline-block;padding:.85rem 1.5rem;background:var(--brass);color:#141719;text-decoration:none;font:600 16px/1.65 \"Segoe UI\",sans-serif}.ds-action:hover{background:var(--paper)}.ds-action:focus-visible{outline:3px solid var(--brass);outline-offset:6px}",
+      "refersTo": "button-primary"
+    },
+    {
+      "name": "Text action",
+      "kind": "button",
+      "description": "Text action extracted from the shipped promo.",
+      "html": "<a class=\"ds-text\" href=\"#source\">View on GitHub</a>",
+      "css": ".ds-text{display:inline-flex;align-items:center;min-height:44px;color:var(--ink);font:16px/1.65 \"Segoe UI\",sans-serif;text-underline-offset:.25em}.ds-text:focus-visible{outline:3px solid var(--brass);outline-offset:6px}"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "description": "Navigation extracted from the shipped promo.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Example\"><a href=\"#how\">The investigation</a><a href=\"#try\">Try locally</a></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem 1.5rem;font:16px/1.65 \"Segoe UI\",sans-serif}.ds-nav a{display:inline-flex;align-items:center;min-height:44px;padding:.5rem 0;color:var(--ink);text-decoration:none}.ds-nav a:hover{color:var(--brass)}.ds-nav a:focus-visible{outline:3px solid var(--brass);outline-offset:6px}"
+    },
+    {
+      "name": "Command block",
+      "kind": "custom",
+      "description": "Command block extracted from the shipped promo.",
+      "html": "<pre class=\"ds-command\"><code>npm.cmd run start:api</code></pre>",
+      "css": ".ds-command{overflow:auto;background:#0c1012;padding:1.5rem;max-width:100%;white-space:pre-wrap;overflow-wrap:anywhere;font-size:.85rem;line-height:1.6;color:var(--ink);margin:0}.ds-command code{font-family:Consolas,monospace}",
+      "refersTo": "code-block"
+    },
+    {
+      "name": "Walkthrough step",
+      "kind": "custom",
+      "description": "Walkthrough step extracted from the shipped promo.",
+      "html": "<ol class=\"ds-steps\"><li><h3>Explore</h3><p>Visit the study, library and garden.</p></li></ol>",
+      "css": ".ds-steps{list-style:none;margin:0;padding:0;counter-reset:steps;color:var(--ink)}.ds-steps li{counter-increment:steps;display:grid;grid-template-columns:3rem 1fr;column-gap:1rem;padding:1.5rem 0;border-bottom:1px solid var(--line)}.ds-steps li:before{content:counter(steps);font:2rem Georgia,serif;color:var(--brass);grid-row:span 2}.ds-steps h3{margin:0 0 .5rem;font:400 1.8rem/1.08 Georgia,serif}.ds-steps p{grid-column:2;margin:0;color:var(--muted);font:16px/1.65 \"Segoe UI\",sans-serif}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Gameplay walkthrough",
+    "overview": "The adopted concept is the user-selected gameplay walkthrough, implemented code-first. Illustrated detective atmosphere meets a modern, professional introduction: elegant serif headings, readable supporting text, restrained charcoal and brass, and genuine game imagery.\n\nThis records the built promo, not a new identity proposal. Source evidence is `index.html` and the final cascade in `style.css`; product constraints remain in `../PRODUCT.md`, with the approved surface brief in `../docs/homework-9/design-brief.md`.",
+    "keyCharacteristics": [
+      "Broad genuine gameplay proof.",
+      "Serif hierarchy and quiet sans serif reading.",
+      "Restrained brass emphasis on dark grounds.",
+      "Clear local-play instructions."
+    ],
+    "rules": [],
+    "dos": [
+      "Do preserve genuine, spoiler-safe gameplay images with descriptive alternatives and full-size links.",
+      "Do retain visible keyboard focus, reachable navigation and the mobile reading sequence.",
+      "Do describe the game as locally run and preserve the two-terminal setup explanation.",
+      "Do consult the existing source and PRODUCT.md for claims, preview limits and AI behavior."
+    ],
+    "donts": [
+      "Don't imply that the static promo hosts a playable game.",
+      "Don't fabricate game imagery, case facts, solutions or AI capabilities.",
+      "Don't replace the illustrated atmosphere with decorative interface effects unsupported by the built page."
+    ]
+  }
+}

@@ -1,5 +1,11 @@
 # Advanced-programming-project
 
+## Promotional page — Homework 9
+
+[Visit the public detective-game promo](https://esst-prog2.github.io/Detective-game-with-AI-agents/).
+It introduces Ashcroft, shows genuine gameplay and explains local setup. The game itself still needs the local Node API; GitHub Pages hosts the promotional page only.
+The approved Impeccable gameplay-walkthrough design, tool contributions, decisions and verification are recorded in [PROCESS.md](PROCESS.md). Isolated site source is in `promo/`; [deployment and reproduction](docs/homework-9/deployment-method.md) describe the separate `gh-pages` artifact.
+
 ## Multi-case foundation (Milestone A)
 
 Ashcroft remains the default full case. The start screen also offers the separately labeled Greyhaven repair-dispute preview. The complete Greyhaven mystery and synthetic isolation fixtures are not playable selections. Restart the API after updating, then reload the browser. The client checks case identity and mode before accepting a response, so it requires the updated API.

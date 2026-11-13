@@ -1,0 +1,721 @@
+{
+  "url": "http://127.0.0.1:5174/",
+  "viewports": [
+    {
+      "width": 360,
+      "scrollWidth": 360,
+      "overflow": [],
+      "images": [
+        {
+          "src": "./assets/study.webp",
+          "alt": "Actual gameplay: the illustrated study, Alice Mercer's public dossier and two objects available for inspection.",
+          "complete": true,
+          "naturalWidth": 1440
+        },
+        {
+          "src": "./assets/alice.svg",
+          "alt": "Illustrated portrait of Alice Mercer",
+          "complete": true,
+          "naturalWidth": 120
+        },
+        {
+          "src": "./assets/ben.svg",
+          "alt": "Illustrated portrait of Ben Carter",
+          "complete": true,
+          "naturalWidth": 120
+        },
+        {
+          "src": "./assets/clara.svg",
+          "alt": "Illustrated portrait of Clara Voss",
+          "complete": true,
+          "naturalWidth": 120
+        },
+        {
+          "src": "./assets/evidence.webp",
+          "alt": "Actual gameplay: the silver cufflink observation is open, showing its description without a solution or verdict.",
+          "complete": true,
+          "naturalWidth": 1440
+        },
+        {
+          "src": "./assets/dialogue.webp",
+          "alt": "Actual gameplay: Alice's interview screen with suggested questions and a field for free-text questioning.",
+          "complete": true,
+          "naturalWidth": 1440
+        }
+      ],
+      "targets": [
+        {
+          "text": "Skip to content",
+          "href": "#main",
+          "width": 131.390625,
+          "height": 50.390625
+        },
+        {
+          "text": "Ashcroft Manor",
+          "href": "#main",
+          "width": 167.296875,
+          "height": 27
+        },
+        {
+          "text": "The investigation",
+          "href": "#how",
+          "width": 105.46875,
+          "height": 23.09375
+        },
+        {
+          "text": "The suspects",
+          "href": "#suspects",
+          "width": 78.921875,
+          "height": 23.09375
+        },
+        {
+          "text": "Try locally",
+          "href": "#try",
+          "width": 60.34375,
+          "height": 23.09375
+        },
+        {
+          "text": "Try it locally",
+          "href": "#try",
+          "width": 135.078125,
+          "height": 53.578125
+        },
+        {
+          "text": "View on GitHub",
+          "href": "https://github.com/esst-prog2/Detective-game-with-AI-agents",
+          "width": 111.03125,
+          "height": 26.390625
+        },
+        {
+          "text": "http://127.0.0.1:5173",
+          "href": "http://127.0.0.1:5173",
+          "width": 145.375,
+          "height": 21
+        },
+        {
+          "text": "README for further setup details",
+          "href": "https://github.com/esst-prog2/Detective-game-with-AI-agents#illustrated-browser-game",
+          "width": 303.796875,
+          "height": 47.390625
+        },
+        {
+          "text": "Explore the source on GitHub",
+          "href": "https://github.com/esst-prog2/Detective-game-with-AI-agents",
+          "width": 324,
+          "height": 26.390625
+        }
+      ],
+      "anchors": [
+        {
+          "href": "#main",
+          "exists": true
+        },
+        {
+          "href": "#main",
+          "exists": true
+        },
+        {
+          "href": "#how",
+          "exists": true
+        },
+        {
+          "href": "#suspects",
+          "exists": true
+        },
+        {
+          "href": "#try",
+          "exists": true
+        },
+        {
+          "href": "#try",
+          "exists": true
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "scrollWidth": 390,
+      "overflow": [],
+      "images": [
+        {
+          "src": "./assets/study.webp",
+          "alt": "Actual gameplay: the illustrated study, Alice Mercer's public dossier and two objects available for inspection.",
+          "complete": true,
+          "naturalWidth": 1440
+        },
+        {
+          "src": "./assets/alice.svg",
+          "alt": "Illustrated portrait of Alice Mercer",
+          "complete": true,
+          "naturalWidth": 120
+        },
+        {
+          "src": "./assets/ben.svg",
+          "alt": "Illustrated portrait of Ben Carter",
+          "complete": true,
+          "naturalWidth": 120
+        },
+        {
+          "src": "./assets/clara.svg",
+          "alt": "Illustrated portrait of Clara Voss",
+          "complete": true,
+          "naturalWidth": 120
+        },
+        {
+          "src": "./assets/evidence.webp",
+          "alt": "Actual gameplay: the silver cufflink observation is open, showing its description without a solution or verdict.",
+          "complete": true,
+          "naturalWidth": 1440
+        },
+        {
+          "src": "./assets/dialogue.webp",
+          "alt": "Actual gameplay: Alice's interview screen with suggested questions and a field for free-text questioning.",
+          "complete": true,
+          "naturalWidth": 1440
+        }
+      ],
+      "targets": [
+        {
+          "text": "Skip to content",
+          "href": "#main",
+          "width": 131.390625,
+          "height": 50.390625
+        },
+        {
+          "text": "Ashcroft Manor",
+          "href": "#main",
+          "width": 167.296875,
+          "height": 27
+        },
+        {
+          "text": "The investigation",
+          "href": "#how",
+          "width": 105.46875,
+          "height": 23.09375
+        },
+        {
+          "text": "The suspects",
+          "href": "#suspects",
+          "width": 78.921875,
+          "height": 23.09375
+        },
+        {
+          "text": "Try locally",
+          "href": "#try",
+          "width": 60.34375,
+          "height": 23.09375
+        },
+        {
+          "text": "Try it locally",
+          "href": "#try",
+          "width": 135.078125,
+          "height": 53.578125
+        },
+        {
+          "text": "View on GitHub",
+          "href": "https://github.com/esst-prog2/Detective-game-with-AI-agents",
+          "width": 111.03125,
+          "height": 26.390625
+        },
+        {
+          "text": "http://127.0.0.1:5173",
+          "href": "http://127.0.0.1:5173",
+          "width": 145.375,
+          "height": 21
+        },
+        {
+          "text": "README for further setup details",
+          "href": "https://github.com/esst-prog2/Detective-game-with-AI-agents#illustrated-browser-game",
+          "width": 232.109375,
+          "height": 21
+        },
+        {
+          "text": "Explore the source on GitHub",
+          "href": "https://github.com/esst-prog2/Detective-game-with-AI-agents",
+          "width": 351,
+          "height": 26.390625
+        }
+      ],
+      "anchors": [
+        {
+          "href": "#main",
+          "exists": true
+        },
+        {
+          "href": "#main",
+          "exists": true
+        },
+        {
+          "href": "#how",
+          "exists": true
+        },
+        {
+          "href": "#suspects",
+          "exists": true
+        },
+        {
+          "href": "#try",
+          "exists": true
+        },
+        {
+          "href": "#try",
+          "exists": true
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "scrollWidth": 768,
+      "overflow": [],
+      "images": [
+        {
+          "src": "./assets/study.webp",
+          "alt": "Actual gameplay: the illustrated study, Alice Mercer's public dossier and two objects available for inspection.",
+          "complete": true,
+          "naturalWidth": 1440
+        },
+        {
+          "src": "./assets/alice.svg",
+          "alt": "Illustrated portrait of Alice Mercer",
+          "complete": true,
+          "naturalWidth": 120
+        },
+        {
+          "src": "./assets/ben.svg",
+          "alt": "Illustrated portrait of Ben Carter",
+          "complete": true,
+          "naturalWidth": 120
+        },
+        {
+          "src": "./assets/clara.svg",
+          "alt": "Illustrated portrait of Clara Voss",
+          "complete": true,
+          "naturalWidth": 120
+        },
+        {
+          "src": "./assets/evidence.webp",
+          "alt": "Actual gameplay: the silver cufflink observation is open, showing its description without a solution or verdict.",
+          "complete": true,
+          "naturalWidth": 1440
+        },
+        {
+          "src": "./assets/dialogue.webp",
+          "alt": "Actual gameplay: Alice's interview screen with suggested questions and a field for free-text questioning.",
+          "complete": true,
+          "naturalWidth": 1440
+        }
+      ],
+      "targets": [
+        {
+          "text": "Skip to content",
+          "href": "#main",
+          "width": 131.390625,
+          "height": 50.390625
+        },
+        {
+          "text": "Ashcroft Manor",
+          "href": "#main",
+          "width": 167.296875,
+          "height": 27
+        },
+        {
+          "text": "The investigation",
+          "href": "#how",
+          "width": 105.46875,
+          "height": 23.09375
+        },
+        {
+          "text": "The suspects",
+          "href": "#suspects",
+          "width": 78.921875,
+          "height": 23.09375
+        },
+        {
+          "text": "Try locally",
+          "href": "#try",
+          "width": 60.34375,
+          "height": 23.09375
+        },
+        {
+          "text": "Try it locally",
+          "href": "#try",
+          "width": 135.078125,
+          "height": 53.578125
+        },
+        {
+          "text": "View on GitHub",
+          "href": "https://github.com/esst-prog2/Detective-game-with-AI-agents",
+          "width": 111.03125,
+          "height": 26.390625
+        },
+        {
+          "text": "http://127.0.0.1:5173",
+          "href": "http://127.0.0.1:5173",
+          "width": 145.375,
+          "height": 21
+        },
+        {
+          "text": "README for further setup details",
+          "href": "https://github.com/esst-prog2/Detective-game-with-AI-agents#illustrated-browser-game",
+          "width": 232.109375,
+          "height": 21
+        },
+        {
+          "text": "Explore the source on GitHub",
+          "href": "https://github.com/esst-prog2/Detective-game-with-AI-agents",
+          "width": 691.21875,
+          "height": 26.390625
+        }
+      ],
+      "anchors": [
+        {
+          "href": "#main",
+          "exists": true
+        },
+        {
+          "href": "#main",
+          "exists": true
+        },
+        {
+          "href": "#how",
+          "exists": true
+        },
+        {
+          "href": "#suspects",
+          "exists": true
+        },
+        {
+          "href": "#try",
+          "exists": true
+        },
+        {
+          "href": "#try",
+          "exists": true
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "scrollWidth": 1440,
+      "overflow": [],
+      "images": [
+        {
+          "src": "./assets/study.webp",
+          "alt": "Actual gameplay: the illustrated study, Alice Mercer's public dossier and two objects available for inspection.",
+          "complete": true,
+          "naturalWidth": 1440
+        },
+        {
+          "src": "./assets/alice.svg",
+          "alt": "Illustrated portrait of Alice Mercer",
+          "complete": true,
+          "naturalWidth": 120
+        },
+        {
+          "src": "./assets/ben.svg",
+          "alt": "Illustrated portrait of Ben Carter",
+          "complete": true,
+          "naturalWidth": 120
+        },
+        {
+          "src": "./assets/clara.svg",
+          "alt": "Illustrated portrait of Clara Voss",
+          "complete": true,
+          "naturalWidth": 120
+        },
+        {
+          "src": "./assets/evidence.webp",
+          "alt": "Actual gameplay: the silver cufflink observation is open, showing its description without a solution or verdict.",
+          "complete": true,
+          "naturalWidth": 1440
+        },
+        {
+          "src": "./assets/dialogue.webp",
+          "alt": "Actual gameplay: Alice's interview screen with suggested questions and a field for free-text questioning.",
+          "complete": true,
+          "naturalWidth": 1440
+        }
+      ],
+      "targets": [
+        {
+          "text": "Skip to content",
+          "href": "#main",
+          "width": 131.390625,
+          "height": 50.390625
+        },
+        {
+          "text": "Ashcroft Manor",
+          "href": "#main",
+          "width": 167.296875,
+          "height": 27
+        },
+        {
+          "text": "The investigation",
+          "href": "#how",
+          "width": 120.53125,
+          "height": 26.390625
+        },
+        {
+          "text": "The suspects",
+          "href": "#suspects",
+          "width": 90.203125,
+          "height": 26.390625
+        },
+        {
+          "text": "Try locally",
+          "href": "#try",
+          "width": 68.953125,
+          "height": 26.390625
+        },
+        {
+          "text": "Try it locally",
+          "href": "#try",
+          "width": 135.078125,
+          "height": 53.578125
+        },
+        {
+          "text": "View on GitHub",
+          "href": "https://github.com/esst-prog2/Detective-game-with-AI-agents",
+          "width": 111.03125,
+          "height": 26.390625
+        },
+        {
+          "text": "http://127.0.0.1:5173",
+          "href": "http://127.0.0.1:5173",
+          "width": 145.375,
+          "height": 21
+        },
+        {
+          "text": "README for further setup details",
+          "href": "https://github.com/esst-prog2/Detective-game-with-AI-agents#illustrated-browser-game",
+          "width": 232.109375,
+          "height": 21
+        },
+        {
+          "text": "Explore the source on GitHub",
+          "href": "https://github.com/esst-prog2/Detective-game-with-AI-agents",
+          "width": 1164.8125,
+          "height": 26.390625
+        }
+      ],
+      "anchors": [
+        {
+          "href": "#main",
+          "exists": true
+        },
+        {
+          "href": "#main",
+          "exists": true
+        },
+        {
+          "href": "#how",
+          "exists": true
+        },
+        {
+          "href": "#suspects",
+          "exists": true
+        },
+        {
+          "href": "#try",
+          "exists": true
+        },
+        {
+          "href": "#try",
+          "exists": true
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "consoleMessages": [
+    {
+      "type": "debug",
+      "text": "[vite] connecting..."
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connected."
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connecting..."
+    },
+    {
+      "type": "debug",
+      "text": "[vite] connected."
+    },
+    {
+      "type": "startGroup",
+      "text": "%c[impeccable] 4 anti-patterns found color: oklch(84% 0.19 80.46); font-weight: bold"
+    },
+    {
+      "type": "log",
+      "text": "%cstraggler%c \"know.\" alone on the last of 2 lines (7% of the measure) color: oklch(84% 0.19 80.46); font-weight: bold color: inherit JSHandle@node"
+    },
+    {
+      "type": "log",
+      "text": "%cstraggler%c \"Manor.\" alone on the last of 3 lines (19% of the measure) color: oklch(84% 0.19 80.46); font-weight: bold color: inherit JSHandle@node"
+    },
+    {
+      "type": "log",
+      "text": "%cstraggler%c \"clarification.\" alone on the last of 3 lines (14% of the measure) color: oklch(84% 0.19 80.46); font-weight: bold color: inherit JSHandle@node"
+    },
+    {
+      "type": "log",
+      "text": "%cstraggler%c \"locally.\" alone on the last of 2 lines (8% of the measure) color: oklch(84% 0.19 80.46); font-weight: bold color: inherit JSHandle@node"
+    },
+    {
+      "type": "endGroup",
+      "text": "console.groupEnd"
+    }
+  ],
+  "requests": [
+    "http://127.0.0.1:5174/",
+    "http://127.0.0.1:5174/@vite/client",
+    "http://127.0.0.1:5174/style.css",
+    "http://127.0.0.1:5174/assets/study.webp",
+    "http://127.0.0.1:5174/@fs/D:/Documents/university/MA/3rd%20semester/advanced%20programming/detective%20game/web/node_modules/vite/dist/client/env.mjs",
+    "http://127.0.0.1:5174/assets/alice.svg",
+    "http://127.0.0.1:5174/assets/ben.svg",
+    "http://127.0.0.1:5174/assets/clara.svg",
+    "http://127.0.0.1:5174/assets/evidence.webp",
+    "http://127.0.0.1:5174/assets/dialogue.webp",
+    "http://127.0.0.1:5174/",
+    "http://127.0.0.1:5174/@vite/client",
+    "http://127.0.0.1:5174/style.css",
+    "http://127.0.0.1:5174/assets/study.webp",
+    "http://127.0.0.1:5174/assets/alice.svg",
+    "http://127.0.0.1:5174/assets/ben.svg",
+    "http://127.0.0.1:5174/assets/clara.svg",
+    "http://127.0.0.1:5174/assets/evidence.webp",
+    "http://127.0.0.1:5174/assets/dialogue.webp",
+    "http://127.0.0.1:5174/@fs/D:/Documents/university/MA/3rd%20semester/advanced%20programming/detective%20game/web/node_modules/vite/dist/client/env.mjs",
+    "http://localhost:8400/detect.js"
+  ],
+  "zoom200": {
+    "method": "200% desktop zoom reflow emulation: 1440x900 CSS viewport reduced to 720x450; not native browser zoom",
+    "width": 720,
+    "scrollWidth": 720
+  },
+  "reducedMotion": {
+    "matches": true,
+    "scrollBehavior": "auto"
+  },
+  "focus": [
+    {
+      "text": "Skip to content",
+      "tag": "A",
+      "href": "#main",
+      "outline": "rgb(214, 177, 109) solid 3px",
+      "visible": true
+    },
+    {
+      "text": "Ashcroft Manor",
+      "tag": "A",
+      "href": "#main",
+      "outline": "rgb(214, 177, 109) solid 3px",
+      "visible": true
+    },
+    {
+      "text": "The investigation",
+      "tag": "A",
+      "href": "#how",
+      "outline": "rgb(214, 177, 109) solid 3px",
+      "visible": true
+    },
+    {
+      "text": "The suspects",
+      "tag": "A",
+      "href": "#suspects",
+      "outline": "rgb(214, 177, 109) solid 3px",
+      "visible": true
+    },
+    {
+      "text": "Try locally",
+      "tag": "A",
+      "href": "#try",
+      "outline": "rgb(214, 177, 109) solid 3px",
+      "visible": true
+    },
+    {
+      "text": "Try it locally",
+      "tag": "A",
+      "href": "#try",
+      "outline": "rgb(214, 177, 109) solid 3px",
+      "visible": true
+    },
+    {
+      "text": "View on GitHub",
+      "tag": "A",
+      "href": "https://github.com/esst-prog2/Detective-game-with-AI-agents",
+      "outline": "rgb(214, 177, 109) solid 3px",
+      "visible": true
+    },
+    {
+      "text": "http://127.0.0.1:5173",
+      "tag": "A",
+      "href": "http://127.0.0.1:5173",
+      "outline": "rgb(214, 177, 109) solid 3px",
+      "visible": true
+    },
+    {
+      "text": "README for further setup details",
+      "tag": "A",
+      "href": "https://github.com/esst-prog2/Detective-game-with-AI-agents#illustrated-browser-game",
+      "outline": "rgb(214, 177, 109) solid 3px",
+      "visible": true
+    },
+    {
+      "text": "Explore the source on GitHub",
+      "tag": "A",
+      "href": "https://github.com/esst-prog2/Detective-game-with-AI-agents",
+      "outline": "rgb(214, 177, 109) solid 3px",
+      "visible": true
+    },
+    {
+      "text": "Skip to content\n    Ashcroft ManorThe investigationThe suspectsTry locally\n    \n      \n        The AshcroftManor MurderQuestion the suspects.Examine the evidence.Find out who is lying.An illustrated detective game for people who enjoy following clues and comparing stories. Explore Ashcroft Manor, interview three suspects, and decide who to accuse.Try it locallyView on GitHubRuns on your computer with Node.js and a local game server. No AI key is needed for offline play.\n        A room full of questions. Where will you start?\n      \n      Follow the clues.Make your own case.ExploreVisit the study, library and garden.InspectExamine a torn contract, a silver cufflink and muddy footprints. Keep the details in your evidence journal.QuestionChoose a suggested question or type your own. Ask each suspect about what they know.CompareRead earlier statements alongside the evidence. Notice where accounts disagree.AccuseName the suspect you believe is responsible and see the result of your investigation.\n      Three people.Three accounts to consider.Alice MercerHousekeeperAlice works as the housekeeper at Ashcroft Manor and is employed by Victor Hale.Ben CarterGardenerBen works as Victor Hale's gardener.Clara VossBusiness partnerClara is Victor Hale's business partner and a frequent guest at Ashcroft Manor.\n      See the investigationin action.Move through the manor and inspect the objects you find. Read a clue closely, then return to your journal when you want to compare details.Inspect a clue closely, then keep it in your evidence journal.Start with a suggested question or ask in your own words.\n      More than a fixedconversation.Each suspect has their own information, way of responding, and memory of the conversation within your investigation. The evidence you've inspected and the statements you've heard can open relevant follow-up questions.Questions use reviewed character responses. You can play entirely offline; optional AI selects from authorized performances without inventing new case facts.\n      Another mysteryis taking shape.The Last Bell at GreyhavenRepair Dispute PreviewMeet Mara and Owen Vale, explore reception and the boathouse, and examine two repair-related records. Use what you find to question an account and ask for clarification.This is a separate playable preview. It does not include the complete murder investigation, final accusation or ending.Choose the Greyhaven preview from the game's case-selection screen after starting it locally.\n      Start your owninvestigation.You'll need Git and Node.js 24 LTS. Run the following in PowerShell:git clone https://github.com/esst-prog2/Detective-game-with-AI-agents.git\ncd Detective-game-with-AI-agents\n  npm.cmd ci\nnpm.cmd --prefix web ciStart the game serverIn the same terminal, start offline mode:Remove-Item Env:OPENAI_API_KEY, Env:OPENAI_MODEL -ErrorAction SilentlyContinue\nnpm.cmd run start:apiOpen the browser interfaceIn a second PowerShell terminal, open the cloned repository folder and run:npm.cmd run dev:webOpen http://127.0.0.1:5173 and choose a case. Keep both terminals running. Press Ctrl+C in each to stop.Ports 3001 and 5173 must be free. Reloading the page starts over; there is no save/continue feature. See the README for further setup details.This website introduces the project. Playing requires the local server above.\n    \n    About the projectDeveloped as part of a university Advanced Programming course, this project explores character dialogue, evidence-based questioning and how players compare conflicting accounts.Explore the source on GitHub",
+      "tag": "BODY",
+      "href": null,
+      "outline": "rgb(243, 236, 220) none 3px",
+      "visible": false
+    },
+    {
+      "text": "Skip to content",
+      "tag": "A",
+      "href": "#main",
+      "outline": "rgb(214, 177, 109) solid 3px",
+      "visible": true
+    },
+    {
+      "text": "Ashcroft Manor",
+      "tag": "A",
+      "href": "#main",
+      "outline": "rgb(214, 177, 109) solid 3px",
+      "visible": true
+    }
+  ],
+  "primaryCTA": {
+    "hash": "#try",
+    "targetTop": 32.484375,
+    "text": "Start your owninvestigation."
+  },
+  "preflight": {
+    "title": "[Human] The Ashcroft Manor Murder — Detective Game",
+    "scriptAdded": true,
+    "executed": true
+  },
+  "overlay": {
+    "injected": true,
+    "messages": [
+      {
+        "type": "startGroup",
+        "text": "%c[impeccable] 4 anti-patterns found color: oklch(84% 0.19 80.46); font-weight: bold"
+      }
+    ]
+  },
+  "visibility": "Headless Playwright: screenshots captured; no human-visible persistent browser tab",
+  "keyboardCTA": {
+    "hash": "#try",
+    "targetTop": 76.640625
+  }
+}

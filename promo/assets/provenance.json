@@ -1,0 +1,35 @@
+[
+  {
+    "file": "study.webp",
+    "origin": "Actual offline gameplay captured by scripts/homework-9-capture.mjs on 2026-11-13",
+    "source": "docs/homework-9/captures/study.png",
+    "sourceSHA256": "f580f6852fdbfb3f641fa65ac76ec32b2e4e9bb20d438b3d344ab6e556aacb6d",
+    "dimensions": [
+      1440,
+      993
+    ],
+    "bytes": 71578
+  },
+  {
+    "file": "evidence.webp",
+    "origin": "Actual offline gameplay captured by scripts/homework-9-capture.mjs on 2026-11-13",
+    "source": "docs/homework-9/captures/evidence.png",
+    "sourceSHA256": "f7e4840dfeb992f55a939d63f72e14e9b9028b00dd9b077f73689fb3fff61ce8",
+    "dimensions": [
+      1440,
+      1114
+    ],
+    "bytes": 80554
+  },
+  {
+    "file": "dialogue.webp",
+    "origin": "Actual offline gameplay captured by scripts/homework-9-capture.mjs on 2026-11-13",
+    "source": "docs/homework-9/captures/dialogue.png",
+    "sourceSHA256": "be9e6c4e7879024deb7e4880a6f25ae88319e2085324adddee11de12c0d4a228",
+    "dimensions": [
+      1440,
+      1237
+    ],
+    "bytes": 80536
+  }
+]
