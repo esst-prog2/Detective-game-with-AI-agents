@@ -111,3 +111,5 @@ Evidence: docs/homework-9/deployment.json, publication-audit.json, verification/
 | Published Pages artifact | c123060 (separate gh-pages root) |
 
 Final verification/documentation commits follow this index in Git history and are listed in the final handoff. All original planning-log lines remain append-only.
+
+Final deployment verification and README handoff commit: `afbbe86070969c60c8c55b6ebf30fe3687407018` (pushed). Draft source-review PR: https://github.com/esst-prog2/Detective-game-with-AI-agents/pull/19. The published artifact is already live independently; PR remains unmerged and main/game source untouched. Final remote check confirmed source ahead/behind0/0, the gh-pages artifact ref fetched successfully, and full homework-range whitespace validation passed. Removed only the verification helper's generated Python bytecode cache; no unrelated work was discarded.
