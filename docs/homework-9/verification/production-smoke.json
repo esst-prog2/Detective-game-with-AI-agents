@@ -1,0 +1,41 @@
+{
+  "url": "http://127.0.0.1:5176/Detective-game-with-AI-agents/",
+  "rows": [
+    {
+      "width": 360,
+      "passed": true,
+      "images": 6,
+      "anchors": true,
+      "keyboard": true,
+      "noAPI": true,
+      "consoleErrors": 0
+    },
+    {
+      "width": 390,
+      "passed": true,
+      "images": 6,
+      "anchors": true,
+      "keyboard": true,
+      "noAPI": true,
+      "consoleErrors": 0
+    },
+    {
+      "width": 768,
+      "passed": true,
+      "images": 6,
+      "anchors": true,
+      "keyboard": true,
+      "noAPI": true,
+      "consoleErrors": 0
+    },
+    {
+      "width": 1440,
+      "passed": true,
+      "images": 6,
+      "anchors": true,
+      "keyboard": true,
+      "noAPI": true,
+      "consoleErrors": 0
+    }
+  ]
+}

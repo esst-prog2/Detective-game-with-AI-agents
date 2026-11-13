@@ -53,7 +53,7 @@ Use genuine, individually reviewed gameplay screenshots. No invented evidence bo
 
 Each suspect has their own information, way of responding, and memory of the conversation within your investigation. The evidence you've inspected and the statements you've heard can open relevant follow-up questions.
 
-Questions use reviewed character responses. You can play entirely offline; optional AI selects from authorized performances without inventing new case facts.
+Questions use reviewed character responses. You can play entirely offline; optional AI chooses how a reviewed response is delivered. It cannot add new facts to the case.
 
 ## Another mystery is taking shape
 

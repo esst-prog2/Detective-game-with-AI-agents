@@ -1,0 +1,39 @@
+{
+  "scope": "Exact Pages artifact, all reachable historic promo source/assets, and tracked .env history. No claim of removing existing case source from the public repository.",
+  "manifest": [
+    {
+      "path": ".nojekyll",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "assets/dialogue-C9zKcuzf.webp",
+      "bytes": 80536,
+      "sha256": "238afda369e8d15ec8c663941ea9bb839516dcf5687f974ca0b6666c11f5f75e"
+    },
+    {
+      "path": "assets/evidence-BzI0SqBd.webp",
+      "bytes": 80554,
+      "sha256": "8b5b3ba723c66daf39e8734f2995691129f806382ba0c42bf00699471e667ca8"
+    },
+    {
+      "path": "assets/index-ChEaTma-.css",
+      "bytes": 6147,
+      "sha256": "1855dbc918c630b686d72aa369e72a0642e144600baa07ae2a9107f1babd69ae"
+    },
+    {
+      "path": "assets/study-DFyXsIxj.webp",
+      "bytes": 71578,
+      "sha256": "0f940d5b483a24cd8e451d85c4a5f9432da9e7e1b289253be981817fd35b2d39"
+    },
+    {
+      "path": "index.html",
+      "bytes": 17417,
+      "sha256": "f3036094955893b726723696ff2804be6f9af4e18960e160b32969fa63e2c36e"
+    }
+  ],
+  "history_commits": 2,
+  "history_text_blobs": 8,
+  "tracked_dotenv_commits": 0,
+  "findings": []
+}
