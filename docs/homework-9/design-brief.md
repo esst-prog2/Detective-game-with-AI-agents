@@ -1,6 +1,6 @@
 # Homework 9 — Impeccable shape brief
 
-Status: DRAFT FOR USER CONFIRMATION. No final page code, design variant or publication is approved by this brief.
+Status: APPROVED by the user on 2026-11-13 ("I approve"). No final design variant or publication is approved by this brief.
 
 Prepared 2026-11-13 using installed Impeccable 4.9.0: context loader, init, shape and the new-work guidance for a whole surface inheriting an existing visual identity. PRODUCT.md records the confirmed product context. The user selected code-first browser design. This is a planning brief, not a direction contract or completed design system.
 
