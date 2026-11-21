@@ -1,0 +1,22 @@
+{
+  "bytes": 10023194,
+  "sha256": "aa430ab462f6d621617956d9aff61e50ee1d62c1366d7eb2ba62b52d33043f63",
+  "durationSeconds": 30,
+  "resolution": [
+    1920,
+    1080
+  ],
+  "fps": 30,
+  "frames": 900,
+  "codec": "h264",
+  "pixelFormat": "yuv420p",
+  "audioStreams": 0,
+  "fastStart": true,
+  "topLevelAtoms": [
+    "ftyp",
+    "moov",
+    "free",
+    "mdat"
+  ],
+  "fullDecode": "ffmpeg -v error -i input -f null - completed without errors"
+}

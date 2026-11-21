@@ -658,3 +658,5 @@ In my real offline game session, I questioned Ben Carter, inspected all three ev
 - 2026-11-21 - User decision: approved official HyperFrames and FFmpeg installation for video production. Assistant installed HyperFrames0.9.77 in npmcache and FFmpeg9.1 via hash-verified winget package, separate from game dependencies; captured7genuine1920x1080 states and cancelled accusation without verdict. Use actual HyperFrames HTML/timeline checks/preview/localrender; no paid account, generated music or AI footage.
 
 - 2026-11-21 ? Assistant decided to deliver six HyperFrames scenes using genuine screenshots, a visible opening frame, a concise authored-knowledge caption, silent H.264 1080p/30fps, native controls/poster/transcript, and the existing isolated gh-pages route; source PR remains unmerged for user review.
+
+- 2026-11-21 ? Assistant retained the finished MP4 and editable sources, published the existing isolated promo artifact after audit, and verified actual public playback plus all repaired screenshot links; Canvas submission remains the user?s action and the source PR remains unmerged.
