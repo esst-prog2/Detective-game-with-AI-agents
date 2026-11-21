@@ -1,6 +1,6 @@
 """Check the intended Pages artifact and its relevant Git history; print no secret values."""
 from pathlib import Path
-import hashlib,json,re,subprocess
+import hashlib,json,re,subprocess,os
 
 root=Path(__file__).resolve().parents[1]
 dist=root/'promo/dist'
@@ -36,6 +36,6 @@ for oid,path in blobs:
 env_history=subprocess.check_output(['git','log','--all','--format=%h','--','.env'],text=True).splitlines()
 if env_history:findings.append({'location':'.env tracked history','kind':'environment-file'})
 report={'scope':'Exact Pages artifact, all reachable historic promo source/assets, and tracked .env history. No claim of removing existing case source from the public repository.','manifest':manifest,'history_commits':len(commits),'history_text_blobs':len(blobs),'tracked_dotenv_commits':len(env_history),'findings':findings}
-out=root/'docs/homework-9/publication-audit.json';out.write_text(json.dumps(report,indent=2))
+out=root/os.environ.get('PROMO_RECORD_DIR','docs/homework-9')/'publication-audit.json';out.parent.mkdir(parents=True,exist_ok=True);out.write_text(json.dumps(report,indent=2))
 print(json.dumps({'public_files':len(manifest),'artifact_bytes':sum(i['bytes'] for i in manifest),'history_text_blobs':len(blobs),'findings':findings}))
 raise SystemExit(1 if findings else 0)

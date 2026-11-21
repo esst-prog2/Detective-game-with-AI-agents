@@ -7,6 +7,7 @@ import urllib.error
 from pathlib import Path
 import base64
 import hashlib
+import os
 
 REPO = 'esst-prog2/Detective-game-with-AI-agents'
 
@@ -39,7 +40,8 @@ if __name__ == '__main__':
         print(json.dumps({'branches_status':status, 'branches':[b['name'] for b in branches] if isinstance(branches,list) else []}))
     elif mode == 'publish':
         root = Path(__file__).resolve().parents[1]
-        audit = json.loads((root/'docs/homework-9/publication-audit.json').read_text())
+        record_dir = root/os.environ.get('PROMO_RECORD_DIR','docs/homework-9')
+        audit = json.loads((record_dir/'publication-audit.json').read_text())
         if audit['findings']:
             raise SystemExit('Publication blocked: audit findings remain')
         dist = root/'promo/dist'
@@ -88,7 +90,7 @@ if __name__ == '__main__':
             else:
                 raise RuntimeError(f'Pages setup returned HTTP {enabled}: {response.get("message")}')
         report={'source_commit':source,'deployment_commit':commit['sha'],'branch':'gh-pages','files':list(sorted(files)),'url':pages.get('html_url'),'method':'GitHub Pages branch publishing; isolated static root; no inherited game history'}
-        (root/'docs/homework-9/deployment.json').write_text(json.dumps(report,indent=2))
+        (record_dir/'deployment.json').write_text(json.dumps(report,indent=2))
         print(json.dumps(report))
     elif mode == 'status':
         status,pages=request('/repos/'+REPO+'/pages')
@@ -98,13 +100,15 @@ if __name__ == '__main__':
         status,runs=request('/repos/'+REPO+'/actions/runs?branch=gh-pages&per_page=3')
         print(json.dumps({'runs_http':status,'runs':[{'id':r['id'],'status':r['status'],'conclusion':r['conclusion'],'url':r['html_url'],'sha':r['head_sha']} for r in runs.get('workflow_runs',[])]}))
     elif mode == 'pr':
-        status,pulls=request('/repos/'+REPO+'/pulls?state=open&head=esst-prog2:feature/homework-9-promo-page')
+        branch=subprocess.check_output(['git','branch','--show-current'],text=True).strip()
+        status,pulls=request('/repos/'+REPO+'/pulls?state=open&head=esst-prog2:'+branch)
         if status==200 and pulls:
             print(json.dumps({'pull_request':pulls[0]['html_url'],'existing':True}))
         else:
             root=Path(__file__).resolve().parents[1]
-            body=(root/'docs/homework-9/PR_DESCRIPTION.md').read_text()
-            status,pull=request('/repos/'+REPO+'/pulls','POST',{'title':'Add Homework 9 detective-game promotional page','head':'feature/homework-9-promo-page','base':'main','body':body,'draft':True})
+            body=(root/(sys.argv[2] if len(sys.argv)>2 else 'docs/homework-9/PR_DESCRIPTION.md')).read_text()
+            title=sys.argv[3] if len(sys.argv)>3 else 'Add Homework 9 detective-game promotional page'
+            status,pull=request('/repos/'+REPO+'/pulls','POST',{'title':title,'head':branch,'base':'main','body':body,'draft':True})
             print(json.dumps({'http':status,'pull_request':pull.get('html_url'),'message':pull.get('message')}))
             if status!=201:raise SystemExit(1)
     else:

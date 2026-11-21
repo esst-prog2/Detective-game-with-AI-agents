@@ -1,0 +1,21 @@
+M	PLANNING_LOG.md
+M	PROCESS.md
+M	docs/homework-9/deployment-method.md
+A	docs/homework-9/teacher-feedback-2026-11-21/PR_DESCRIPTION.md
+A	docs/homework-9/teacher-feedback-2026-11-21/before-public-links.json
+A	docs/homework-9/teacher-feedback-2026-11-21/production-1440.png
+A	docs/homework-9/teacher-feedback-2026-11-21/production-360.png
+A	docs/homework-9/teacher-feedback-2026-11-21/production-390.png
+A	docs/homework-9/teacher-feedback-2026-11-21/production-768.png
+A	docs/homework-9/teacher-feedback-2026-11-21/production-smoke.json
+A	docs/homework-9/teacher-feedback-2026-11-21/publication-audit.json
+A	docs/homework-9/teacher-feedback-2026-11-21/repair.md
+M	promo/assets/provenance.json
+M	promo/index.html
+R100	promo/assets/dialogue.webp	promo/public/screenshots/dialogue.webp
+R100	promo/assets/evidence.webp	promo/public/screenshots/evidence.webp
+R100	promo/assets/study.webp	promo/public/screenshots/study.webp
+A	scripts/check-promo-assets.mjs
+M	scripts/homework-9-audit.py
+M	scripts/homework-9-github.py
+M	scripts/homework-9-smoke.mjs
