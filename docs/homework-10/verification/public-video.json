@@ -1,0 +1,20 @@
+{
+  "url": "https://esst-prog2.github.io/Detective-game-with-AI-agents/",
+  "metadata": {
+    "duration": 30,
+    "width": 1920,
+    "height": 1080,
+    "controls": true,
+    "poster": "https://esst-prog2.github.io/Detective-game-with-AI-agents/video/ashcroft-poster.webp",
+    "source": "https://esst-prog2.github.io/Detective-game-with-AI-agents/video/ashcroft-promo.mp4",
+    "rate": 1
+  },
+  "elapsedMs": 30040,
+  "ended": true,
+  "errors": [],
+  "responsiveWidths": [
+    360,
+    768
+  ],
+  "transcript": true
+}

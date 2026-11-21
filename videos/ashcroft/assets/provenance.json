@@ -1,0 +1,43 @@
+{
+  "date": "2026-11-21",
+  "source": "Actual current offline game; no mocked API or fabricated screens",
+  "events": [
+    {
+      "file": "opening.png",
+      "action": "Actual default Ashcroft start screen",
+      "viewport": "1920x1080"
+    },
+    {
+      "file": "study.png",
+      "action": "Started actual offline Ashcroft investigation",
+      "viewport": "1920x1080"
+    },
+    {
+      "file": "evidence.png",
+      "action": "Inspected silver cufflink without ownership interpretation",
+      "viewport": "1920x1080"
+    },
+    {
+      "file": "questioning.png",
+      "action": "Asked Alice an ordinary alibi question; real authored response",
+      "viewport": "1920x1080"
+    },
+    {
+      "file": "garden.png",
+      "action": "Travelled to garden through actual room exit",
+      "viewport": "1920x1080"
+    },
+    {
+      "file": "evidence-response.png",
+      "action": "Presented inspected footprints to Ben; genuine bounded response, no solution",
+      "viewport": "1920x1080"
+    },
+    {
+      "file": "accusation.png",
+      "action": "Opened and changed unconfirmed accusation dialog; no verdict requested",
+      "viewport": "1920x1080"
+    }
+  ],
+  "noAccusationConfirmed": true,
+  "noVerdictCaptured": true
+}

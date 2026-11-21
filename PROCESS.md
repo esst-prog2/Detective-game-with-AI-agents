@@ -144,3 +144,26 @@ Successful workflow: https://github.com/esst-prog2/Detective-game-with-AI-agents
 | Dialogue caption | https://esst-prog2.github.io/Detective-game-with-AI-agents/screenshots/dialogue.webp | 200 |
 
 Dated public-smoke.json records all six real clicks and responsive results; deployment.json records workflow and hashes. public-*.png, production-smoke.json and before-public-links.json preserve distinct before/local/public evidence. Regression failed before and passes after repair. No old verification records overwritten. No macOS/Linux execution or full assistive-technology certification claimed.
+
+## Homework 10 — video preparation (2026-11-21)
+
+| Step | What the tool did | What I decided | Commit |
+|---|---|---|---|
+| V1. Storyboard | Read the video request, current source/Pages history and local lecture08.pdf slides15/16/27. Confirmed PR20 merged as88201ec; started feature/homework-10-promo-video from main. Planned six silent, spoiler-safe beats in docs/homework-10/storyboard.md. | User requested a finished30-second genuine Ashcroft demonstration. Assistant targets1920×1080,30fps,H264; the lecture requires video on promo page and that pageURL on Canvas byNovember21 20:00. | 664149e3e8cdedc9d48b0b459e2ae64d160a3bed |
+| V2. Capture and tooling | Captured seven real1920×1080 game screens with actual offline API/Vite controls; inspected ordinary dialogue, Ben's footprint response and unconfirmed accusation. Saved originals/provenance and source-frame contact sheet. Installed official HyperFrames0.9.77 through npm's CLI cache and FFmpeg9.1 through winget after approval. | User explicitly approved both installations. Assistant keeps dependencies separate from game, cancels accusation and captures no verdict; uses 'Test their stories' over safe evidence questioning. No game code changed. | Capture/tool preparation commit follows this entry. |
+
+No rendered video is claimed at this preparation point. HyperFrames uses HTML/timeline composition and local export; no HeyGen account, paid generation, voice or music is required. Actual capture helper corrected an arrow-prefixed Return to room selector after its first partial run; the completed run saved all seven states and stopped only its own temporary servers. The visual content is genuine, not fabricated UI.
+
+### Homework 10 ? finished edit and local verification (2026-11-21)
+
+Capture/tool commit: `777c3bc`. Built six editable HyperFrames 0.9.77 scenes from seven genuine screenshots. Rendered the actual MP4, inspected its contact sheet and corrected a blank opening frame and a caption encoding defect before re-export. Final source caption: Responses stay within authored character knowledge. Silent by choice; no music/voice licenses required. FFprobe measures 30.000 seconds, 1920x1080, 30fps/900 frames, H.264 High, yuv420p/BT.709; full FFmpeg decode reports no errors. Added native controls, actual-export poster and expandable transcript to isolated promo. No game mechanics changed.
+
+Fresh HyperFrames checks have zero lint/runtime/layout/motion/contrast errors or warnings; image-crop information is intentional and film_silent is accepted under the course audio-optional requirement. A read-only documentation reviewer requested as-built storyboard wording, pinned reproduction instructions, README link and fresh final-file playback checks; these are included in docs/homework-10. Publication and public playback results will be appended after verification; this paragraph does not claim public availability.
+
+Final local checks: corrected export plays to the end at rate 1 in Chrome in 30.025 seconds; metadata is exactly 30 seconds/1080p. Native controls/transcript and 360/768 reflow pass. Existing screenshot regression passes 360/390/768/1440, all six intended HTTP200 image links and 200% reflow. The extra section exposed an offscreen lazy-image decode wait in the old test harness; verification now explicitly requests those images and serves MP4 MIME correctly, without changing page lazy-loading. Public artifact audit: eight files, no findings.
+
+### Homework 10 ? publication and public verification (2026-11-21)
+
+Video commit `f09904d`; integration commit `4c8f0ad`; source branch `feature/homework-10-promo-video`. Published the audited eight-file static artifact as gh-pages commit `b8613e8e778d902d7048b24fd2e8572214646eda`; Pages workflow `44908402424` completed successfully. Actual HTTPS MP4 returned HTTP200 video/mp4, 10,023,194 bytes, with SHA-256 matching the local finished file. All eight public artifact hashes match. Chrome played the actual public video to the end at rate 1 in 30.040 seconds, measuring duration 30.000 seconds and 1920x1080. Poster, transcript and 360/768 sizing pass with no page/asset errors. Public regression at 360/390/768/1440 passes all six repaired full-size screenshot links, keyboard navigation and 200% reflow, with no game API calls. Dated evidence is retained in docs/homework-10/verification. The source PR is to remain unmerged for the user; no Canvas submission was performed.
+
+Canvas: Homework 10 - Your video, submit the promotional page address https://esst-prog2.github.io/Detective-game-with-AI-agents/ by November 21, 2026 at 20:00 Europe/Budapest, per slide27. Lecture allows about30 seconds and optional audio; H.264/1080p are our delivery choices.

@@ -18,7 +18,7 @@ if (!publicUrl) {
     const file = resolve(dist, decodeURIComponent(pathname.slice(prefix.length)) || 'index.html');
     if (!file.startsWith(dist + '/') && !file.startsWith(dist + '\\')) { res.writeHead(404).end(); return; }
     try {
-      const mime = { '.html': 'text/html', '.css': 'text/css', '.webp': 'image/webp', '.svg': 'image/svg+xml' }[extname(file)] || 'application/octet-stream';
+      const mime = { '.html': 'text/html', '.css': 'text/css', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.mp4': 'video/mp4' }[extname(file)] || 'application/octet-stream';
       res.writeHead(200, { 'Content-Type': mime }).end(await readFile(file));
     } catch { res.writeHead(404).end(); }
   });
@@ -28,7 +28,7 @@ const url = publicUrl || 'http://127.0.0.1:5176' + prefix;
 const rows = [];
 const screenshotLinks = [];
 try {
-  browser = await chromium.launch();
+  browser = await chromium.launch({ channel: process.env.PROMO_BROWSER_CHANNEL || undefined });
   for (const width of [360,390,768,1440]) {
     const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
     const problems = [];
@@ -48,7 +48,7 @@ try {
       repo: document.querySelector('.text-link')?.href,
     }));
     await page.locator('footer').scrollIntoViewIfNeeded();
-    await page.evaluate(async () => { await Promise.all([...document.images].map(i => i.decode().catch(()=>{}))); });
+    await page.evaluate(async () => { document.querySelectorAll('img').forEach(i=>{i.loading='eager'}); await Promise.all([...document.images].map(i => i.decode().catch(()=>{}))); });
     state.images = await page.locator('img').evaluateAll(nodes => nodes.map(i => ({ alt:i.alt, loaded:i.complete && i.naturalWidth>0 })));
     assert.equal(state.overflow,false,`overflow at ${width}`);
     assert.equal(state.headings,1); assert.equal(state.anchors,true); assert.equal(state.duplicateIds,false); assert.equal(state.helper,false);
@@ -92,7 +92,7 @@ try {
       }
     }
     await page.locator('footer').scrollIntoViewIfNeeded();
-    await page.evaluate(async () => { await Promise.all([...document.images].map(i => i.decode().catch(()=>{}))); });
+    await page.evaluate(async () => { document.querySelectorAll('img').forEach(i=>{i.loading='eager'}); await Promise.all([...document.images].map(i => i.decode().catch(()=>{}))); });
     await page.evaluate(() => scrollTo(0, 0));
     await page.screenshot({ path:resolve(output,`${publicUrl?'public':'production'}-${width}.png`), fullPage:true });
     assert.deepEqual(problems,[]);

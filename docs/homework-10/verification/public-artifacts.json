@@ -1,0 +1,62 @@
+{
+  "url": "https://esst-prog2.github.io/Detective-game-with-AI-agents/",
+  "allMatch": true,
+  "files": [
+    {
+      "path": ".nojekyll",
+      "status": 200,
+      "mime": "application/octet-stream",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "assets/index-Iza_BLQA.css",
+      "status": 200,
+      "mime": "text/css; charset=utf-8",
+      "bytes": 6496,
+      "sha256": "e4007d64156efc3411ce42cd0069f0918de42840cd357130fd66f2691c4517ea"
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "mime": "text/html; charset=utf-8",
+      "bytes": 19932,
+      "sha256": "aa646483c28e68e8041a91c6efe8623e38b6926294552a00665a4a015918b025"
+    },
+    {
+      "path": "screenshots/dialogue.webp",
+      "status": 200,
+      "mime": "image/webp",
+      "bytes": 80536,
+      "sha256": "238afda369e8d15ec8c663941ea9bb839516dcf5687f974ca0b6666c11f5f75e"
+    },
+    {
+      "path": "screenshots/evidence.webp",
+      "status": 200,
+      "mime": "image/webp",
+      "bytes": 80554,
+      "sha256": "8b5b3ba723c66daf39e8734f2995691129f806382ba0c42bf00699471e667ca8"
+    },
+    {
+      "path": "screenshots/study.webp",
+      "status": 200,
+      "mime": "image/webp",
+      "bytes": 71578,
+      "sha256": "0f940d5b483a24cd8e451d85c4a5f9432da9e7e1b289253be981817fd35b2d39"
+    },
+    {
+      "path": "video/ashcroft-poster.webp",
+      "status": 200,
+      "mime": "image/webp",
+      "bytes": 30336,
+      "sha256": "6ecf59785f74665d628d6df6ea01b384d9bf5af2dabb409b67b6b6da9f6c8c67"
+    },
+    {
+      "path": "video/ashcroft-promo.mp4",
+      "status": 200,
+      "mime": "video/mp4",
+      "bytes": 10023194,
+      "sha256": "aa430ab462f6d621617956d9aff61e50ee1d62c1366d7eb2ba62b52d33043f63"
+    }
+  ]
+}
