@@ -26,3 +26,9 @@ From promo/: `node ../web/node_modules/vite/bin/vite.js build --config vite.conf
 From root: `node scripts/check-promo-assets.mjs`.
 Set PROMO_VERIFY_DIR=docs/homework-9/teacher-feedback-2026-11-21, then run `node scripts/homework-9-smoke.mjs` (built localhost) or append the actual public URL after deployment.
 Set PROMO_RECORD_DIR to the same dated directory for audit/deployment records.
+
+## Published result
+
+Source a81f1ec is pushed; PR20 remains unmerged. Deployment237add2986f153eff2df0837b83219cb96e55cd9 fast-forwards gh-pages; workflow44906153511 succeeded. Actual public-browser checks clicked all six image/caption links individually: eachHTTP200 image/webp and intended1440px image. All thumbnails load, macOS/Linux note appears, and360/390/768/1440 reflow, keyboard, navigation and200%CSS zoom pass without page/asset errors or API calls. All six public artifact hashes match the audit. public-smoke.json and deployment.json contain exact results. This supersedes pending-public status above without rewriting historical evidence.
+
+Exact source changes are listed in source-files.txt: promo/index.html; three screenshot moves from promo/assets to promo/public/screenshots; promo/assets/provenance.json; scripts/check-promo-assets.mjs; scripts/homework-9-smoke.mjs; scripts/homework-9-audit.py and scripts/homework-9-github.py (dated outputs/current-branch PR support); PROCESS.md; PLANNING_LOG.md; docs/homework-9/deployment-method.md; dated test/evidence/report files. No CSS, game source, package files or old verification records changed.

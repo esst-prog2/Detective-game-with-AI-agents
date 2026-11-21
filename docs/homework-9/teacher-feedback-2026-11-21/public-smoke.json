@@ -1,0 +1,86 @@
+{
+  "url": "https://esst-prog2.github.io/Detective-game-with-AI-agents/",
+  "rows": [
+    {
+      "width": 360,
+      "passed": true,
+      "images": 6,
+      "anchors": true,
+      "keyboard": true,
+      "noAPI": true,
+      "consoleErrors": 0
+    },
+    {
+      "width": 390,
+      "passed": true,
+      "images": 6,
+      "anchors": true,
+      "keyboard": true,
+      "noAPI": true,
+      "consoleErrors": 0
+    },
+    {
+      "width": 768,
+      "passed": true,
+      "images": 6,
+      "anchors": true,
+      "keyboard": true,
+      "noAPI": true,
+      "consoleErrors": 0
+    },
+    {
+      "width": 1440,
+      "passed": true,
+      "images": 6,
+      "anchors": true,
+      "keyboard": true,
+      "noAPI": true,
+      "consoleErrors": 0
+    }
+  ],
+  "screenshotLinks": [
+    {
+      "index": 1,
+      "kind": "image",
+      "url": "https://esst-prog2.github.io/Detective-game-with-AI-agents/screenshots/study.webp",
+      "status": 200,
+      "naturalWidth": 1440
+    },
+    {
+      "index": 2,
+      "kind": "caption",
+      "url": "https://esst-prog2.github.io/Detective-game-with-AI-agents/screenshots/study.webp",
+      "status": 200,
+      "naturalWidth": 1440
+    },
+    {
+      "index": 3,
+      "kind": "image",
+      "url": "https://esst-prog2.github.io/Detective-game-with-AI-agents/screenshots/evidence.webp",
+      "status": 200,
+      "naturalWidth": 1440
+    },
+    {
+      "index": 4,
+      "kind": "caption",
+      "url": "https://esst-prog2.github.io/Detective-game-with-AI-agents/screenshots/evidence.webp",
+      "status": 200,
+      "naturalWidth": 1440
+    },
+    {
+      "index": 5,
+      "kind": "image",
+      "url": "https://esst-prog2.github.io/Detective-game-with-AI-agents/screenshots/dialogue.webp",
+      "status": 200,
+      "naturalWidth": 1440
+    },
+    {
+      "index": 6,
+      "kind": "caption",
+      "url": "https://esst-prog2.github.io/Detective-game-with-AI-agents/screenshots/dialogue.webp",
+      "status": 200,
+      "naturalWidth": 1440
+    }
+  ],
+  "macLinuxNote": true
+}

@@ -32,8 +32,8 @@
       "sha256": "0f940d5b483a24cd8e451d85c4a5f9432da9e7e1b289253be981817fd35b2d39"
     }
   ],
-  "history_commits": 3,
-  "history_text_blobs": 10,
+  "history_commits": 4,
+  "history_text_blobs": 12,
   "tracked_dotenv_commits": 0,
   "findings": []
 }

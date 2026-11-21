@@ -1,0 +1,53 @@
+{
+  "source_commit": "a81f1ec4804bb2fe0e3899feccb7ad9e734d32a4",
+  "deployment_commit": "237add2986f153eff2df0837b83219cb96e55cd9",
+  "branch": "gh-pages",
+  "files": [
+    ".nojekyll",
+    "assets/index-ChEaTma-.css",
+    "index.html",
+    "screenshots/dialogue.webp",
+    "screenshots/evidence.webp",
+    "screenshots/study.webp"
+  ],
+  "url": "https://esst-prog2.github.io/Detective-game-with-AI-agents/",
+  "method": "GitHub Pages branch publishing; isolated static root; no inherited game history",
+  "workflow": {
+    "id": 44906153511,
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/esst-prog2/Detective-game-with-AI-agents/actions/runs/44906153511"
+  },
+  "public_file_checks": [
+    {
+      "path": ".nojekyll",
+      "status": 200,
+      "sha256_match": true
+    },
+    {
+      "path": "assets/index-ChEaTma-.css",
+      "status": 200,
+      "sha256_match": true
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "sha256_match": true
+    },
+    {
+      "path": "screenshots/dialogue.webp",
+      "status": 200,
+      "sha256_match": true
+    },
+    {
+      "path": "screenshots/evidence.webp",
+      "status": 200,
+      "sha256_match": true
+    },
+    {
+      "path": "screenshots/study.webp",
+      "status": 200,
+      "sha256_match": true
+    }
+  ]
+}

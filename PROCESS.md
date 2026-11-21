@@ -125,3 +125,22 @@ PR #19 is merged into main as b1d65f7. Began fix/promo-screenshot-links from tha
 | 8. Source repair and regression | Confirmed six public404s and a failing production regression (ENOENT dist/assets/study.webp). Moved three byte-identical images to promo/public/screenshots with stable base-aware paths; kept Windows instructions and added equivalent npm/POSIX-shell steps. Expanded static and production-browser checks to all six actual screenshot destinations. | User requested the bounded repair, append-only correction, regression, commits/PR/public verification before video work. Assistant preserves the selected design, screenshot content and game code; macOS/Linux commands are checked against scripts, not claimed OS-tested. | Source-repair commit is the commit introducing this entry; exact hash follows after creation. |
 
 Production build/static regression pass at /Detective-game-with-AI-agents/. Production-browser checks at360/390/768/1440 pass all six image/caption HTTP200 destinations, intended1440px images, thumbnails, macOS/Linux note, keyboard/navigation and200%reflow. These are **production-build localhost checks, not public repair verification yet**. Deployment and actual public results will be appended after testing the published repair. Dated evidence is under docs/homework-9/teacher-feedback-2026-11-21, preserving all November13 evidence. No mechanics, E/F or video work.
+
+Source repair commit: `a81f1ec4804bb2fe0e3899feccb7ad9e734d32a4` (pushed). Source-review PR20: https://github.com/esst-prog2/Detective-game-with-AI-agents/pull/20, remains unmerged. The authorized isolated Pages route did not require a source merge. All three image moves are byte-identical.
+
+| Step | What the tool did | What I decided | Commit |
+|---|---|---|---|
+| 9. Repair publication and actual public verification | Fast-forwarded gh-pages with the audited artifact; successful workflow44906153511. Chromium opened the actual HTTPS page and clicked all six image/caption links: each200 image/webp and intended1440px image. Public360/390/768/1440 checks pass thumbnails, note, keyboard/navigation,200%reflow, no page/asset errors or API calls. All six public artifact hashes match. | Report public verification only after real public checks. Preserve November13 records/design; macOS/Linux source-checked only. No source merge, force push, game change, E/F or video. | Deployment `237add2986f153eff2df0837b83219cb96e55cd9`, sourcea81f1ec; final evidence commit follows this entry. |
+
+Successful workflow: https://github.com/esst-prog2/Detective-game-with-AI-agents/actions/runs/44906153511
+
+| Separately clicked link | Actual public destination | HTTP |
+|---|---|---|
+| Study image | https://esst-prog2.github.io/Detective-game-with-AI-agents/screenshots/study.webp | 200 |
+| Study caption | https://esst-prog2.github.io/Detective-game-with-AI-agents/screenshots/study.webp | 200 |
+| Evidence image | https://esst-prog2.github.io/Detective-game-with-AI-agents/screenshots/evidence.webp | 200 |
+| Evidence caption | https://esst-prog2.github.io/Detective-game-with-AI-agents/screenshots/evidence.webp | 200 |
+| Dialogue image | https://esst-prog2.github.io/Detective-game-with-AI-agents/screenshots/dialogue.webp | 200 |
+| Dialogue caption | https://esst-prog2.github.io/Detective-game-with-AI-agents/screenshots/dialogue.webp | 200 |
+
+Dated public-smoke.json records all six real clicks and responsive results; deployment.json records workflow and hashes. public-*.png, production-smoke.json and before-public-links.json preserve distinct before/local/public evidence. Regression failed before and passes after repair. No old verification records overwritten. No macOS/Linux execution or full assistive-technology certification claimed.
