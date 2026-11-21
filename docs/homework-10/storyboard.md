@@ -33,4 +33,6 @@ Confirm available installed tooling; obtain approval before new software install
 
 ## Canvas submission
 
+As built (2026-11-21): the user approved HyperFrames and FFmpeg installation; installed versions are 0.9.77 and 9.1. The final 15–21s support caption is “Responses stay within authored character knowledge.” The other timings remain as planned. The finished MP4 and measured verification are linked from [the production record](README.md). The earlier pending-installation wording records the planning stage only.
+
 After public playback is verified, open Homework10 — Your video on Canvas and paste **the promotional page URL above**. The lecture asks for the page address, not only the raw MP4 URL or an uploaded file. Do not claim Canvas submission or knowledge of account-specific Canvas controls.
