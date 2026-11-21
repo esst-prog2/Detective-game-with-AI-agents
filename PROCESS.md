@@ -144,3 +144,12 @@ Successful workflow: https://github.com/esst-prog2/Detective-game-with-AI-agents
 | Dialogue caption | https://esst-prog2.github.io/Detective-game-with-AI-agents/screenshots/dialogue.webp | 200 |
 
 Dated public-smoke.json records all six real clicks and responsive results; deployment.json records workflow and hashes. public-*.png, production-smoke.json and before-public-links.json preserve distinct before/local/public evidence. Regression failed before and passes after repair. No old verification records overwritten. No macOS/Linux execution or full assistive-technology certification claimed.
+
+## Homework 10 — video preparation (2026-11-21)
+
+| Step | What the tool did | What I decided | Commit |
+|---|---|---|---|
+| V1. Storyboard | Read the video request, current source/Pages history and local lecture08.pdf slides15/16/27. Confirmed PR20 merged as88201ec; started feature/homework-10-promo-video from main. Planned six silent, spoiler-safe beats in docs/homework-10/storyboard.md. | User requested a finished30-second genuine Ashcroft demonstration. Assistant targets1920×1080,30fps,H264; the lecture requires video on promo page and that pageURL on Canvas byNovember21 20:00. | 664149e3e8cdedc9d48b0b459e2ae64d160a3bed |
+| V2. Capture and tooling | Captured seven real1920×1080 game screens with actual offline API/Vite controls; inspected ordinary dialogue, Ben's footprint response and unconfirmed accusation. Saved originals/provenance and source-frame contact sheet. Installed official HyperFrames0.9.77 through npm's CLI cache and FFmpeg9.1 through winget after approval. | User explicitly approved both installations. Assistant keeps dependencies separate from game, cancels accusation and captures no verdict; uses 'Test their stories' over safe evidence questioning. No game code changed. | Capture/tool preparation commit follows this entry. |
+
+No rendered video is claimed at this preparation point. HyperFrames uses HTML/timeline composition and local export; no HeyGen account, paid generation, voice or music is required. Actual capture helper corrected an arrow-prefixed Return to room selector after its first partial run; the completed run saved all seven states and stopped only its own temporary servers. The visual content is genuine, not fabricated UI.
