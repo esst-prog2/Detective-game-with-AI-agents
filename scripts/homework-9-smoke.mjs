@@ -5,7 +5,7 @@ import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { resolve, extname } from 'node:path';
 import { chromium } from '../web/node_modules/@playwright/test/index.mjs';
 const root = resolve(import.meta.dirname, '..');
-const output = resolve(root, 'docs/homework-9/verification');
+const output = resolve(root, process.env.PROMO_VERIFY_DIR || 'docs/homework-9/verification');
 const prefix = '/Detective-game-with-AI-agents/';
 const publicUrl = process.argv[2];
 let server, browser;
@@ -26,6 +26,7 @@ if (!publicUrl) {
 }
 const url = publicUrl || 'http://127.0.0.1:5176' + prefix;
 const rows = [];
+const screenshotLinks = [];
 try {
   browser = await chromium.launch();
   for (const width of [360,390,768,1440]) {
@@ -66,11 +67,38 @@ try {
       await page.evaluate(()=>{document.documentElement.style.zoom=''});
     }
     await page.goto(url, {waitUntil:'load'});
+    await page.getByRole('heading', { name: 'macOS and Linux', exact: true }).waitFor();
+    if (width === 1440) {
+      const selector = 'a.screenshot-link, a.full-size';
+      assert.equal(await page.locator(selector).count(), 6);
+      for (let index = 0; index < 6; index++) {
+        const link = page.locator(selector).nth(index);
+        const expected = await link.evaluate(a => ({
+          url: a.href, thumbnail: a.closest('figure').querySelector('img').src,
+          kind: a.classList.contains('full-size') ? 'caption' : 'image',
+        }));
+        assert.equal(expected.url, expected.thumbnail);
+        const navigation = page.waitForNavigation({ waitUntil: 'load' });
+        await link.click();
+        const imageResponse = await navigation;
+        assert.equal(imageResponse.status(), 200, expected.url);
+        assert.match(imageResponse.headers()['content-type'], /^image\/webp/);
+        assert.equal(page.url(), expected.url);
+        const image = page.locator('img');
+        await image.evaluate(i => i.decode());
+        assert.equal(await image.evaluate(i => i.naturalWidth), 1440);
+        screenshotLinks.push({ index: index + 1, kind: expected.kind, url: page.url(), status: imageResponse.status(), naturalWidth: 1440 });
+        await page.goto(url, { waitUntil: 'load' });
+      }
+    }
+    await page.locator('footer').scrollIntoViewIfNeeded();
+    await page.evaluate(async () => { await Promise.all([...document.images].map(i => i.decode().catch(()=>{}))); });
+    await page.evaluate(() => scrollTo(0, 0));
     await page.screenshot({ path:resolve(output,`${publicUrl?'public':'production'}-${width}.png`), fullPage:true });
     assert.deepEqual(problems,[]);
     rows.push({width,passed:true,images:state.images.length,anchors:true,keyboard:true,noAPI:true,consoleErrors:0});
     await page.close();
   }
-  await writeFile(resolve(output,publicUrl?'public-smoke.json':'production-smoke.json'),JSON.stringify({url,rows},null,2));
-  console.log(JSON.stringify({url,rows}));
+  await writeFile(resolve(output,publicUrl?'public-smoke.json':'production-smoke.json'),JSON.stringify({url,rows,screenshotLinks,macLinuxNote:true},null,2));
+  console.log(JSON.stringify({url,rows,screenshotLinks,macLinuxNote:true}));
 } finally { await browser?.close(); if(server) await new Promise(r=>server.close(r)); }

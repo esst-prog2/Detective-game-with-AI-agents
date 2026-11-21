@@ -7,6 +7,7 @@ cd promo
 node ../web/node_modules/vite/bin/vite.js build --config vite.config.mjs
 cd ..
 node scripts/homework-9-smoke.mjs
+node scripts/check-promo-assets.mjs
 python scripts/homework-9-audit.py
 ```
 
@@ -24,3 +25,11 @@ Permissions preflight: GitHub API returned public repository with admin/push per
 - https://docs.github.com/en/rest/pages/pages
 
 Security scope: the audit covers exact deployment files and relevant promo history, not a claim to scrub the already-public game repository. `.env.example` has empty key/model values; no tracked `.env` history was found. Public Git history contains ordinary author metadata and the original game source; no repository visibility or history rewriting is performed.
+
+## Teacher-feedback repair — 2026-11-21
+
+PR #19 was merged into main as b1d65f7. Repair source starts from that main on fix/promo-screenshot-links. Branch publishing remains gh-pages / through GitHub's dynamic pages-build-deployment workflow; there is no checked-in Actions YAML. The existing authorized artifact path can deploy the repair without merging the source PR; no automatic merge is performed.
+
+Full-size images now live in promo/public/screenshots/ with stable names. Image src and all six image/caption hrefs use `%BASE_URL%screenshots/<name>.webp`; Vite expands its relative base and copies public files without hashing. Screenshot pixels and selected styling are unchanged.
+
+The dependency-free production regression resolves every image/caption path to a real built file under the repository prefix, checks each intended destination, verifies thumbnail/stylesheet paths and rejects preview/helper URLs. The intentional local-game address on port5173 stays in setup instructions. The expanded browser smoke actually clicks all six links, checking HTTP200, image content type and1440px natural width. Set PROMO_VERIFY_DIR and PROMO_RECORD_DIR to docs/homework-9/teacher-feedback-2026-11-21 to keep new browser/audit/deployment evidence separate from November13 records.
