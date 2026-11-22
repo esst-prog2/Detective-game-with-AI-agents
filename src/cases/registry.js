@@ -26,7 +26,8 @@ export function createCaseRegistry({ definitions = [ashcroft, greyhavenPreview],
     createInvestigation(caseId = defaultCaseId, { performer = null, phraser = null } = {}) {
       const definition = resolve(caseId);
       if (!definition) throw new Error('Unavailable case.');
-      return createInvestigation({ data: definition.data, dialogueCatalog: definition.catalog, performer, phraser,
+      const coordination = definition.id === 'greyhaven-preview' && definition.mode === 'preview' ? performer?.coordination : null;
+      return createInvestigation({ data: definition.data, dialogueCatalog: definition.catalog, performer: coordination ? null : performer, coordination, phraser,
         caseContext: { id: definition.id, version: definition.version, mode: definition.mode,
           ...(definition.mode === 'preview' ? { previewProfile: definition.previewProfile } : {}) } });
     },

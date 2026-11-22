@@ -2,6 +2,10 @@ import { test, expect } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { M0, O0, O1, work, guarded, reason } from '../../test-support/greyhaven-preview-oracle.js';
+import { once } from 'node:events';
+import { createInvestigationServer } from '../../src/http-api.js';
+import { createSessionStore } from '../../src/investigation-sessions.js';
+import { caseRegistry } from '../../src/cases/registry.js';
 
 async function start(page) {
   await page.goto('/');
@@ -21,6 +25,38 @@ async function inspect(page, name) {
   await expect(page.getByRole('button', { name: 'Close observation' })).toBeVisible();
   await page.getByRole('button', { name: 'Close observation' }).click();
 }
+
+test('scripted pilot carries one accepted direction between interviews through the revisioned API', async ({ page }) => {
+  const calls = [];
+  const coordination = {
+    direct(ctx) { calls.push('director'); expect(ctx.actions).toContain('inspection'); return { strategy: 'invite-account' }; },
+    act(ctx) { calls.push(ctx.speaker); return ctx.performances[0]; }
+  };
+  const store = createSessionStore({ investigationFactory: def => caseRegistry.createInvestigation(def.id, { performer: { coordination } }) });
+  const server = createInvestigationServer({ store });
+  server.listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  try {
+    await page.route(url => url.pathname.startsWith('/api/'), async route => {
+      const path = new URL(route.request().url()).pathname;
+      await route.fulfill({ response: await route.fetch({ url: 'http://127.0.0.1:' + server.address().port + path }) });
+    });
+    await start(page);
+    await talk(page, 'Mara Vale'); await ask(page, 'Mara Vale', 'Where were you?', M0);
+    await back(page); await page.getByRole('button', { name: 'Go to the boathouse' }).click();
+    await inspect(page, 'Pump pressure-test worksheet'); await inspect(page, 'Repayment demand');
+    await talk(page, 'Owen Vale'); await ask(page, 'Owen Vale', 'Where were you?', O0);
+    await page.locator('[data-choice="present-pump-payment"]').click();
+    await expect(page.locator('blockquote')).toContainText('Let me finish, then ask me about the work. ' + O1);
+    await page.getByRole('button', { name: 'Go to reception' }).click(); await talk(page, 'Mara Vale');
+    await ask(page, 'Mara Vale', 'Are you saying you watched him the whole time?', 'Which part would you like me to take first? ' + guarded);
+    expect(calls).toEqual(['director', 'Owen', 'Mara']);
+  } finally {
+    await page.unrouteAll({ behavior: 'wait' });
+    server.closeAllConnections();
+    await new Promise(done => server.close(done));
+  }
+});
 
 test('offline preview earns the admission through visible investigation and returns cleanly to Ashcroft', async ({ page }, info) => {
   const replies = [], errors = []; page.on('pageerror', (error) => errors.push(error.message));
