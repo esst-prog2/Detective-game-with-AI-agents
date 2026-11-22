@@ -2,6 +2,24 @@
 
 **Independent readers:** complete the [eight unlabeled moves](blind-review.md) before reading the results below. For each, guess the speaker and describe the conversational move. Keep the original guesses and score speaker and move separately. The agreed threshold is at least six of eight in each category.
 
+## Final E1 acceptance · 22 November 2026
+
+**Task 4.3 passed on the approved experimental deadlines.** One live session using `gpt-4.1-mini-2025-04-14` produced three accepted decisions, one per role. Both NPCs selected from the repaired schema's two current offers. The runner observed the committed handoff, matched every offline factual checkpoint and exited successfully. There were zero retries, warm-ups, rejections or fallbacks. [Final live transcript](live-final-2026-11-22.jsonl)
+
+| Role | Live decision and performance | Request budget | SDK elapsed | Full player turn | Input / output tokens |
+| --- | --- | ---: | ---: | ---: | ---: |
+| Game Master | Chose `set-boundary` after an account, a clarification and two inspections. | 5,000 ms | 1,986 ms | Within Owen's turn | 111 / 8 |
+| Owen | Under `insist-on-precision`, chose `narrow-to-work`. He opened with “Stick to the job for a minute.” and delivered his complete authorized account. | 8,014 ms remaining | 1,566 ms | 3,555 ms including director | 456 / 85 |
+| Mara | After Owen's turn committed and the player returned to reception, she received `limit-to-observation` from the same strategy. She chose `narrow-observation` and opened with “Could you put your finger on the particular moment you mean?” before her complete authorized clarification. | 10,000 ms fresh | 882 ms | 883 ms | 309 / 50 |
+
+The quoted openings come from the reviewed performances identified by the accepted reaction IDs. Both had null narration. Owen could also have asked the detective to separate two questions, and Mara could have reserved judgment. The third record of the scripted replay archive contains the full authored dialogue for the pair of IDs selected live. [Reaction catalog](../../src/cases/greyhaven-reactions.js) · [Scripted comparison](scripted.jsonl)
+
+**Timing and usage.** The provider reported 876 input and 143 output tokens, 1,019 in total. The live replay took 4,441 ms and the full demo took 4,643 ms. Both directed turns also finished inside four seconds. The Game Master exceeded the application’s 1,500 ms limit by 486 ms. The live result establishes coordination with the experimental 5/10-second settings.
+
+**Offline comparison.** At each checkpoint, the runner compared location, inspected evidence, available dialogue options, policy state including testimony receipts and account revisions, committed testimony and case lifecycle. All matched. Repeating Mara's question returned the exact offline reply in 0 ms rounded, with no fourth call. The encrypted credential file was deleted and its absence verified.
+
+**Review status.** All 680 local Node tests passed in preflight. Verification of the same repaired code included 64 passing Chromium tests, a successful production build and privacy check, and strict validation of this OpenSpec change. Controlled replays covered all eight authored choices. The independent reader scored 7/8 for speaker and 7/8 for conversational move. E1 is ready for final owner review.
+
 ## Two interviews, one direction
 
 The player obtains Mara's account, travels to Owen, asks too early about the payment, hears his initial account and clarification, inspects the worksheet, tries again, and inspects the repayment demand. Only then does the evidence choice authorize Owen's payment explanation. After it commits, travel to reception and ask Mara whether she watched him the whole time. Repeating Mara's question uses ordinary delivery again.
@@ -18,11 +36,11 @@ In a controlled run, the director received four committed categories in order: a
 
 The four scripted runs each dispatched three role calls and matched the offline factual snapshots at every recorded action, including options, receipts, account versions and lifecycle. Rounded local turn times in the captured scripted runs were 0–1 ms. These measure the fixture and engine only. The history-sensitive fixture test additionally selected a different strategy when the committed history contained a challenge. [Offline transcript](offline.jsonl), [four controlled transcripts](scripted.jsonl), [earlier credential-free check](live.jsonl).
 
-## Live acceptance report · 22 November 2026
+## First live trial · 22 November 2026
 
 [Timeout diagnosis and proposed controlled retest](../../openspec/changes/greyhaven-agent-coordination-pilot/controlled-retest.md)
 
-**Task 4.3 remains open.** One credentialed run used `gpt-4.1-mini-2025-04-14` on the OpenAI Responses API. The Game Master had a 1,500 ms timeout within Owen's shared 4,000 ms turn budget. The local abort event was observed at 1,506 ms. The runner captured neither an accepted strategy nor a provider usage response. Server-side completion, billed tokens and cost are unknown.
+**Task 4.3 remained open after this first run.** One credentialed run used `gpt-4.1-mini-2025-04-14` on the OpenAI Responses API. The Game Master had a 1,500 ms timeout within Owen's shared 4,000 ms turn budget. The local abort event was observed at 1,506 ms. The runner captured neither an accepted strategy nor a provider usage response. Server-side completion, billed tokens and cost are unknown.
 
 | Role | Provider attempts | Observed result |
 | --- | ---: | --- |
@@ -50,7 +68,7 @@ For interactive play set `$env:GREYHAVEN_AGENT_PILOT='1'` in the API or CLI proc
 
 ### Controlled live retest · 22 November 2026
 
-**The handoff worked. Task 4.3 remains open because the adapter rejected Mara's response.** The approved retest used `gpt-4.1-mini-2025-04-14` with a 5-second director deadline and a shared 10-second budget per directed turn. All three calls received responses within those limits. There were zero retries or warm-ups.
+**The handoff worked. Task 4.3 remained open at this stage because the adapter rejected Mara's response.** The approved retest used `gpt-4.1-mini-2025-04-14` with a 5-second director deadline and a shared 10-second budget per directed turn. All three calls received responses within those limits. There were zero retries or warm-ups.
 
 | Role | Live result | SDK elapsed | Input / output tokens |
 | --- | --- | ---: | ---: |
@@ -80,7 +98,7 @@ Future local demo reports record the failed stage and a fixed category, for exam
 
 **Local verification.** All 680 Node tests and 64 Chromium tests passed, as did the browser build and privacy check and strict validation of this OpenSpec change. Fake responses exercised both valid Mara choices under each direction, wrong-direction pairs, ID-only responses, extra fields, malformed JSON, refusal, incomplete responses and engine revalidation. The loopback SDK test reproduced a rejection on Mara's third call and verified the redacted report. The fake-clock and cancellation tests verified that late results cannot commit. All simulated Mara fallbacks matched offline evidence, options, receipts, case progression and the repeat reply. This diagnosis used zero live provider calls.
 
-**Live acceptance.** Task 4.3 still needs one same-session transcript with three accepted live choices and offline factual parity. A single separately approved three-attempt trial is justified to test the narrower schema with the actual provider. It cannot reconstruct the earlier answer. Report any experimental 5/10-second result separately from the original 1.5/4-second targets. The two retained live transcripts contain all genuine provider measurements to date.
+**Status after diagnosis.** Task 4.3 still required a same-session transcript with three accepted live choices and offline factual parity. This prompted the final trial reported above. The specific reason for the earlier rejection remains unknown.
 
 ### Independent reader score
 
@@ -99,4 +117,4 @@ On 22 November 2026 the project owner submitted these answers before consulting 
 
 **Speaker identities 7/8. Conversational moves 7/8. Both pass the 6/8 threshold.** F earns the move point for recognizing the invitation to pick a specific part. On G the reader recognized the sequence of topics. I scored the move conservatively because the description omits Owen's affirmative invitation to ask a follow-up.
 
-The implementation verification recorded 673 passing Node tests and 64 passing Chromium tests, including the two-witness interview on desktop and mobile. Retest preparation recorded 678 passing Node tests. The browser production build passed its privacy check. The scoped OpenSpec change and all five archived changes passed strict validation. Repository-wide strict validation reported the same nine older failures on a separate export of main at `e578de4`. The remaining live acceptance gap is an authorized Mara reaction in the same run as the director and Owen.
+The implementation verification recorded 673 passing Node tests and 64 passing Chromium tests, including the two-witness interview on desktop and mobile. Retest preparation recorded 678 passing Node tests. The browser production build passed its privacy check. The scoped OpenSpec change and all five archived changes passed strict validation. Repository-wide strict validation reported the same nine older failures on a separate export of main at `e578de4`. The final live trial subsequently recorded an authorized Mara reaction in the same session as the director and Owen.
