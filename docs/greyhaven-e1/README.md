@@ -48,6 +48,20 @@ For interactive play set `$env:GREYHAVEN_AGENT_PILOT='1'` in the API or CLI proc
 
 ## Verification and review status
 
+### Controlled live retest · 22 November 2026
+
+**The handoff worked. Task 4.3 remains open because the adapter rejected Mara's response.** The approved retest used `gpt-4.1-mini-2025-04-14` with a 5-second director deadline and a shared 10-second budget per directed turn. All three calls received responses within those limits. There were zero retries or warm-ups.
+
+| Role | Live result | SDK elapsed | Input / output tokens |
+| --- | --- | ---: | ---: |
+| Game Master | Selected `invite-account` for the two interviews. | 1,812 ms | 111 / 7 |
+| Owen | Received `own-the-explanation` and chose `acknowledge-question`. His payment account opened with “Fair question. I'll answer it straight.” | 3,092 ms | 300 / 85 |
+| Mara | Received the committed `invite-account` handoff as `keep-conversation-open`. The adapter rejected the response and the game delivered the authorized fallback. The trace records no accepted Mara reaction or more specific rejection reason. | 1,323 ms | 221 / 39 |
+
+The provider reported 632 input and 131 output tokens. The replay took 6,234 ms and the complete demo took 6,434 ms. Owen's full turn took 4,906 ms and Mara's took 1,324 ms. The director and Owen's full turn exceeded the original 1,500/4,000 ms targets. The runner verified factual parity against the offline session after every scripted action, including disclosure options, inspected evidence, receipts, account progression and lifecycle. Mara's repeat returned to baseline. The runner exited with status 1. The temporary credential was deleted and its absence verified. [First trial](live-provider-2026-11-22.jsonl) · [Controlled retest](live-retest-2026-11-22.jsonl)
+
+### Independent reader score
+
 On 22 November 2026 the project owner submitted these answers before consulting the labeled transcripts. The scoring key is the [reaction catalog](../../src/cases/greyhaven-reactions.js) at commit `a80dd66`, matched by exact dialogue line to the reader sheet. Each column earns one point per match. The move is scored by the conversational action described, independently of the speaker guess.
 
 | Row | Speaker guess | Key speaker | Submitted move | Key move | Speaker / move points |
@@ -63,4 +77,4 @@ On 22 November 2026 the project owner submitted these answers before consulting 
 
 **Speaker identities 7/8. Conversational moves 7/8. Both pass the 6/8 threshold.** F earns the move point for recognizing the invitation to pick a specific part. On G the reader recognized the sequence of topics. I scored the move conservatively because the description omits Owen's affirmative invitation to ask a follow-up.
 
-The implementation verification recorded 673 passing Node tests and 64 passing Chromium tests, including the two-witness interview on desktop and mobile. The browser production build passed its privacy check. The scoped OpenSpec change and all five archived changes passed strict validation. Repository-wide strict validation reported the same nine older failures on a separate export of main at `e578de4`. The credentialed trial above verified fallback and left the successful live handoff outstanding.
+The implementation verification recorded 673 passing Node tests and 64 passing Chromium tests, including the two-witness interview on desktop and mobile. Retest preparation recorded 678 passing Node tests. The browser production build passed its privacy check. The scoped OpenSpec change and all five archived changes passed strict validation. Repository-wide strict validation reported the same nine older failures on a separate export of main at `e578de4`. The remaining live acceptance gap is an authorized Mara reaction in the same run as the director and Owen.
