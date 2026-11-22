@@ -18,7 +18,7 @@ The quoted openings come from the reviewed performances identified by the accept
 
 **Offline comparison.** At each checkpoint, the runner compared location, inspected evidence, available dialogue options, policy state including testimony receipts and account revisions, committed testimony and case lifecycle. All matched. Repeating Mara's question returned the exact offline reply in 0 ms rounded, with no fourth call. The encrypted credential file was deleted and its absence verified.
 
-**Review status.** All 680 local Node tests passed in preflight. Verification of the same repaired code included 64 passing Chromium tests, a successful production build and privacy check, and strict validation of this OpenSpec change. Controlled replays covered all eight authored choices. The independent reader scored 7/8 for speaker and 7/8 for conversational move. E1 is ready for final owner review.
+**Merged and verified.** The project owner accepted E1. GitHub merged [PR #22](https://github.com/esst-prog2/Detective-game-with-AI-agents/pull/22) at [`c59ed7d`](https://github.com/esst-prog2/Detective-game-with-AI-agents/commit/c59ed7d1e8e29e8b5cf3014ce9950db9391c6b80). The merge tree matched the tested feature tip. All 680 Node tests and 64 Chromium tests passed in final verification, as did the production build, privacy check and scoped strict OpenSpec validation. GitHub reported zero hosted checks or commit statuses for the PR. A fresh credential-free replay on merged main made zero provider calls, matched offline factual state and returned Mara's repeat to baseline. Controlled replays covered all eight authored choices. The independent reader scored 7/8 for speaker and 7/8 for conversational move.
 
 ### Inherited repository-wide OpenSpec failures
 
