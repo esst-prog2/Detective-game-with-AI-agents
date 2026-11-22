@@ -12,9 +12,11 @@ function tags(values, allowed, cap) {
 
 export function createCoordinationRoles(client, model) {
   async function request(name, instructions, input, schema, options) {
-    const response = await client.responses.create({ model, store: false, instructions,
+    const body = { model, store: false, instructions,
       input: JSON.stringify(input), text: { format: { type: 'json_schema', name, strict: true, schema } }
-    }, { signal: options.signal, timeout: options.timeout, maxRetries: 0 });
+    };
+    options.onRequestStart?.();
+    const response = await client.responses.create(body, { signal: options.signal, timeout: options.timeout, maxRetries: 0 });
     options.onUsage?.(response.usage);
     if (response.status !== 'completed' || response.output?.some(item => item.content?.some(part => part.type === 'refusal'))) {
       throw Error('Role unavailable');

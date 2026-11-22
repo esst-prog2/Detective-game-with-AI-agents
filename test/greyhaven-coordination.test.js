@@ -1,7 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { createServer } from 'node:http';
+import { once } from 'node:events';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import { caseRegistry } from '../src/cases/registry.js';
 import { createConfiguredNPCPerformer } from '../src/npc-performance.js';
+import { demoRetestDeadlines } from '../src/greyhaven-coordination.js';
 import { createSessionStore } from '../src/investigation-sessions.js';
 import { runCli } from '../src/cli.js';
 import { prepareInterviews, replay, owen, mara, source } from '../test-support/greyhaven-pilot-journey.js';
@@ -16,6 +21,108 @@ async function configured(create, enabled = true) {
 const completed = value => ({ status: 'completed', output_text: JSON.stringify(value) });
 const present = g => g.askSuspect(owen, presentation);
 const returns = g => { g.travelTo('reception'); return g.askSuspect(mara, source); };
+
+test('retest runner reports timings, usage and rejected output against a loopback provider', async t => {
+  const requests = [];
+  let invalid = false;
+  const server = createServer(async (request, response) => {
+    let raw = '';
+    for await (const chunk of request) raw += chunk;
+    const body = JSON.parse(raw), ctx = JSON.parse(body.input);
+    requests.push([ctx.speaker ?? 'director', body.model, body.text.format.strict]);
+    const result = ctx.speaker ? ctx.performances[0] : { strategy: 'invite-account' };
+    response.writeHead(200, { 'Content-Type': 'application/json' });
+    response.end(JSON.stringify({ ...completed(invalid && ctx.speaker === 'Owen' ? { invalid: true } : result),
+      usage: { input_tokens: 12, output_tokens: 4 } }));
+  });
+  server.listen(0, '127.0.0.1'); await once(server, 'listening');
+  t.after(() => new Promise(resolve => server.close(resolve)));
+  const model = 'gpt-4.1-mini-2025-04-14';
+  const run = () => promisify(execFile)(process.execPath, ['scripts/demo-greyhaven-coordination.js', 'live-retest'], {
+    env: { ...process.env, OPENAI_BASE_URL: 'http://127.0.0.1:' + server.address().port + '/v1',
+      OPENAI_API_KEY: 'fixture', OPENAI_MODEL: model }
+  });
+  const success = JSON.parse((await run()).stdout);
+  assert.deepEqual(requests, ['director','Owen','Mara'].map(role => [role, model, true]));
+  assert.equal(success.handoffUsed, true);
+  assert.deepEqual(success.deadlines, { directorMs: 5000, turnMs: 10000 });
+  assert.ok(success.totalElapsedMs >= success.replayElapsedMs);
+  assert.ok(success.calls.every(call => call.responseReceived && call.outcome === 'adapter-validated'
+    && Number.isInteger(call.sdkElapsedMs) && call.sdkElapsedMs >= 0
+    && call.elapsedMs >= call.sdkElapsedMs && call.tokens.input === 12 && call.tokens.output === 4));
+  invalid = true;
+  await assert.rejects(run(), error => {
+    const report = JSON.parse(error.stdout);
+    assert.equal(error.code, 1);
+    assert.deepEqual(report.calls.map(c => c.outcome), ['adapter-validated','response-rejected']);
+    assert.equal(report.calls[1].tokens.output, 4);
+    assert.equal(report.decisions[0].source, 'fallback');
+    assert.equal(report.handoffUsed, false);
+    assert.equal(report.factualParity, true);
+    return true;
+  });
+  assert.equal(requests.length, 5);
+});
+
+test('demo retest gives Owen the remainder and Mara a fresh turn, with offline factual parity', async t => {
+  let clock = 0;
+  t.mock.method(performance, 'now', () => clock);
+  const baseline = await replay(make(null));
+  const calls = [];
+  const roles = { deadlines: demoRetestDeadlines,
+    direct(ctx, opts) {
+      calls.push(['director', opts.timeout]); clock += 3750;
+      return { strategy: 'set-boundary' };
+    },
+    act(ctx, opts) {
+      calls.push([ctx.speaker, opts.timeout]); clock += ctx.speaker === 'Owen' ? 5400 : 8200;
+      return ctx.performances[1];
+    }
+  };
+  const run = await replay(make(roles));
+  assert.deepEqual(calls, [['director', 5000], ['Owen', 6250], ['Mara', 10000]]);
+  assert.deepEqual(run.replies.map(r => r.elapsedMs), [9150, 8200, 0]);
+  assert.deepEqual(run.snapshots, baseline.snapshots);
+  assert.deepEqual(run.decisions.map(e => [e.role, e.strategy, e.source]),
+    [['Owen','set-boundary','provider'], ['Mara','set-boundary','provider']]);
+});
+
+for (const delayed of ['director', 'Owen', 'Mara']) test('demo retest discards late ' + delayed + ' result', async t => {
+  let clock = 0;
+  t.mock.method(performance, 'now', () => clock);
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const started = Promise.withResolvers(), late = Promise.withResolvers();
+  const baseline = await replay(make(null));
+  const wait = (opts, value) => { started.resolve({ opts, value }); return late.promise; };
+  const calls = [];
+  const g = make({ deadlines: demoRetestDeadlines,
+    direct(ctx, opts) {
+      calls.push('director');
+      if (delayed === 'director') return wait(opts, defaults.direct());
+      clock += 3200;
+      return defaults.direct();
+    },
+    act(ctx, opts) {
+      calls.push(ctx.speaker);
+      return delayed === ctx.speaker ? wait(opts, ctx.performances[0]) : ctx.performances[0];
+    }
+  });
+  const pending = replay(g);
+  const { opts, value } = await started.promise;
+  assert.equal(opts.timeout, { director: 5000, Owen: 6800, Mara: 10000 }[delayed]);
+  clock += opts.timeout;
+  t.mock.timers.tick(opts.timeout);
+  const run = await pending;
+  assert.equal(opts.signal.aborted, true);
+  assert.deepEqual(run.snapshots, baseline.snapshots);
+  assert.equal(run.decisions.at(-1).source, 'fallback');
+  assert.equal(calls.length, { director: 1, Owen: 2, Mara: 3 }[delayed]);
+  const before = g.getDialogueDiagnostics();
+  late.resolve(value);
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(g.getDialogueDiagnostics(), before);
+  assert.deepEqual(g.getCoordinationTrace(), run.decisions);
+});
 
 test('four wire-level replays preserve every factual snapshot and offer eight distinct approved whole performances', async () => {
   const baseline = await replay(make(null));

@@ -20,6 +20,8 @@ The four scripted runs each dispatched three role calls and matched the offline 
 
 ## Live acceptance report · 22 November 2026
 
+[Timeout diagnosis and proposed controlled retest](../../openspec/changes/greyhaven-agent-coordination-pilot/controlled-retest.md)
+
 **Task 4.3 remains open.** One credentialed run used `gpt-4.1-mini-2025-04-14` on the OpenAI Responses API. The Game Master had a 1,500 ms timeout within Owen's shared 4,000 ms turn budget. The local abort event was observed at 1,506 ms. The runner captured neither an accepted strategy nor a provider usage response. Server-side completion, billed tokens and cost are unknown.
 
 | Role | Provider attempts | Observed result |
