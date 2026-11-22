@@ -13,9 +13,22 @@ In a controlled run, the director received four committed categories in order: a
 | Offline | Zero calls | Original authored deliveries | Both premature payment requests returned guidance. Owen's account advanced only after the two inspections and his initial account. |
 | Scripted, invite an account | One controlled selection per replay | Own the explanation / keep conversation open | Two replays exercised all four local reactions under this strategy. |
 | Scripted, set a boundary | One controlled selection per replay | Insist on precision / limit to observation | Owen narrowed the discussion to his work or separated the questions. Mara requested a specific moment or reserved judgment about the inference. |
-| Live requested | Zero requests dispatched | Credential-free fallback | Neither provider environment variable was configured. Live decision, latency and billed token evidence are outstanding. |
+| Initial configuration check | Zero requests dispatched | Credential-free fallback | The provider variables were absent at this earlier check. |
+| Credentialed live trial, 22 November | One director attempt, aborted at 1,506 ms | Owen used fallback. Mara used ordinary delivery. | Factual parity passed. The required three accepted model results and two-turn handoff were not observed. |
 
-The four scripted runs each dispatched three role calls and matched the offline factual snapshots at every recorded action, including options, receipts, account versions and lifecycle. Rounded local turn times in the captured scripted runs were 0–1 ms. These measure the fixture and engine only. The history-sensitive fixture test additionally selected a different strategy when the committed history contained a challenge. [Offline transcript](offline.jsonl), [four controlled transcripts](scripted.jsonl), [live attempt](live.jsonl).
+The four scripted runs each dispatched three role calls and matched the offline factual snapshots at every recorded action, including options, receipts, account versions and lifecycle. Rounded local turn times in the captured scripted runs were 0–1 ms. These measure the fixture and engine only. The history-sensitive fixture test additionally selected a different strategy when the committed history contained a challenge. [Offline transcript](offline.jsonl), [four controlled transcripts](scripted.jsonl), [earlier credential-free check](live.jsonl).
+
+## Live acceptance report · 22 November 2026
+
+**Task 4.3 remains open.** One credentialed run used `gpt-4.1-mini-2025-04-14` on the OpenAI Responses API. The Game Master had a 1,500 ms timeout within Owen's shared 4,000 ms turn budget. The local abort event was observed at 1,506 ms. The runner captured neither an accepted strategy nor a provider usage response. Server-side completion, billed tokens and cost are unknown.
+
+| Role | Provider attempts | Observed result |
+| --- | ---: | --- |
+| Game Master | 1 | Timed out before a direction was accepted. |
+| Owen | 0 | Returned the authorized payment explanation via fallback. Full turn took 1,512 ms. |
+| Mara | 0 | With no committed direction, the source question and its repeat used ordinary authored delivery. Each rounded to 0 ms. |
+
+There were zero retries. The runner matched the offline factual snapshots and repeat reply, then exited with status 1 because the live coordination criterion was unmet. The temporary credential file was deleted and its absence verified. [Credentialed trial transcript](live-provider-2026-11-22.jsonl).
 
 ## Reproduce
 
@@ -48,4 +61,4 @@ On 22 November 2026 the project owner submitted these answers before consulting 
 
 **Speaker identities 7/8. Conversational moves 7/8. Both pass the 6/8 threshold.** F earns the move point for recognizing the invitation to pick a specific part. On G the reader recognized the sequence of topics. I scored the move conservatively because the description omits Owen's affirmative invitation to ask a follow-up.
 
-All 673 Node tests and 64 Chromium tests passed, including the two-witness interview on desktop and mobile. The browser production build passed its privacy check. The scoped OpenSpec change and all five archived changes passed strict validation. Repository-wide strict validation reported the same nine older failures on a separate export of main at `e578de4`. The successful live trial with measured usage and latency remains outstanding.
+The implementation verification recorded 673 passing Node tests and 64 passing Chromium tests, including the two-witness interview on desktop and mobile. The browser production build passed its privacy check. The scoped OpenSpec change and all five archived changes passed strict validation. Repository-wide strict validation reported the same nine older failures on a separate export of main at `e578de4`. The credentialed trial above verified fallback and left the successful live handoff outstanding.

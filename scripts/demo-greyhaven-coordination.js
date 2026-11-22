@@ -42,13 +42,22 @@ if (mode === 'live') {
       const entry = { role: input.speaker ?? 'director', ordinal: calls.length + 1, elapsedMs: null, tokens: null };
       calls.push(entry);
       const start = performance.now();
+      const markElapsed = () => { entry.elapsedMs ??= Math.round(performance.now() - start); };
+      const onAbort = () => { entry.aborted = true; markElapsed(); };
+      opts.signal.addEventListener('abort', onAbort, { once: true });
       try {
         return await roles[method](input, { ...opts, onUsage(usage) {
           if (Number.isSafeInteger(usage?.input_tokens) && Number.isSafeInteger(usage.output_tokens)) {
             entry.tokens = { input: usage.input_tokens, output: usage.output_tokens };
           }
         } });
-      } finally { entry.elapsedMs = Math.round(performance.now() - start); }
+      } catch (error) {
+        if (Number.isInteger(error?.status)) entry.httpStatus = error.status;
+        throw error;
+      } finally {
+        opts.signal.removeEventListener('abort', onAbort);
+        markElapsed();
+      }
     }]));
   }
   const run = await replay(game(performer));
