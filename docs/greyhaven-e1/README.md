@@ -20,6 +20,15 @@ The quoted openings come from the reviewed performances identified by the accept
 
 **Review status.** All 680 local Node tests passed in preflight. Verification of the same repaired code included 64 passing Chromium tests, a successful production build and privacy check, and strict validation of this OpenSpec change. Controlled replays covered all eight authored choices. The independent reader scored 7/8 for speaker and 7/8 for conversational move. E1 is ready for final owner review.
 
+### Inherited repository-wide OpenSpec failures
+
+The E1 change and all five archived changes pass strict validation. The full strict run on the E1 branch passed 11 items and failed nine. Running the same command on an export of the merge base `e578de4` produced the same nine failing items.
+
+| Item type | Failing items on both revisions |
+| --- | --- |
+| Change | `add-investigation-http-api`, `add-playable-browser-interface`, `add-room-based-investigation`, `enforce-investigation-lifecycle`, `expose-safe-investigation-view` |
+| Canonical spec | `hybrid-dialogue-interface`, `npc-dialogue-naturalness`, `safe-npc-performance`, `stateful-npc-dialogue` |
+
 ## Two interviews, one direction
 
 The player obtains Mara's account, travels to Owen, asks too early about the payment, hears his initial account and clarification, inspects the worksheet, tries again, and inspects the repayment demand. Only then does the evidence choice authorize Owen's payment explanation. After it commits, travel to reception and ask Mara whether she watched him the whole time. Repeating Mara's question uses ordinary delivery again.
