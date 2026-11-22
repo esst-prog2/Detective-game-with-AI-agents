@@ -1,5 +1,6 @@
 // Server-only contract. A schema-valid sentence is not necessarily authorized testimony.
-const invalid = () => new Error('Invalid NPC performance.');
+import { roleFailure } from './role-rejection.js';
+const invalid = (category = 'schema_mismatch') => roleFailure(category, 'Invalid NPC performance.');
 const within = (text, max) => typeof text === 'string' && text.trim().length > 0 && [...text].length <= max;
 
 export function performancePair(value) {
@@ -17,16 +18,19 @@ export function performancePair(value) {
 
 export function validatePerformance(value, performances) {
   const pair = performancePair(value);
-  if (!performances.some((allowed) => allowed.narration === pair.narration && allowed.dialogue === pair.dialogue)) throw invalid();
+  if (!performances.some((allowed) => allowed.narration === pair.narration && allowed.dialogue === pair.dialogue)) throw invalid('unauthorized_performance');
   // Return only freshly projected fields, never a provider-owned object.
   return pair;
 }
 
+export function parseRoleOutput(text, maxBytes) {
+  if (typeof text !== 'string' || text.length === 0) throw invalid('missing_output');
+  if (Buffer.byteLength(text, 'utf8') > maxBytes) throw invalid('output_too_large');
+  try { return JSON.parse(text); } catch { throw invalid('invalid_json'); }
+}
+
 export function parsePerformance(text, performances) {
-  if (typeof text !== 'string' || Buffer.byteLength(text, 'utf8') > 4096) throw invalid();
-  let value;
-  try { value = JSON.parse(text); } catch { throw invalid(); }
-  return validatePerformance(value, performances);
+  return validatePerformance(parseRoleOutput(text, 4096), performances);
 }
 
 export function validatePerformanceContext(context) {

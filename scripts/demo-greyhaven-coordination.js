@@ -3,6 +3,7 @@ import { caseRegistry } from '../src/cases/registry.js';
 import { createConfiguredNPCPerformer } from '../src/npc-performance.js';
 import { replay } from '../test-support/greyhaven-pilot-journey.js';
 import { demoRetestDeadlines } from '../src/greyhaven-coordination.js';
+import { roleRejection } from '../src/role-rejection.js';
 
 const demoStart = performance.now();
 const mode = process.argv[2] ?? 'scripted';
@@ -54,7 +55,13 @@ if (mode === 'live' || retest) {
         if (sdkStart !== undefined) entry.sdkElapsedMs ??= Math.round(performance.now() - sdkStart);
       };
       const markElapsed = () => { entry.elapsedMs ??= Math.round(performance.now() - start); };
-      const onAbort = () => { entry.outcome = 'locally-aborted'; entry.aborted = true; markRequestElapsed(); markElapsed(); };
+      const onAbort = () => {
+        entry.outcome = 'locally-aborted';
+        entry.aborted = true;
+        entry.rejection = roleRejection(opts.signal.reason);
+        markRequestElapsed();
+        markElapsed();
+      };
       opts.signal.addEventListener('abort', onAbort, { once: true });
       try {
         const result = await roles[method](input, { ...opts, onRequestStart() { sdkStart = performance.now(); }, onUsage(usage) {
@@ -69,7 +76,10 @@ if (mode === 'live' || retest) {
       } catch (error) {
         markRequestElapsed();
         if (Number.isInteger(error?.status)) entry.httpStatus = error.status;
-        if (!opts.signal.aborted) entry.outcome = entry.responseReceived ? 'response-rejected' : 'request-error';
+        if (!opts.signal.aborted) {
+          entry.outcome = entry.responseReceived ? 'response-rejected' : 'request-error';
+          entry.rejection = roleRejection(error);
+        }
         throw error;
       } finally {
         opts.signal.removeEventListener('abort', onAbort);

@@ -29,4 +29,6 @@ Start one monotonic four-second timer per directed turn. Allocate at most 1.5 se
 
 ## Risks and evaluation
 
+The E1 NPC response schema enumerates the current speaker's offered dialogue strings. All pilot offers have null narration, so the enum describes exactly the approved whole pairs. Adapter and engine each check membership. The engine derives the reaction ID only after acceptance. The local trace records the rejection stage and a fixed category on fallback. It omits provider text and exception messages. See the [Mara rejection diagnosis](../../../docs/greyhaven-e1/README.md#mara-rejection-diagnosis--22-november-2026).
+
 The main risk is writing two labels for what sounds like the same answer. The [demo rubric](demonstration.md) tests choices at constant testimony, varies the director while holding the world fixed, and compares acting moves with labels hidden. Inspect provider payloads with independent forbidden canaries. Record only role, approved category, elapsed time, call count, token totals and actual source in the local demonstration trace. Use the existing local walkthrough pattern with synthetic fixtures in CI. One genuine three-call trial establishes live wiring. A live selection can legitimately repeat an earlier choice, so scripted counterfactuals establish the full range.

@@ -7,6 +7,7 @@ import { promisify } from 'node:util';
 import { caseRegistry } from '../src/cases/registry.js';
 import { createConfiguredNPCPerformer } from '../src/npc-performance.js';
 import { demoRetestDeadlines } from '../src/greyhaven-coordination.js';
+import { roleRejection } from '../src/role-rejection.js';
 import { createSessionStore } from '../src/investigation-sessions.js';
 import { runCli } from '../src/cli.js';
 import { prepareInterviews, replay, owen, mara, source } from '../test-support/greyhaven-pilot-journey.js';
@@ -32,7 +33,8 @@ test('retest runner reports timings, usage and rejected output against a loopbac
     requests.push([ctx.speaker ?? 'director', body.model, body.text.format.strict]);
     const result = ctx.speaker ? ctx.performances[0] : { strategy: 'invite-account' };
     response.writeHead(200, { 'Content-Type': 'application/json' });
-    response.end(JSON.stringify({ ...completed(invalid && ctx.speaker === 'Owen' ? { invalid: true } : result),
+    response.end(JSON.stringify({ ...completed(invalid && ctx.speaker === 'Mara'
+      ? { ...result, reaction: 'PRIVATE_CANARY' } : result),
       usage: { input_tokens: 12, output_tokens: 4 } }));
   });
   server.listen(0, '127.0.0.1'); await once(server, 'listening');
@@ -54,14 +56,17 @@ test('retest runner reports timings, usage and rejected output against a loopbac
   await assert.rejects(run(), error => {
     const report = JSON.parse(error.stdout);
     assert.equal(error.code, 1);
-    assert.deepEqual(report.calls.map(c => c.outcome), ['adapter-validated','response-rejected']);
-    assert.equal(report.calls[1].tokens.output, 4);
-    assert.equal(report.decisions[0].source, 'fallback');
-    assert.equal(report.handoffUsed, false);
+    assert.deepEqual(report.calls.map(c => c.outcome), ['adapter-validated','adapter-validated','response-rejected']);
+    assert.equal(report.calls[2].tokens.output, 4);
+    assert.deepEqual(report.calls[2].rejection, { stage: 'response_shape', category: 'schema_mismatch' });
+    assert.deepEqual(report.decisions[1].rejection, report.calls[2].rejection);
+    assert.equal(report.decisions[1].source, 'fallback');
+    assert.equal(report.handoffUsed, true);
     assert.equal(report.factualParity, true);
+    assert.doesNotMatch(error.stdout + error.stderr, /PRIVATE_CANARY/);
     return true;
   });
-  assert.equal(requests.length, 5);
+  assert.equal(requests.length, 6);
 });
 
 test('demo retest gives Owen the remainder and Mara a fresh turn, with offline factual parity', async t => {
@@ -116,6 +121,7 @@ for (const delayed of ['director', 'Owen', 'Mara']) test('demo retest discards l
   assert.equal(opts.signal.aborted, true);
   assert.deepEqual(run.snapshots, baseline.snapshots);
   assert.equal(run.decisions.at(-1).source, 'fallback');
+  assert.deepEqual(run.decisions.at(-1).rejection, { stage: 'turn_deadline', category: 'provider_timeout' });
   assert.equal(calls.length, { director: 1, Owen: 2, Mara: 3 }[delayed]);
   const before = g.getDialogueDiagnostics();
   late.resolve(value);
@@ -141,6 +147,11 @@ test('four wire-level replays preserve every factual snapshot and offer eight di
       }
       assert.deepEqual(Object.keys(ctx).sort(), ['demeanor','goal','instruction','intent','memory','performances','speaker','style']);
       assert.equal(ctx.performances.length, 2);
+      const schema = request.text.format.schema;
+      assert.deepEqual(schema.properties.dialogue.enum, ctx.performances.map(pair => pair.dialogue));
+      assert.deepEqual(schema.properties.narration, { type: 'null' });
+      assert.deepEqual(schema.required, ['narration', 'dialogue']);
+      assert.equal(schema.additionalProperties, false);
       for (const pair of ctx.performances) {
         assert.equal(pair.narration, null);
         assert.ok(pair.dialogue.endsWith(ctx.speaker === 'Owen' ? O1 : guarded));
@@ -157,6 +168,9 @@ test('four wire-level replays preserve every factual snapshot and offer eight di
     assert.deepEqual(run.snapshots, baseline.snapshots);
     assert.deepEqual(requests.map(r => r.speaker ?? 'director'), ['director','Owen','Mara']);
     assert.ok(run.decisions.every(e => e.strategy === strategy && e.source === 'provider'));
+    const maraReactions = strategy === 'invite-account' ? ['invite-precise-question', 'hear-detective-out']
+      : ['narrow-observation', 'reserve-judgment'];
+    assert.equal(run.decisions[1].reaction, maraReactions[index]);
     assert.notEqual(requests[1].goal, requests[2].goal);
     assert.notEqual(requests[1].instruction, requests[2].instruction);
     assert.equal(run.replies[2].dialogue, baseline.replies[2].dialogue);
@@ -204,6 +218,61 @@ test('wire adapters reject malformed, oversized, refused and incomplete replies 
   }
 });
 
+test('Mara adapter failures report only the failed check and preserve the offline investigation', async () => {
+  const baseline = await replay(make(null));
+  let otherDirection;
+  await replay(make({ direct: () => ({ strategy: 'set-boundary' }), act(ctx) {
+    if (ctx.speaker === 'Mara') otherDirection = ctx.performances[0];
+    return ctx.performances[0];
+  } }));
+  const wireText = output_text => ({ status: 'completed', output_text });
+  const cases = [
+    ['provider_request', 'request_failed', () => { throw Error('PRIVATE_CANARY'); }],
+    ['provider_response', 'incomplete_response', () => ({ status: 'incomplete' })],
+    ['provider_response', 'refusal', () => ({ ...completed({}), output: [{ content: [{ type: 'refusal' }] }] })],
+    ['response_text', 'missing_output', () => wireText(undefined)],
+    ['response_text', 'output_too_large', () => wireText(' '.repeat(4097))],
+    ['json_parse', 'invalid_json', () => wireText('{PRIVATE_CANARY')],
+    ['response_shape', 'schema_mismatch', () => completed({ reaction: 'unknown-id' })],
+    ['response_shape', 'schema_mismatch', ctx => completed({ ...ctx.performances[0], reaction: 'hear-detective-out' })],
+    ['response_shape', 'schema_mismatch', ctx => completed({ ...ctx.performances[0], narration: 'PRIVATE_CANARY' })],
+    ['offer_membership', 'unauthorized_performance', ctx => completed({ ...ctx.performances[0], dialogue: 'reserve-judgment' })],
+    ['offer_membership', 'unauthorized_performance', () => completed(otherDirection)],
+  ];
+  for (const [stage, category, respond] of cases) {
+    const calls = [];
+    const performer = await configured(request => {
+      const ctx = JSON.parse(request.input);
+      calls.push(ctx.speaker ?? 'director');
+      if (ctx.speaker === 'Mara') return respond(ctx);
+      return completed(ctx.speaker ? ctx.performances[0] : defaults.direct());
+    });
+    const game = caseRegistry.createInvestigation('greyhaven-preview', { performer });
+    const run = await replay(game);
+    assert.deepEqual(calls, ['director', 'Owen', 'Mara']);
+    assert.deepEqual(run.snapshots, baseline.snapshots);
+    assert.deepEqual(run.replies.slice(1).map(r => r.dialogue), baseline.replies.slice(1).map(r => r.dialogue));
+    assert.deepEqual(run.decisions[1], { role: 'Mara', strategy: 'invite-account', instruction: 'keep-conversation-open',
+      reaction: null, source: 'fallback', rejection: { stage, category } });
+    assert.doesNotMatch(JSON.stringify(run), /PRIVATE_CANARY/);
+    assert.doesNotMatch(JSON.stringify(game.getPublicView()), /"rejection"|PRIVATE_CANARY/);
+  }
+});
+
+test('engine independently rejects an unoffered pair and ignores untrusted error metadata', async () => {
+  const baseline = await replay(make(null));
+  for (const [stage, category] of [['engine_revalidation', 'unauthorized_performance'], ['role_execution', 'unclassified_error']]) {
+    const run = await replay(make({ ...defaults, act(ctx) {
+      if (ctx.speaker === 'Owen') return ctx.performances[0];
+      if (stage === 'engine_revalidation') return { narration: null, dialogue: 'PRIVATE_CANARY' };
+      throw Object.assign(Error('PRIVATE_CANARY'), { stage: 'PRIVATE_CANARY', category: 'PRIVATE_CANARY' });
+    } }));
+    assert.deepEqual(run.decisions[1].rejection, { stage, category });
+    assert.deepEqual(run.snapshots, baseline.snapshots);
+    assert.doesNotMatch(JSON.stringify(run), /PRIVATE_CANARY/);
+  }
+});
+
 test('handoff expires after two intervening substantive interviews and cannot cross sessions', async () => {
   for (const turns of [0,1,2]) {
     const a = make(defaults), b = make(defaults);
@@ -220,17 +289,18 @@ test('handoff expires after two intervening substantive interviews and cannot cr
 for (const pendingRole of ['director','Owen','Mara']) for (const settle of ['success','failure']) test('travel invalidates pending ' + pendingRole + ' ' + settle, async () => {
   const started = Promise.withResolvers(), late = Promise.withResolvers();
   let count = 0;
-  function wait() { count++; started.resolve(); return late.promise; }
-  const g = make({ direct: ctx => pendingRole === 'director' ? wait() : defaults.direct(ctx),
-    act: ctx => ctx.speaker === pendingRole ? wait() : defaults.act(ctx) });
+  function wait(opts) { count++; started.resolve(opts.signal); return late.promise; }
+  const g = make({ direct: (ctx, opts) => pendingRole === 'director' ? wait(opts) : defaults.direct(ctx),
+    act: (ctx, opts) => ctx.speaker === pendingRole ? wait(opts) : defaults.act(ctx) });
   await prepareInterviews(g);
   if (pendingRole === 'Mara') { await present(g); g.travelTo('reception'); }
   const before = g.getDialogueDiagnostics(), events = g.getCoordinationTrace();
   const ask = () => pendingRole === 'Mara' ? g.askSuspect(mara,source) : present(g);
-  const reply = ask(); await started.promise;
+  const reply = ask(); const signal = await started.promise;
   const room = g.getPublicView().currentLocationId;
   g.travelTo(room === 'reception' ? 'boathouse' : 'reception'); g.travelTo(room);
   assert.equal((await reply).code, 'stale_response');
+  assert.deepEqual(roleRejection(signal.reason), { stage: 'turn_authority', category: 'stale_turn' });
   if (settle === 'success') late.resolve(defaults.direct()); else late.reject(Error('provider failed'));
   assert.deepEqual(g.getDialogueDiagnostics(), before); assert.deepEqual(g.getCoordinationTrace(), events);
   await ask(); assert.equal(count, 1);

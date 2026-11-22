@@ -1,14 +1,15 @@
 import { strategies, witnesses } from './cases/greyhaven-reactions.js';
 import { validatePerformance } from './npc-performance.js';
+import { roleFailure, roleRejection } from './role-rejection.js';
 
 const applicationDeadlines = Object.freeze({ directorMs: 1500, turnMs: 4000 });
 export const demoRetestDeadlines = Object.freeze({ directorMs: 5000, turnMs: 10000 });
 
 export function validatedStrategy(value) {
   if (!value || ![Object.prototype, null].includes(Object.getPrototypeOf(value))
-    || Reflect.ownKeys(value).length !== 1) throw Error('Invalid direction');
+    || Reflect.ownKeys(value).length !== 1) throw roleFailure('schema_mismatch', 'Invalid direction');
   const strategy = Object.getOwnPropertyDescriptor(value, 'strategy')?.value;
-  if (!strategies.includes(strategy)) throw Error('Invalid direction');
+  if (!strategies.includes(strategy)) throw roleFailure('invalid_strategy', 'Invalid direction');
   return strategy;
 }
 
@@ -19,21 +20,27 @@ export function rememberPilotAction(state, action) {
 // Keep attempts outside the candidate transaction: even a discarded request spent its slot.
 async function dispatch(role, context, parentSignal, deadline, limits, call) {
   const budget = deadline - performance.now();
-  if (parentSignal.aborted || budget <= 0 || limits.has(role)) throw Error('Role unavailable');
+  if (parentSignal.aborted) throw roleFailure('stale_turn');
+  if (budget <= 0) throw roleFailure('provider_timeout');
+  if (limits.has(role)) throw roleFailure('attempt_spent');
   limits.add(role);
   const controller = new AbortController();
-  let stop;
-  const canceled = new Promise((_, reject) => {
-    stop = () => { controller.abort(); reject(Error('Role canceled')); };
-  });
-  parentSignal.addEventListener('abort', stop, { once: true });
-  const timer = setTimeout(stop, budget);
+  const canceled = Promise.withResolvers();
+  function stop(category) {
+    const failure = roleFailure(category);
+    controller.abort(failure);
+    canceled.reject(failure);
+  }
+  const onCancel = () => stop('stale_turn');
+  parentSignal.addEventListener('abort', onCancel, { once: true });
+  const timer = setTimeout(() => stop('provider_timeout'), budget);
   try {
-    const value = await Promise.race([canceled, call(structuredClone(context), { signal: controller.signal, timeout: Math.ceil(budget) })]);
-    if (parentSignal.aborted || performance.now() >= deadline) throw Error('Late response');
+    const value = await Promise.race([canceled.promise, call(structuredClone(context), { signal: controller.signal, timeout: Math.ceil(budget) })]);
+    if (parentSignal.aborted) throw roleFailure('stale_turn');
+    if (performance.now() >= deadline) throw roleFailure('provider_timeout');
     return value;
   } finally {
-    parentSignal.removeEventListener('abort', stop);
+    parentSignal.removeEventListener('abort', onCancel);
     clearTimeout(timer);
   }
 }
@@ -74,14 +81,21 @@ export async function stageCoordination({ state, turn, plan, suspectId, roles, a
     const performances = moves.map(([, line]) => ({ narration: null, dialogue: line + ' ' + turn.core.approvedContent }));
     const context = { speaker: role, goal: witness.goal, instruction, memory, style: witness.style,
       demeanor: turn.result.demeanor, intent: plan.intent, performances };
-    const selected = validatePerformance(await dispatch(role, context, signal, deadline, attempts, roles.act), performances);
+    const returned = await dispatch(role, context, signal, deadline, attempts, roles.act);
+    let selected;
+    try { selected = validatePerformance(returned, performances); }
+    catch (error) {
+      event.rejection = { stage: 'engine_revalidation', category: roleRejection(error).category };
+      throw error;
+    }
     event.reaction = moves[performances.findIndex(pair => pair.dialogue === selected.dialogue)][0];
     event.source = 'provider';
     if (origin && state.policy.receipts.has('mara-initial')) {
       next.direction = { strategy, expiresAfter: turn.next.turnId + 2 };
     }
     return { selected, performances };
-  } catch {
+  } catch (error) {
+    event.rejection ??= roleRejection(error);
     return { selected: null };
   }
 }

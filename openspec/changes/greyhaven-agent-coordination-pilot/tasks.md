@@ -10,6 +10,7 @@
 - [x] 2.1 Build the bounded action and speaker-memory projections. Test history sensitivity at fixed eligibility, rejected actions, cross-speaker/private canaries and the exact allowed fields of each serialized request.
 - [x] 2.2 Add the director and pilot NPC adapters using the existing client. Test strict shape, unknown strategies, invalid UTF-8 byte lengths, wrong actor/core, mixed pairs, free text, extra keys, refusal and malformed output at adapter and independent engine boundaries.
 - [x] 2.3 Implement the shared timeout, abort and attempt accounting. Verify with a fake clock and a provider ignoring abort that time cannot restart between roles and canceled attempts cannot exceed the session cap.
+- [x] 2.4 Diagnose the recorded Mara rejection, constrain the E1 wire schema to current offers and test redacted failure stages, independent engine checks, stale results and offline parity with fake responses. Preserve both live transcripts for task 4.3.
 
 ## 3. Coordinate through the existing transaction
 
