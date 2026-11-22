@@ -660,3 +660,16 @@ In my real offline game session, I questioned Ben Carter, inspected all three ev
 - 2026-11-21 ? Assistant decided to deliver six HyperFrames scenes using genuine screenshots, a visible opening frame, a concise authored-knowledge caption, silent H.264 1080p/30fps, native controls/poster/transcript, and the existing isolated gh-pages route; source PR remains unmerged for user review.
 
 - 2026-11-21 ? Assistant retained the finished MP4 and editable sources, published the existing isolated promo artifact after audit, and verified actual public playback plus all repaired screenshot links; Canvas submission remains the user?s action and the source PR remains unmerged.
+
+- 2026-11-22 - User decision: review the original AI-agent architecture before Milestone E, preserve deterministic protections, and limit this turn to documentation and planning.
+- 2026-11-22 - Assistant decision: record the review in docs/ai-architecture-review.md and leave it uncommitted to keep it out of the Homework 10 branch history.
+- 2026-11-22 - Assistant recommendation pending user decision: time-box a two-character Game Master pilot early in E and verify offline and model-enabled case parity in F.
+
+- 2026-11-22 - User decided E1 covers the optional model-driven Mara/Owen coordination pilot, E2 covers full Greyhaven content and both discovery routes, and F covers accusation outcomes and end-to-end verification. Implementation requires separate approval.
+- 2026-11-22 - Assistant selected docs/greyhaven-e1-coordination from fetched main e578de4 after confirming PR #21 merged and zero open PRs. The existing audit and its append-only log entries accompanied the planning branch.
+- 2026-11-22 - Assistant proposed the Owen payment to Mara source handoff, two strategies with two local reactions per speaker, two intervening turns to expiry, a four-second shared deadline and three provider attempts per pilot session for project-owner review.
+
+- 2026-11-22 - User confirmed the approved E1 Mara/Owen pilot should proceed within its existing scope and acceptance criteria. Current E2 work is limited to recording narrative planning requirements.
+- 2026-11-22 - User set E2 targets of at least 6–7 meaningful NPCs including Mara and Owen, at least 3–4 explorable locations, interconnected evidence chains, competing interpretations and at least two independently solvable discovery routes. Preserve established Greyhaven facts and the central relationship.
+- 2026-11-22 - User requires explicit approval of the complete E2 narrative design before content implementation. The review covers truth and timeline, cast and relationships, individual knowledge and memory, locations, clues, testimony dependencies, routes, bounded agent behavior, outcomes and fairness testing. F retains outcome implementation and end-to-end verification.
+- 2026-11-22 - User approved the recorded E2 planning requirements and authorized E1 implementation and verification only, with review before merge. Assistant will checkpoint planning separately and use a dedicated E1 feature branch.

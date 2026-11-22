@@ -1,5 +1,7 @@
 # Greyhaven staged implementation roadmap
 
+**22 November 2026 milestone update.** D merged in PR #17. E1 proceeds under the approved [Mara/Owen coordination pilot](../greyhaven-agent-coordination-pilot/proposal.md) and its existing acceptance criteria. E2 starts with a complete narrative design for project-owner review. Approval of that design gates E2 content implementation. F owns accusation outcomes and end-to-end verification. The E1–E4 package labels in the historical content plan below all fall within the new phase E2.
+
 **Narrative baseline approved on 2026-11-06; execution status updated after separate milestone authorizations.** A is merged through PR #14 at3727a9b. B is merged through PR #15 at37d7b26; its specifications and B1-B4 checklist are in [deterministic-disclosure](../deterministic-disclosure/tasks.md). C is merged through PR #16 at2003b1b; its C1-C3 checklist is in [statement-specific-clarification](../statement-specific-clarification/tasks.md). D is implemented and verified on `feature/greyhaven-vertical-slice`, approved for commit, push and PR creation after final verification and user-confirmed manual playtesting; manual PR review/merge remain pending. E-F remain proposed, unstarted and unapproved. Its D1-D5 checklist is in [greyhaven-vertical-slice](../greyhaven-vertical-slice/tasks.md). The overarching planning checklist tracks preparation only; implementation tracking lives in the scoped changes. Narrative canon is unchanged.
 
 ## Gates and critical path
@@ -64,7 +66,26 @@ Merged packages: **C1** target/facet schema and resolver; **C2** option prioriti
 
 Implemented packages awaiting review: **D1** approved subset authoring; **D2** preview mode/UI integration; **D3** deterministic browser/CLI/HTTP proof and review. See [Milestone D report](../../../docs/greyhaven-preview/implementation.md). Human playtesting remains pending; no commit, push, merge or archive is authorized.
 
-## Milestone E — Complete approved Greyhaven content
+## E2 narrative design requirements for approval
+
+Start from the approved [story bible](greyhaven-story-bible.md), [timeline](greyhaven-canonical-timeline.md), [character dossiers](greyhaven-character-dossiers.md) and [deduction graph](greyhaven-deduction-graph.md). Preserve established Greyhaven facts and the characterization of Mara and Owen. The earlier five-interviewee inventory is the starting cast. The expanded cast target below governs E2. The five planned rooms already meet the location target. Judge any additions by the investigative or emotional work they do.
+
+| Design deliverable | What the project owner should be able to review |
+| --- | --- |
+| 1. Underlying truth and timeline | Reconstruct what actually happened, when, where and who could perceive it. Trace each proposed addition against established events and distinguish what the designer knows from what the detective can establish. |
+| 2. Expanded cast and relationships | Target at least 6–7 meaningful NPCs, including Owen and Mara. Keep their mother–son relationship emotionally central. For each character, show an independent motivation, a stake in the outcome and a relationship that affects what they say or do. Explain how one person's attempt to protect or understand another can complicate the investigation. |
+| 3. Character knowledge and memory | For each NPC, distinguish firsthand knowledge, hearsay, belief, misconception, secret, motive and relevant remembered interactions. Trace pivotal statements to their source. Identify where a witness sincerely misinterprets an event, tells a partial truth, withholds information for personal reasons or deliberately lies. Show what could change their account and what they could still reasonably believe afterward. |
+| 4. Investigative locations | Target at least 3–4 explorable locations. For each, identify the observation, encounter or evidence it makes possible. Check sightlines, travel and timing wherever a deduction depends on them. |
+| 5. Evidence chains and competing interpretations | Connect physical evidence, records and testimony across multiple chains. Inventory genuine clues, ambiguous findings and plausible misleading leads. For each significant lead, explain why a player might follow it, its underlying explanation and the discoverable check that distinguishes rival interpretations. Record any uncertainty that survives the check. |
+| 6. Testimony dependencies and account revisions | Map each material disclosure to the speaker, prior account, required inspection or received testimony, and resulting revision. Explain why the character responds differently at that point. A change of demeanor alone cannot establish a fact. |
+| 7. Independent discovery routes | Walk through at least two complete, logically valid routes using player-accessible actions. For each, list the observations, sources, deductions and strongest competing explanation. Identify shared premises and each route's independent decisive support. Verify each still works with the other route's distinctive evidence omitted. Hearing the same source twice cannot count as corroboration. |
+| 8. Agent influence | Specify where the Game Master may direct behavior and where a character's goal, relationships and committed memory shape its response. The deterministic engine owns truth, knowledge, gates and progression. Both routes must work offline. This design applies to the full case in E2. |
+| 9. Conclusion and alternative outcomes | Define the intended inference, what evidence warrants it, what remains uncertain, and how incomplete or incorrect accusations should read. Distinguish what a detective can conclude about the repair dispute from what supports the murder accusation. F implements and verifies those outcomes. |
+| 10. Consistency, solvability and fairness | Plan timeline and source checks, missing-prerequisite tests, both route walkthroughs and a first-time-player reasoning playtest. Ask players which evidence changed their interpretation, why a plausible alternative weakened and what remains uncertain. A correct guess or an exhausted dialogue menu alone cannot demonstrate successful deduction. |
+
+Submit these ten deliverables together for explicit project-owner approval **before implementing E2 content**. The design review should settle the exact roster, locations and clue inventory in the context of the complete mystery.
+
+## Historical full-case content plan (now E2)
 
 **Scope/dependency:** B/C/D accepted and content inventory reviewed. Author full 5 interviewees/5 rooms/8 inspection items, six meaningful base subjects each, both account arcs,20 facets, two comparisons and approved source limits. Full original gates/routes preserved; no new twist. Full package initially constructible in integration tests, not publicly selectable until F.
 
