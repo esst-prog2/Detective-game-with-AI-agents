@@ -80,6 +80,11 @@ export async function createConfiguredNPCPerformer({ env = process.env, createCl
   try {
     const options = { apiKey, maxRetries: 0, timeout: 8000, logLevel: 'off' };
     const client = createClient ? await createClient(options) : new (await import('openai')).default(options);
-    return createOpenAINPCPerformer({ client, model });
+    const performer = createOpenAINPCPerformer({ client, model });
+    if (env.GREYHAVEN_AGENT_PILOT === '1') {
+      const { createCoordinationRoles } = await import('./coordination-provider.js');
+      performer.coordination = createCoordinationRoles(client, model);
+    }
+    return performer;
   } catch { return null; }
 }

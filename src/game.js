@@ -6,6 +6,7 @@ import { validatePerformance } from './npc-performance.js';
 import { legacyPerformances } from './dialogue-phraser.js';
 import { explainAshcroft } from './mystery-conclusion.js';
 import { policyCacheKey } from './dialogue-policy.js';
+import { stageCoordination, rememberPilotAction } from './greyhaven-coordination.js';
 
 export function validateSpatialData(data) {
   const slug = (id) => typeof id === 'string' && id.length <= 64 && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id);
@@ -47,7 +48,7 @@ export function validateCase(data = caseData) {
   return errors;
 }
 
-export function createInvestigation({ data = caseData, phraser = null, dialogueCatalog = defaultDialogueCatalog(data), performer = null, caseContext = null } = {}) {
+export function createInvestigation({ data = caseData, phraser = null, dialogueCatalog = defaultDialogueCatalog(data), performer = null, coordination = null, caseContext = null } = {}) {
   if (validateSpatialData(data).length) throw new Error('Invalid investigation configuration.');
   if (performer && phraser) throw new Error('Cannot combine dialogue adapters.');
   if (performer && typeof performer.perform !== 'function') throw new Error('Invalid performance adapter.');
@@ -60,6 +61,11 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
   const context = caseContext ? Object.freeze({ id: caseContext.id, version: caseContext.version }) : null;
   const catalog = freezeCatalog(structuredClone(dialogueCatalog));
   let dialogueState = initialDialogueState(catalog);
+  const roleAttempts = new Set();
+  if (coordination) {
+    if (caseContext?.id !== 'greyhaven-preview' || mode !== 'preview' || phraser || performer) throw Error('Invalid coordination configuration.');
+    dialogueState.pilot = { actions: [], direction: null, events: [] };
+  }
   let mutationGeneration = 0;
   let pendingDialogue = null;
   const candidates = new Map();
@@ -172,8 +178,17 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
         const offer = !legacy && (catalog.schemaVersion === 2 || performer || turn.core?.deliveries || (!turn.core && catalog.profiles.find((p) => p.suspectId === suspectId)?.socialDeliveries)) ? offerPerformances(catalog, dialogueState, suspectId, plan, turn) : null;
         const poolKey = legacy ? `legacy:${turn.core.id}` : offer?.cacheKey ?? turn.cacheKey;
         const cacheKey = policyCacheKey(dialogueState, context, catalog.policy?.facets ? `${plan.ruleId ?? 'base'}:${poolKey}` : poolKey);
-        const cached = turn.npc.cache.get(cacheKey);
-        if (offer) {
+        const pilotSelection = coordination && await stageCoordination({ state: dialogueState, turn, plan, suspectId,
+          roles: coordination, attempts: roleAttempts, signal: candidate.controller.signal });
+        const cached = !pilotSelection && turn.npc.cache.get(cacheKey);
+        if (pilotSelection?.selected) {
+          const previous = dialogueState.npcs.get(suspectId);
+          turn.npc.gestures = [...previous.gestures];
+          text = pilotSelection.selected.dialogue;
+          narration = pilotSelection.selected.narration;
+          candidate.performances = pilotSelection.performances;
+        }
+        else if (offer) {
           let pair;
           if (cached) {
             try { pair = validatePerformance({ narration: cached.narration, dialogue: cached.text }, offer.context.performances); reused = true; }
@@ -207,7 +222,7 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
         else if (cached) { text = cached.text; narration = cached.narration; reused = true; }
         turn.result.text = text; turn.result.dialogue = text; turn.result.narration = narration; turn.result.cached = reused;
         turn.record.dialogue = text; turn.record.narration = narration;
-        cachePerformance(turn.npc, cacheKey, { text, narration });
+        if (!pilotSelection) cachePerformance(turn.npc, cacheKey, { text, narration });
         candidate.next = turn.next;
         candidate.result = turn.result;
       }
@@ -260,23 +275,26 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
     return data.evidence.map(({ id, name, locationId }) => ({ id, name, locationId }));
   }
 
-  function selectEvidence(evidenceId) {
+  function recordInspection(evidenceId) {
     if (status === 'ended') return { error: endedError() };
     const evidence = data.evidence.find((evidence) => evidence.id === evidenceId) ?? null;
     if (evidence && evidence.locationId !== currentLocationId) return { error: rejected('evidence_not_here', 'That evidence is in another room.') };
+    if (evidence) {
+      dialogueState.inspected.add(evidence.id);
+      if (coordination) rememberPilotAction(dialogueState, 'inspection');
+      invalidateDialogue();
+    }
     return { evidence };
   }
 
   function inspectEvidence(evidenceId) {
-    const selection = selectEvidence(evidenceId);
-    if (selection.evidence) { dialogueState.inspected.add(selection.evidence.id); invalidateDialogue(); }
+    const selection = recordInspection(evidenceId);
     return selection.error ?? selection.evidence;
   }
 
   function inspectPublicEvidence(evidenceId) {
-    const { evidence, error } = selectEvidence(evidenceId);
+    const { evidence, error } = recordInspection(evidenceId);
     if (error) return error;
-    if (evidence) { dialogueState.inspected.add(evidence.id); invalidateDialogue(); }
     return evidence ? { id: evidence.id, name: evidence.name, description: evidence.description } : null;
   }
 
@@ -306,6 +324,7 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
     travelTo, getLocationContext,
     interact, prepareDialogue, commitDialogue, discardDialogue,
     isDialogueCandidate: (token) => candidates.has(token),
+    getCoordinationTrace: () => structuredClone(dialogueState.pilot?.events ?? []),
     getDialogueDiagnostics: () => structuredClone(dialogueDiagnostics(dialogueState)),
   };
 }

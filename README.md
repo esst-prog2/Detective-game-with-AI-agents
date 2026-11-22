@@ -20,6 +20,8 @@ CLI defaults and menus are preserved. Use `npm.cmd start -- --list-cases` to lis
 
 ## Greyhaven repair-dispute preview (Milestone D)
 
+The optional E1 Game Master pilot coordinates Owen's payment explanation and Mara's next source clarification. [Setup, review results and reproducible offline/scripted/live comparisons](docs/greyhaven-e1/README.md).
+
 Select **The Last Bell at Greyhaven — Repair Dispute Preview** on the browser start screen. Only Mara/Owen, reception/boathouse and two repair records are included. Inspect both boathouse records, hear Owen's account and use an available evidence question. Suggested choices and free text both work offline. The preview stays open after the explanation; it has no final murder accusation or verdict. Use its Ashcroft button to start a fresh original investigation with new notes.
 
 For the CLI, run `npm.cmd start -- --case greyhaven-preview`; `/choices` lists eligible questions. Reproduce the public engine/actual CLI journey with `node scripts/walkthrough-greyhaven-preview.js`. See the [implementation and narrative audit](docs/greyhaven-preview/implementation.md) and [human-playtest checklist](docs/greyhaven-preview/playtest.md). Full Greyhaven content and endings remain Milestones E/F, requiring separate approval.
