@@ -20,5 +20,5 @@
 ## 4. Route the pilot and evaluate it
 
 - [x] 4.1 Wire the local switch through CLI startup and HTTP investigation creation. Verify missing credentials, disabled pilot, default Ashcroft, preview with ordinary performer, and enabled preview through public API, CLI and browser. Document the switch, setup and fallback.
-- [ ] 4.2 Provide a local demo runner with offline, scripted and opt-in live modes. Verify step-by-step parity, privacy of trace/public payloads, all eight combinations and blinded speaker/action scores against the [demo criteria](demonstration.md).
+- [x] 4.2 Provide a local demo runner with offline, scripted and opt-in live modes. Verify step-by-step parity, privacy of trace/public payloads, all eight combinations and blinded speaker/action scores against the [demo criteria](demonstration.md).
 - [ ] 4.3 Record one actual live trial with usage and timing, score it against the three-call and deadline limits, and disclose any fallback. Run existing Node, Chromium, build/privacy and strict OpenSpec checks and retain the results for E1 review.

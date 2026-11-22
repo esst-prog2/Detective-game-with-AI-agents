@@ -33,4 +33,19 @@ For interactive play set `$env:GREYHAVEN_AGENT_PILOT='1'` in the API or CLI proc
 
 ## Verification and review status
 
-All 673 Node tests and 64 Chromium tests passed, including the two-witness interview on desktop and mobile. The browser production build passed its privacy check. The scoped OpenSpec change and all five archived changes passed strict validation. Repository-wide strict validation reported the same nine older failures on a separate export of main at `e578de4`. The independent reader's answers and a successful live trial are still needed for the two outstanding acceptance tasks.
+On 22 November 2026 the project owner submitted these answers before consulting the labeled transcripts. The scoring key is the [reaction catalog](../../src/cases/greyhaven-reactions.js) at commit `a80dd66`, matched by exact dialogue line to the reader sheet. Each column earns one point per match. The move is scored by the conversational action described, independently of the speaker guess.
+
+| Row | Speaker guess | Key speaker | Submitted move | Key move | Speaker / move points |
+| --- | --- | --- | --- | --- | --- |
+| A | Mara | Mara | Requests a precise observation before responding. | `narrow-observation` | 1 / 1 |
+| B | Owen | Owen | Welcomes the question and offers a direct answer. | `acknowledge-question` | 1 / 1 |
+| C | Mara | Mara | Invites the detective to finish and offers attentive listening. | `hear-detective-out` | 1 / 1 |
+| D | Owen | Owen | Sets a firm boundary, redirecting attention to the repair work. | `narrow-to-work` | 1 / 1 |
+| E | Mara | Mara | Withholds agreement until the detective explains their interpretation. | `reserve-judgment` | 1 / 1 |
+| F | Owen | Mara | Asks the detective to prioritize one part of the question. | `invite-precise-question` | 0 / 1 |
+| G | Owen | Owen | Insists on finishing his account before discussing the work. | `invite-follow-up` | 1 / 0 |
+| H | Owen | Owen | Separates the repair work from the argument and requests one topic at a time. | `separate-questions` | 1 / 1 |
+
+**Speaker identities 7/8. Conversational moves 7/8. Both pass the 6/8 threshold.** F earns the move point for recognizing the invitation to pick a specific part. On G the reader recognized the sequence of topics. I scored the move conservatively because the description omits Owen's affirmative invitation to ask a follow-up.
+
+All 673 Node tests and 64 Chromium tests passed, including the two-witness interview on desktop and mobile. The browser production build passed its privacy check. The scoped OpenSpec change and all five archived changes passed strict validation. Repository-wide strict validation reported the same nine older failures on a separate export of main at `e578de4`. The successful live trial with measured usage and latency remains outstanding.
