@@ -145,6 +145,14 @@ The allowlist excludes the murderer designation, solution, private facts, motive
 
 The existing `data`, `findSuspect()` and guarded `inspectEvidence()` remain trusted internal APIs. **Network adapters must serialize public projections, never the investigation object or raw case records.** The game engine/case module belong on the server. `travelTo(locationId)` changes active position; trusted `getLocationContext()` supplies an internal epoch for stale-reply commit guards, never public JSON. Trusted `getDialogueDiagnostics()` supplies detached numeric state, private turn provenance, summaries and cache diagnostics for tests; it is never exposed by HTTP. Raw references do not protect against malicious in-process code. This milestone does not resolve issue #3.
 
+### Case-defined investigation controls
+
+Cases can mark an interviewee with `accusationEligible: false`. Both clients keep that person available for interviews and omit them from accusations. A case-wide preview restriction takes precedence. A case can also give every room a `connections` array of room IDs. Edges must be reciprocal and every room must be reachable from the starting room. Omitting the graph retains unrestricted travel between listed rooms.
+
+Each public conversation exposes the original six-choice `options` window, authorized overflow in `moreOptions`, and `statements` containing the first delivered wording of each distinct statement. Each statement belongs to its conversation and carries a public turn number, current/historical/received status, and IDs of currently eligible follow-ups. Browsing these records or changing pages is local to the client. Selecting a question runs the normal revision-checked interview command. Historical corrections require the original receipt and an authorized authored response.
+
+In the browser, use **Next questions** or **Review received statement** during an interview. In the CLI, enter `/choices` or `/statements` at the question prompt. The evidence journal and CLI action 7 reopen received observations without another inspection. A standalone CLI investigation can use `receivedObservations()` to read only inspected descriptions.
+
 ## Stateful dialogue — Phase 1
 
 `src/data/dialogue-catalog.js` keeps reviewed profiles, testimony cores, delivery alternatives, evidence relevance and comparison prerequisites separate from the unchanged mystery records. Alice remains nervous/dutiful with careful wording; Ben remains blunt/proud with restless explanation under pressure; Clara remains polished/composed with firm rebuttals. Existing intentional lies remain testimony, not verified facts. No family ties, new secrets or confessions are authored.

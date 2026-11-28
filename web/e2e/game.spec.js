@@ -213,7 +213,7 @@ test('failed travel retains current room and empty-room fixtures offer navigatio
   await expect(page.getByRole('alert')).toContainText('Refresh before trying again');
   await expect(page.getByRole('heading', { name: 'the study', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Refresh investigation' }).click();
-  await page.route('**/travel', async (route) => { const response = await route.fetch(); const envelope = await response.json(); envelope.data.state.suspects = envelope.data.state.suspects.map((suspect) => ({ ...suspect, locationId: 'study' })); envelope.data.state.dialogue.conversations.forEach((item) => { item.options = []; }); await route.fulfill({ response, json: envelope }); }, { times: 1 });
+  await page.route('**/travel', async (route) => { const response = await route.fetch(); const envelope = await response.json(); envelope.data.state.suspects = envelope.data.state.suspects.map((suspect) => ({ ...suspect, locationId: 'study' })); envelope.data.state.dialogue.conversations.forEach((item) => { item.options = []; item.moreOptions = []; }); await route.fulfill({ response, json: envelope }); }, { times: 1 });
   await page.getByRole('button', { name: 'Go to the library', exact: true }).click();
   await expect(page.getByText('Nobody is here to question.', { exact: true })).toBeVisible();
   await expect(page.getByText('No case evidence is recorded in this room.', { exact: true })).toBeVisible();

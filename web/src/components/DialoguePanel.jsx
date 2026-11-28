@@ -9,7 +9,14 @@ export default function DialoguePanel({ suspect }) {
   const [reading, setReading] = useState(null);
   const choicesHeading = useRef(null);
   const conversation = state.snapshot.dialogue.conversations.find((item) => item.suspectId === suspect.id);
-  const options = conversation?.options ?? [];
+  const [navigation, setNavigation] = useState({});
+  const { page = 0, turnId = null } = navigation.revision === state.revision ? navigation : {};
+  const navigate = (page, turnId) => setNavigation({ revision: state.revision, page, turnId });
+  const statements = conversation?.statements ?? [];
+  const statement = statements.find(item => item.turnId === turnId);
+  const available = [...(conversation?.options ?? []), ...(conversation?.moreOptions ?? [])];
+  const matching = statement ? available.filter(option => statement.followUps.includes(option.id)) : available;
+  const options = matching.slice(page * 6, page * 6 + 6);
   const records = state.transcripts[suspect.id] ?? [];
   const draft = state.drafts[suspect.id] ?? '';
   const latest = records.at(-1);
@@ -22,6 +29,18 @@ export default function DialoguePanel({ suspect }) {
       {conversation && <div className="demeanor"><span aria-describedby="demeanor-explanation">Demeanor: {conversation.demeanor}</span><details className="demeanor-help"><summary aria-label="About demeanor">?</summary><p id="demeanor-explanation">Demeanor reflects conversational delivery. It does not establish truthfulness.</p></details><span className="sr-only">Demeanor reflects conversational delivery, not truthfulness.</span></div>}
       {latest?.narration && <p className="performance-narration"><em>{latest.narration}</em></p>}
       <blockquote tabIndex="0" aria-label="Latest reply">{latest?.dialogue ?? 'What would you like to ask?'}</blockquote>
+      {statements.length > 0 && <label>Review received statement
+        <select value={turnId ?? ''} onChange={event => navigate(0, Number(event.target.value) || null)}>
+          <option value="">All questions</option>
+          {statements.map(item => <option key={item.turnId} value={item.turnId}>{suspect.name} · Turn {item.turnId} · {item.accountStatus}</option>)}
+        </select>
+      </label>}
+      {statement && <p aria-label="Reviewed statement">{statement.dialogue}</p>}
+      {matching.length > 6 && <nav aria-label="Interview question pages">
+        <button disabled={!page} onClick={() => navigate(page - 1, turnId)}>Previous questions</button>
+        <span aria-live="polite">Page {page + 1} of {Math.ceil(matching.length / 6)}</span>
+        <button disabled={(page + 1) * 6 >= matching.length} onClick={() => navigate(page + 1, turnId)}>Next questions</button>
+      </nav>}
       <section className="dialogue-choices" aria-labelledby="choices-heading"><h2 id="choices-heading" ref={choicesHeading} tabIndex="-1">Continue the conversation</h2>
         <div>{options.map((option) => <button key={option.id} disabled={!canAct} data-choice={option.id} onClick={async (event) => {
           const button = event.currentTarget;

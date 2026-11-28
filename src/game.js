@@ -1,6 +1,6 @@
 import { caseData, TOPICS } from './data/case.js';
 import { defaultDialogueCatalog, validateDialogueCatalog, freezeCatalog } from './data/dialogue-catalog.js';
-import { initialDialogueState, resolveDialogue, dialogueOptions, prepareTurn, cachePerformance, publicDialogue, guidance, dialogueDiagnostics, coreAllowed } from './dialogue-state.js';
+import { initialDialogueState, resolveDialogue, prepareTurn, cachePerformance, publicDialogue, guidance, dialogueDiagnostics, coreAllowed } from './dialogue-state.js';
 import { validateAuthoredPerformances, offerPerformances, applyPerformance } from './authored-performances.js';
 import { validatePerformance } from './npc-performance.js';
 import { legacyPerformances } from './dialogue-phraser.js';
@@ -19,6 +19,22 @@ export function validateSpatialData(data) {
   if (new Set(roomIds).size !== roomIds.length || data.rooms.some((room) => !slug(room.id) || !text(room.name))) errors.push('Invalid rooms.');
   if (!roomIds.includes(data.initialLocationId) || data.locations.length !== data.rooms.length
     || data.rooms.some((room, i) => room.name !== data.locations[i])) errors.push('Invalid room configuration.');
+  if (data.rooms.some(room => Object.hasOwn(room, 'connections'))) {
+    const edges = new Map(data.rooms.map(room => [room.id, room.connections]));
+    const invalid = data.rooms.some(({ id, connections }) => !Array.isArray(connections)
+      || new Set(connections).size !== connections.length
+      || connections.some(to => to === id || !Array.isArray(edges.get(to)) || !edges.get(to).includes(id)));
+    if (invalid) errors.push('Invalid room connections.');
+    else {
+      const reachable = new Set([data.initialLocationId]);
+      for (const id of reachable) for (const to of edges.get(id) ?? []) reachable.add(to);
+      if (reachable.size !== data.rooms.length) errors.push('Unreachable room.');
+    }
+  }
+  if (data.suspects.some(person => Object.hasOwn(person, 'accusationEligible')
+    && (typeof person.accusationEligible !== 'boolean' || (person.id === data.murdererId && !person.accusationEligible)))) {
+    errors.push('Invalid accusation eligibility.');
+  }
   const entities = [...data.suspects, ...data.evidence];
   if (new Set(entities.map((entity) => entity.id)).size !== entities.length
     || entities.some((entity) => !slug(entity.id) || !roomIds.includes(entity.locationId))) errors.push('Invalid placements.');
@@ -84,6 +100,8 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
     if (status === 'ended') return endedError();
     if (!data.rooms.some((room) => room.id === locationId)) return rejected('location_not_found', 'That room is not available.');
     const changed = currentLocationId !== locationId;
+    const exits = data.rooms.find(room => room.id === currentLocationId).connections;
+    if (changed && exits && !exits.includes(locationId)) return rejected('travel_unavailable', 'There is no direct exit to that room.');
     if (changed) { currentLocationId = locationId; locationEpoch += 1; }
     invalidateDialogue();
     return { kind: 'travel', locationId, changed };
@@ -109,7 +127,8 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
     const suspect = findSuspect(suspectId);
     if (!suspect) return null;
     const dossier = suspect.publicDossier;
-    return { id: suspect.id, name: suspect.name, locationId: suspect.locationId, dossier: {
+    return { id: suspect.id, name: suspect.name, locationId: suspect.locationId,
+      ...(suspect.accusationEligible === false ? { accusationEligible: false } : {}), dossier: {
       role: dossier.role, relationshipToVictim: dossier.relationshipToVictim, background: dossier.background,
       relationships: dossier.relationships.map((edge) => ({ targetSuspectId: edge.targetSuspectId, kind: edge.kind, label: edge.label })),
     } };
@@ -120,7 +139,7 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
       title: data.title,
       victim: { name: data.victim.name, description: data.victim.description },
       locations: [...data.locations],
-      rooms: data.rooms.map(({ id, name }) => ({ id, name })),
+      rooms: data.rooms.map(({ id, name, connections }) => ({ id, name, ...(connections && { connections: [...connections] }) })),
       currentLocationId,
       suspects: data.suspects.map(({ id }) => getPublicSuspect(id)),
       evidence: listEvidence(),
@@ -169,7 +188,7 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
     candidates.set(token, candidate);
     try {
       if (plan && !plan.guidance) {
-        const question = input.question?.trim() ?? dialogueOptions(catalog, dialogueState, suspectId).find((o) => o.id === input.choiceId).label;
+        const question = input.question?.trim() ?? plan.label;
         const turn = prepareTurn(catalog, dialogueState, suspectId, plan, question);
         let { text, narration } = turn.result;
         let reused = false;
@@ -222,6 +241,9 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
         else if (cached) { text = cached.text; narration = cached.narration; reused = true; }
         turn.result.text = text; turn.result.dialogue = text; turn.result.narration = narration; turn.result.cached = reused;
         turn.record.dialogue = text; turn.record.narration = narration;
+        if (turn.core && !turn.npc.statements.has(turn.core.id)) {
+          turn.npc.statements.set(turn.core.id, { turnId: turn.record.turnId, dialogue: text });
+        }
         if (!pilotSelection) cachePerformance(turn.npc, cacheKey, { text, narration });
         candidate.next = turn.next;
         candidate.result = turn.result;
@@ -275,6 +297,11 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
     return data.evidence.map(({ id, name, locationId }) => ({ id, name, locationId }));
   }
 
+  function receivedObservations() {
+    return data.evidence.filter(item => dialogueState.inspected.has(item.id))
+      .map(({ id, name, description }) => ({ id, name, description }));
+  }
+
   function recordInspection(evidenceId) {
     if (status === 'ended') return { error: endedError() };
     const evidence = data.evidence.find((evidence) => evidence.id === evidenceId) ?? null;
@@ -301,6 +328,7 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
   function resolveAccusation(suspectId, confirmed) {
     if (mode === 'preview') return rejected('accusation_unavailable', 'This preview has no final accusation. Continue investigating the repair dispute.');
     if (status === 'ended') return { ...endedError(), ended: true, result: 'rejected' };
+    if (findSuspect(suspectId)?.accusationEligible === false) return rejected('ineligible_accusation', 'That contact is unavailable for accusation.');
     if (confirmed !== true) { invalidateDialogue(); return { ended: false, result: 'cancelled', text: 'The accusation was cancelled. Continue investigating.' }; }
     const suspect = findSuspect(suspectId);
     if (!suspect) return { ended: false, result: 'invalid', text: 'That suspect is not available.' };
@@ -320,7 +348,7 @@ export function createInvestigation({ data = caseData, phraser = null, dialogueC
   // data, findSuspect and inspectEvidence remain trusted internal APIs for CLI compatibility.
   return {
     data, findSuspect, askSuspect, listEvidence, inspectEvidence, resolveAccusation, getCaseMode: () => mode,
-    getPublicView, getPublicSuspect, inspectPublicEvidence, getLifecycle,
+    getPublicView, getPublicSuspect, inspectPublicEvidence, receivedObservations, getLifecycle,
     travelTo, getLocationContext,
     interact, prepareDialogue, commitDialogue, discardDialogue,
     isDialogueCandidate: (token) => candidates.has(token),

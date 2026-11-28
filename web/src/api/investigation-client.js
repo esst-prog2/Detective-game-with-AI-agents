@@ -1,4 +1,6 @@
 const messages = {
+  ineligible_accusation: 'That contact is unavailable for accusation.',
+  travel_unavailable: 'There is no direct exit to that room.',
   accusation_unavailable: 'This preview has no final accusation. Continue investigating the repair dispute.',
   dialogue_option_unavailable: 'That conversation option is no longer available. Refresh the investigation to see current options.',
   suspect_not_present: 'That person is in another room. Refresh the investigation before travelling there.',
@@ -31,9 +33,18 @@ function dialogueView(value, suspects, evidence, locationId, ended) {
     const suspect = suspects.find((item) => item.id === suspectId);
     if (!suspect || !Array.isArray(conversation.recentTurns) || conversation.recentTurns.length > 8 || !Array.isArray(conversation.options) || conversation.options.length > 6) throw new Error('protocol');
     const recentTurns = conversation.recentTurns.map((turn) => ({ turnId: turnId(turn.turnId), question: bounded(turn.question, 1000), kind: enumeration(turn.kind, ['answer']), topic: topic(turn.topic), ...performance(turn) }));
-    const options = conversation.options.map((option) => ({ id: slug(option.id), label: bounded(option.label, 1000), kind: enumeration(option.kind, ['topic', 'clarify', 'revisit', 'evidence', 'contradiction', 'social']) }));
+    const remaining = conversation.moreOptions ?? [];
+    if (!Array.isArray(remaining)) throw new Error('protocol');
+    const options = [...conversation.options, ...remaining].map((option) => ({ id: slug(option.id), label: bounded(option.label, 1000), kind: enumeration(option.kind, ['topic', 'clarify', 'revisit', 'evidence', 'contradiction', 'social']) }));
     if (new Set(recentTurns.map((turn) => turn.turnId)).size !== recentTurns.length || new Set(options.map((option) => option.id)).size !== options.length || ((ended || suspect.locationId !== locationId) && options.length)) throw new Error('protocol');
-    return { suspectId, demeanor: demeanor(conversation.demeanor), recentTurns, options };
+    const statements = (conversation.statements ?? []).map(statement => {
+      const followUps = statement.followUps.map(slug);
+      if (followUps.some(id => !options.some(option => option.id === id && option.kind === 'clarify'))) throw new Error('protocol');
+      return { turnId: turnId(statement.turnId), dialogue: bounded(statement.dialogue, 1200),
+        accountStatus: enumeration(statement.accountStatus, ['received', 'current', 'historical']), followUps };
+    });
+    return { suspectId, demeanor: demeanor(conversation.demeanor), recentTurns,
+      options: options.slice(0, 6), moreOptions: options.slice(6), statements };
   });
   if (new Set(conversations.map((item) => item.suspectId)).size !== conversations.length) throw new Error('protocol');
   return { inspectedEvidenceIds, conversations };
@@ -47,10 +58,11 @@ export function publicState(value) {
   const final = value.lifecycle.finalResult;
   if (value.lifecycle.status === 'ended' && (!final || final.ended !== true || !['correct', 'incorrect'].includes(final.result))) throw new Error('protocol');
   if (value.lifecycle.status === 'active' && final !== null) throw new Error('protocol');
-  const rooms = value.rooms.map(identity);
+  const rooms = value.rooms.map(room => ({ ...identity(room),
+    ...(room.connections !== undefined && { connections: room.connections.map(slug) }) }));
   if (!rooms.some((room) => room.id === value.currentLocationId) || new Set(rooms.map((room) => room.id)).size !== rooms.length) throw new Error('protocol');
   const located = (entity) => { if (!rooms.some((room) => room.id === entity.locationId)) throw new Error('protocol'); return { ...identity(entity), locationId: entity.locationId }; };
-  const suspects = value.suspects.map((suspect) => ({ ...located(suspect), dossier: dossier(suspect.dossier) }));
+  const suspects = value.suspects.map((suspect) => ({ ...located(suspect), ...(suspect.accusationEligible === false && { accusationEligible: false }), dossier: dossier(suspect.dossier) }));
   const evidence = value.evidence.map(located);
   if (new Set(suspects.map((item) => item.id)).size !== suspects.length || new Set(evidence.map((item) => item.id)).size !== evidence.length) throw new Error('protocol');
   if (suspects.some((suspect) => suspect.dossier.relationships.some((edge) => edge.targetSuspectId === suspect.id || !suspects.some((target) => target.id === edge.targetSuspectId)))) throw new Error('protocol');
@@ -163,7 +175,8 @@ export function createInvestigationClient({ emit, fetchImpl = globalThis.fetch, 
       const result = state.lifecycle.status === 'ended' && ['questions', 'evidence/inspect'].includes(command)
         ? undefined : resultFor(command, data.result, input);
       if (command === 'questions' && state.lifecycle.status === 'ended' && acceptedDialogue) {
-        state.dialogue = { inspectedEvidenceIds: [...acceptedDialogue.inspectedEvidenceIds], conversations: acceptedDialogue.conversations.map((conversation) => ({ ...conversation, options: [] })) };
+        state.dialogue = { inspectedEvidenceIds: [...acceptedDialogue.inspectedEvidenceIds], conversations: acceptedDialogue.conversations.map((conversation) => ({ ...conversation, options: [], moreOptions: [],
+          statements: conversation.statements.map(item => ({ ...item, followUps: [] })) })) };
       }
       if (result?.kind === 'answer') {
         const received = state.dialogue.conversations.find((item) => item.suspectId === input.suspectId)?.recentTurns.find((turn) => turn.turnId === result.turnId);

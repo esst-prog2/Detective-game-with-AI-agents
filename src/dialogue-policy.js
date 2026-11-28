@@ -59,6 +59,8 @@ export function validateDisclosurePolicy(catalog, data) {
     }
     const aliases = new Set();
     const reserved = new Set(['ask-hiding', 'clarify-last', ...TOPICS.map((topic) => `ask-${topic.replaceAll('_', '-')}`)]);
+    const reviewId = /^review-\d+-(received|historical)$/;
+    requireValid([...policy.rules, ...(policy.facets ?? [])].every(entry => !reviewId.test(entry.id)));
     const referenced = new Set();
     for (const rule of policy.rules) {
       requireValid(exact(rule, ['id', 'suspectId', 'coreId', 'kind', 'label', 'aliases', 'gate'], policy.facets ? ['transition', 'evidenceId', 'essential'] : ['transition', 'evidenceId'])
@@ -297,6 +299,11 @@ export function resolveFacet(catalog, state, suspectId, question) {
   return undefined;
 }
 
+function reviewChoiceId(catalog, facet, plan) {
+  const suffix = plan.coreId === facet.historicalCoreId ? 'historical' : 'received';
+  return `review-${catalog.policy.facets.indexOf(facet)}-${suffix}`;
+}
+
 export function prioritizeFacetOptions(catalog, state, suspectId, options) {
   const npc = state.npcs.get(suspectId), target = state.policy.primaryTargets.get(suspectId);
   const facets = (catalog.policy.facets ?? []).filter((facet) => facet.suspectId === suspectId && facet.primaryStatement === target?.primaryStatement)
@@ -307,9 +314,24 @@ export function prioritizeFacetOptions(catalog, state, suspectId, options) {
       || catalog.cores.some((core) => core.id === option.coreId && core.role === 'base' && core.suggestionPriority === 1)))
     .sort((a, b) => Number(!a.ruleId) - Number(!b.ruleId) || a.id.localeCompare(b.id));
   const contextual = facets.find((facet) => !state.policy.receipts.has(facet.coreId)) ?? facets[npc.deliveries % (facets.length || 1)];
+  if (contextual) {
+    const facet = catalog.policy.facets.find(item => item.id === contextual.ruleId);
+    if (contextual.coreId === facet.historicalCoreId) contextual.id = reviewChoiceId(catalog, facet, contextual);
+  }
   const reserved = [...essential, ...(contextual ? [contextual] : [])];
   const optional = options.filter((option) => !reserved.some((item) => item.id === option.id))
     .sort((a, b) => a.id.localeCompare(b.id));
   const offset = npc.deliveries % (optional.length || 1);
-  return [...reserved, ...optional.slice(offset), ...optional.slice(0, offset)].slice(0, 6);
+  const ordered = [...reserved, ...optional.slice(offset), ...optional.slice(0, offset)];
+  for (const facet of catalog.policy.facets) {
+    if (facet.suspectId !== suspectId) continue;
+    const plan = facetPlan(catalog, state, facet);
+    if (!plan || ordered.some(option => option.ruleId === facet.id)) continue;
+    // An old contextual button must not silently turn into a historical correction.
+    if (facet.primaryStatement !== target?.primaryStatement || plan.coreId === facet.historicalCoreId) {
+      plan.id = reviewChoiceId(catalog, facet, plan);
+    }
+    ordered.push(plan);
+  }
+  return ordered;
 }

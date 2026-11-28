@@ -2,6 +2,8 @@ import { createServer } from 'node:http';
 import { ApiError, createSessionStore } from './investigation-sessions.js';
 
 const errors = {
+  travel_unavailable: [409, 'There is no direct exit to that room.'],
+  ineligible_accusation: [409, 'That contact is unavailable for accusation.'],
   accusation_unavailable: [409, 'This preview has no final accusation. Continue investigating the repair dispute.'],
   invalid_request: [400, 'Invalid request.'], invalid_json: [400, 'Invalid JSON body.'],
   invalid_session_id: [400, 'Invalid session identifier.'], invalid_id: [400, 'Invalid entity identifier.'],

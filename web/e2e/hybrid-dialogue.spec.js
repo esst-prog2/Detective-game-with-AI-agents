@@ -110,7 +110,7 @@ test('twelve-contact long-label and no-option/null-narration fixtures reflow and
   for (const width of [360, 390, 1440]) { await page.setViewportSize({ width, height: 900 }); expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true); }
   await page.setViewportSize({ width: 1440, height: 900 }); await page.evaluate(() => { document.documentElement.style.zoom = '2'; });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true); await page.evaluate(() => { document.documentElement.style.zoom = ''; });
-  await page.route('**/questions', async (route) => { const reply = await route.fetch(); const envelope = await reply.json(); envelope.data.state.dialogue.conversations.forEach((item) => { item.options = []; }); await route.fulfill({ response: reply, json: envelope }); });
+  await page.route('**/questions', async (route) => { const reply = await route.fetch(); const envelope = await reply.json(); envelope.data.state.dialogue.conversations.forEach((item) => { item.options = []; item.moreOptions = []; }); await route.fulfill({ response: reply, json: envelope }); });
   await ask(page, 'Alice Mercer', 'Where were you?', 1);
   await expect(page.locator('.cinematic-dialogue > .performance-narration')).toHaveCount(0); await expect(page.locator('.dialogue-choices button')).toHaveCount(0);
   await expect(page.getByLabel('Your question for Alice Mercer')).toBeEnabled(); await expect(page.locator('.character-figure')).toHaveAttribute('src', '/art/figures/alice-mercer-neutral.svg');

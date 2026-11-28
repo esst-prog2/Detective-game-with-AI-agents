@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { once } from 'node:events';
-import { clarificationCase } from '../../test-support/clarification-case.js';
+import { infrastructureCase } from '../../test-support/infrastructure-case.js';
 import { createCaseRegistry } from '../../src/cases/registry.js';
 import { createSessionStore } from '../../src/investigation-sessions.js';
 import { createInvestigationServer } from '../../src/http-api.js';
@@ -8,7 +8,7 @@ import { createInvestigationServer } from '../../src/http-api.js';
 // Real HTTP/session/engine in the test process, never a production-published fixture.
 let server, url;
 test.beforeAll(async () => {
-  const fixture = clarificationCase();
+  const fixture = infrastructureCase();
   const registry = createCaseRegistry({ definitions: [fixture], defaultCaseId: fixture.id });
   server = createInvestigationServer({ store: createSessionStore({ registry }) });
   server.listen(0, '127.0.0.1'); await once(server, 'listening');
@@ -16,8 +16,7 @@ test.beforeAll(async () => {
 });
 test.afterAll(async () => { server.closeAllConnections(); await new Promise((resolve) => server.close(resolve)); });
 
-test('contextual menu and text clarify revised testimony without exposing private targets', async ({ page }) => {
-  const bodies = [], replies = [];
+async function connect(page, bodies = [], replies = []) {
   await page.route('**/api/**', async (route) => {
     const request = route.request();
     if (!new URL(request.url()).pathname.startsWith('/api/')) return route.continue();
@@ -27,6 +26,39 @@ test('contextual menu and text clarify revised testimony without exposing privat
     const json = await response.json(); replies.push(json);
     await route.fulfill({ status: response.status, json });
   });
+}
+
+test('supporting witness, connected exits and read-only interview navigation', async ({ page }) => {
+  const bodies = [];
+  await connect(page, bodies);
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Start investigation' }).click();
+  await expect(page.getByRole('button', { name: 'Speak with Test Keeper' })).toBeVisible();
+  await page.getByRole('button', { name: 'Speak with Test Visitor' }).click();
+  await page.getByRole('button', { name: 'Next questions' }).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('Page 2 of 2')).toBeVisible();
+  expect(bodies).toHaveLength(0);
+  await page.locator('[data-choice]').first().click();
+  await expect(page.getByLabel('Review received statement')).toBeVisible();
+  const delivered = await page.locator('blockquote').innerText();
+  await page.getByLabel('Review received statement').selectOption({ index: 1 });
+  await expect(page.getByLabel('Reviewed statement')).toHaveText(delivered);
+  expect(bodies).toHaveLength(1);
+  await page.getByRole('button', { name: 'Return to room' }).click();
+  await page.getByRole('button', { name: 'Make an accusation' }).click();
+  await expect(page.getByLabel('Selected suspect').locator('option')).toHaveText(['Test Keeper']);
+  await page.getByRole('button', { name: 'Cancel accusation' }).click();
+  await expect(page.getByRole('button', { name: /Go to the test lobby/ })).toHaveCount(0);
+  await page.getByRole('button', { name: /Go to the test office/ }).click();
+  await page.getByRole('button', { name: /Go to the test lobby/ }).click();
+  await expect(page.getByRole('heading', { name: 'the test lobby' })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+});
+
+test('contextual menu and text clarify revised testimony without exposing private targets', async ({ page }) => {
+  const bodies = [], replies = [];
+  await connect(page, bodies, replies);
   await page.goto('/'); await page.getByRole('button', { name: 'Start investigation', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'the test pier', exact: true })).toBeVisible();
   await page.locator('.room-object').filter({ hasText: 'Test Ticket' }).click();
