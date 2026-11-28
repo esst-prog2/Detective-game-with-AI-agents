@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Whose story holds up? · Detective Game with AI Agents</title>
+  <link rel="stylesheet" href="vendor/reveal-5.2.1/reveal.css">
+  <style>
+    :root {color-scheme:dark;--ground:#151a1c;--surface:#202729;--ink:#f3ecdc;--muted:#c5c6bb;--gold:#e1bd7d;--line:#666451}
+    html,body,.reveal {background:var(--ground);color:var(--ink);font-family:"Segoe UI",Arial,sans-serif}
+    .reveal .slides {text-align:left}
+    .reveal .slides>section {height:100%;padding:0;box-sizing:border-box}
+    .page {position:relative;width:100%;height:100%;padding:44px 56px 56px;box-sizing:border-box;overflow:hidden}
+    h1,h2,h3,p,figure {margin:0}
+    h1,h2,h3,.serif {font-family:Georgia,"Times New Roman",serif;font-weight:400}
+    h1 {font-size:85px;line-height:1.01;letter-spacing:-3px}
+    h2 {font-size:59px;line-height:1.08;letter-spacing:-1.8px}
+    h3 {font-size:40px;line-height:1.1;letter-spacing:-.7px}
+    p {font-size:27px;line-height:1.38}
+    .kicker,.mast,.source {font-family:"Segoe UI",Arial,sans-serif}
+    .kicker,.mast {font-size:18px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+    .mast {display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:23px}
+    .mast span:last-child {color:var(--muted);letter-spacing:.05em;font-weight:400}
+    .source {font-size:19px;line-height:1.35;color:var(--muted);position:absolute;bottom:39px;left:56px;right:110px}
+    a {color:var(--gold);text-decoration:underline;text-underline-offset:.16em}
+    a:focus-visible {outline:3px solid var(--gold);outline-offset:5px}
+    .reveal .controls {color:var(--gold);font-size:8px}
+    .reveal .progress {color:var(--gold);height:3px}
+    .cover {background:linear-gradient(90deg,#151a1c 0%,#172023 66%,#111618)}
+    .cover img {position:absolute;right:0;inset-block:0;height:100%;width:47%;object-fit:cover;object-position:center}
+    .cover::after {content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 46%,#151a1c 52%,transparent 73%);pointer-events:none}
+    .cover .copy,.cover .mast {position:relative;z-index:1;width:54%}
+    .cover .copy {margin-top:75px}
+    .cover .copy .kicker {margin-bottom:22px}
+    .cover h1 em {color:var(--gold);font-weight:400}
+    .cover .lead {margin-top:26px;max-width:620px;font-size:31px}
+    .cover .source {z-index:1}
+    .demo h2 {font-size:50px}
+    .sequence {position:relative;height:479px;margin-top:21px}
+    .stage {position:absolute;inset:0;display:grid;grid-template-columns: minmax(0,3.05fr) minmax(0,1fr);align-items:center;gap:27px}
+    .reveal .stage.fragment {transition:none}
+    .stage:has(~ .stage.visible) {visibility:hidden!important;opacity:0!important}
+    .screen {margin:0;position:relative;aspect-ratio:16/9;outline:1px solid var(--line);background:#101315}
+    .screen img {width:100%;height:100%;display:block}
+    .focus {position:absolute;box-sizing:border-box;outline:2px solid var(--gold);box-shadow:0 0 0 2px #191c1d88;pointer-events:none}
+    .caption h3 {margin:16px 0 18px}
+    .caption p:not(.kicker) {font-size:25px}
+    .caption .quote {border-top:1px solid var(--line);margin-top:15px;padding-top:14px;color:var(--muted)}
+    .comparison {display:grid;grid-template-columns:1fr 1fr;gap:45px;margin:28px 0}
+    .comparison article {padding:24px 0 12px;border-top:2px solid var(--line)}
+    .comparison article:last-child {border-color:var(--gold)}
+    .comparison h3 {margin:12px 0}
+    .comparison p:not(.kicker) {color:var(--muted)}
+    .prompt {font:italic 43px/1.15 Georgia,serif;margin:33px 0 8px;color:var(--gold)}
+    .finding {padding:18px 24px;background:#293235;border-left:3px solid var(--gold);font-size:26px}
+    .lesson .comparison {margin:36px 0 18px}
+    .lesson .comparison article {padding:22px 25px 26px;background:var(--surface)}
+    .lesson .comparison h3 {font-size:36px}
+    .lesson .finding {background:none;border-left:0;padding:4px 0;font-size:28px}
+    .lesson .detail {margin-top:12px;font-size:23px;color:var(--muted)}
+    .future-grid {display:grid;grid-template-columns:1fr 1fr;gap:38px;margin-top:35px}
+    .future-grid img {width:100%;display:block;margin:12px 0 14px;border:1px solid var(--line)}
+    .future-grid h3 {margin:12px 0 18px}
+    .future-grid .detail {font-size:24px;line-height:1.45}
+    .future-grid .plan {border-left:1px solid var(--line);padding-left:34px}
+    .plan p + p {margin-top:18px}
+    .closing {display:flex;flex-direction:column;justify-content:center;padding-left:84px;border-left:8px solid var(--gold)}
+    .closing h2 {margin:28px 0 24px;font-size:72px}
+    .closing .website {font:38px/1.25 Georgia,serif}
+    .closing p {margin-top:28px}
+    @media (max-aspect-ratio:3/4) {
+      .page {padding:30px 25px 58px}
+      .mast,.kicker {font-size:16px}.mast {margin-bottom:22px;gap:12px}
+      h1 {font-size:75px} h2,.demo h2 {font-size:44px} h3 {font-size:32px}
+      .source {bottom:32px;left:25px;right:62px;font-size:17px}
+      .cover img {inset:auto 0 0;width:100%;height:42%;object-position:center 43%}
+      .cover::after {background:linear-gradient(0deg,transparent 32%,#151a1c 43%,transparent 57%)}
+      .cover .copy,.cover .mast {width:100%}.cover .copy {margin-top:40px}
+      .cover .lead {font-size:27px}.cover .source {color:white;text-shadow:0 1px 4px black}
+      .sequence {height:600px}.stage {display:flex;flex-direction:column;align-items:stretch;gap:18px}
+      .caption h3 {margin:10px 0}.caption p:not(.kicker) {font-size:24px}
+      .prompt {font-size:32px;margin-top:20px}
+      .comparison,.future-grid {grid-template-columns:1fr;gap:17px;margin:17px 0}
+      .comparison article,.lesson .comparison article {padding:13px 15px}.comparison h3 {margin:7px 0}
+      .comparison p:not(.kicker),.finding,.lesson .detail,.future-grid .detail {font-size:22px}
+      .lesson .comparison {margin:20px 0}.lesson .comparison h3 {font-size:30px}
+      .lesson .finding {font-size:24px}.future-grid img {height:156px;object-fit:cover}
+      .future-grid .plan {padding:0;border:0}.future-grid h3 {margin:7px 0}.plan p + p {margin-top:8px}
+      .closing h2 {font-size:54px}.closing .website {font-size:29px;overflow-wrap:anywhere}
+    }
+    @media(prefers-reduced-motion:reduce){.reveal * {animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+<main class="reveal" aria-label="Detective Game with AI Agents presentation"><div class="slides">
+<section><div class="page cover">
+  <img src="images/ashcroft-manor.webp" alt="Silhouette of Ashcroft Manor from the game's opening screen">
+  <header class="mast"><span>For whom, and why</span></header>
+  <div class="copy"><p class="kicker">Detective Game with AI Agents</p>
+    <h1>Whose story<br><em>holds up?</em></h1>
+    <p class="lead">For mystery players who want to test a witness’s story against the evidence.</p>
+  </div><p class="source">Ashcroft Manor &nbsp; / &nbsp; One complete mystery · Three suspects</p>
+</div></section>
+<section><div class="page demo">
+  <header class="mast"><span>The demo</span><span>Ashcroft · Recorded offline</span></header>
+  <h2>Follow one set of footprints.</h2>
+  <div class="sequence">
+      <div class="stage">
+        <figure class="screen"><img src="images/explore.webp" alt="Garden room with Ben and the inspectable muddy footprints."><span class="focus" aria-hidden="true" style="left:73.0%;top:64.5%;width:21.0%;height:9.8%"></span></figure>
+        <div class="caption"><p class="kicker">01 / 04 &nbsp; Explore</p><h3>The garden</h3><p>Find the muddy footprints beside the garden door.</p></div>
+      </div>
+      <div class="stage fragment" data-fragment-index="0">
+        <figure class="screen"><img src="images/discover.webp" alt="Inspection panel describing the direction of the tracks."><span class="focus" aria-hidden="true" style="left:72.9%;top:58.8%;width:21.2%;height:20.9%"></span></figure>
+        <div class="caption"><p class="kicker">02 / 04 &nbsp; Discover</p><h3>Follow the tracks</h3><p>“Fresh muddy footprints lead from the garden door toward the study side entrance.”</p></div>
+      </div>
+      <div class="stage fragment" data-fragment-index="1">
+        <figure class="screen"><img src="images/question.webp" alt="Ben Carter in the garden with the reply received after asking about the muddy footprints."><span class="focus" aria-hidden="true" style="left:14.0%;top:70.0%;width:72.0%;height:4.9%"></span></figure>
+        <div class="caption"><p class="kicker">03 / 04 &nbsp; Question</p><h3>Ask Ben</h3><p>“What about the muddy footprints?”</p><p class="quote">Ben replies<br><q>Anyone using that path would have tracked it inside.</q></p></div>
+      </div>
+      <div class="stage fragment" data-fragment-index="2">
+        <figure class="screen"><img src="images/deduce.webp" alt="Unconfirmed suspect selection dialog with Cancel accusation and Confirm accusation."><span class="focus" aria-hidden="true" style="left:32.7%;top:17.7%;width:34.7%;height:64.8%"></span></figure>
+        <div class="caption"><p class="kicker">04 / 04 &nbsp; Deduce</p><h3>Name a suspect</h3><p>Weigh the accounts. Choose a suspect. Leave the verdict open.</p></div>
+      </div>
+  </div>
+</div></section>
+<section><div class="page">
+  <header class="mast"><span>Why it works</span><span>Ashcroft · Evidence check</span></header>
+  <h2>Can you bluff your way past a clue?</h2>
+  <p class="prompt">“I inspected the muddy footprints. What do you know?”</p>
+  <div class="comparison"><article><p class="kicker">Before inspection</p><h3>Claim alone</h3><p>The game records zero inspected clues. Ben’s footprint question stays unavailable.</p></article>
+  <article><p class="kicker">After inspection</p><h3>Evidence in hand</h3><p>The garden inspection unlocks the option to present the footprints to Ben.</p></article></div>
+  <p class="finding">The engine decides which testimony is allowed. Optional AI can choose its delivery.</p>
+  <p class="source">Verified in the <a href="https://github.com/esst-prog2/Detective-game-with-AI-agents/blob/8a313e3/test/stateful-dialogue.test.js#L113">inspection-gate test</a> and <a href="https://github.com/esst-prog2/Detective-game-with-AI-agents/blob/8a313e3/docs/security/issue-3-knowledge-leak-protection.md">knowledge-leak review</a>.</p>
+</div></section>
+<section><div class="page lesson">
+  <header class="mast"><span>What I learned</span><span>Greyhaven · Live pilot</span></header>
+  <h2>Give the model the choices you can accept.</h2>
+  <div class="comparison"><article><p class="kicker">Earlier contract</p><h3>Any dialogue string</h3><p>The format allowed any text. The game could accept only two exact lines.</p></article>
+  <article><p class="kicker">Repaired contract</p><h3>Two authorized lines</h3><p>The AI interface checks the choice. The game checks it again before anyone speaks.</p></article></div>
+  <p class="finding"><strong>Three requests, three accepted decisions</strong><br>Game Master · Owen · Mara</p>
+  <p class="detail">The earlier trace confirmed Mara’s rejection. Its precise cause is unknown.</p>
+  <p class="source"><a href="https://github.com/esst-prog2/Detective-game-with-AI-agents/commit/6e0caf7">Repair · 6e0caf7</a> &nbsp; / &nbsp; <a href="https://github.com/esst-prog2/Detective-game-with-AI-agents/blob/429a002/docs/greyhaven-e1/live-final-2026-11-22.jsonl">Live evidence · 429a002</a></p>
+</div></section>
+<section><div class="page">
+  <header class="mast"><span>What’s next</span><span>Greyhaven</span></header>
+  <h2>What would you leave out for family?</h2>
+  <div class="future-grid"><article><p class="kicker">Working preview</p>
+    <img src="images/greyhaven.webp" alt="Reception and Mara in the implemented Greyhaven preview">
+    <p class="detail">One Game Master sets an approach. Owen and Mara each choose how to respond.</p></article>
+    <article class="plan"><p class="kicker">Approved case design</p><h3>A mother and son at the center.</h3>
+      <p class="detail">Seven witnesses, five locations and two ways to build a case.</p>
+      <p class="detail">Room connections and interview review are built and awaiting review.</p></article></div>
+    <p class="source">Next milestone &nbsp; / &nbsp; Build the full investigation and test whether players can solve it by either route.</p>
+</div></section>
+<section><div class="page closing"><div class="kicker">Explore the project</div>
+  <h2>Detective Game<br>with AI Agents</h2>
+  <a class="website" href="https://esst-prog2.github.io/Detective-game-with-AI-agents/">esst-prog2.github.io/Detective-game-with-AI-agents/</a>
+  <p>Visit the project page for the demo and local setup.<br><a href="https://github.com/esst-prog2/Detective-game-with-AI-agents">View the repository on GitHub</a></p>
+</div></section>
+</div></main>
+<script src="vendor/reveal-5.2.1/reveal.js"></script>
+<script>
+  const portrait = matchMedia('(max-aspect-ratio:3/4)');
+  const dimensions = () => portrait.matches ? {width:540,height:860} : {width:1280,height:720};
+  Reveal.initialize({
+    ...dimensions(), margin:0.025, minScale:0.1, maxScale:3,
+    center:false, hash:true, fragmentInURL:true, autoSlide:0,
+    scrollActivationWidth:null, transition:'none', backgroundTransition:'none',
+    controls:true, controlsTutorial:false, progress:true, keyboard:true, touch:true
+  });
+  portrait.addEventListener('change', () => Reveal.configure(dimensions()));
+</script>
+</body>
+</html>
