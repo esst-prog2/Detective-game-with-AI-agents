@@ -7,6 +7,7 @@ import ReadingDialog from './ReadingDialog.jsx';
 export default function SuspectOverview({ onAccuse }) {
   const { state, dispatch, client, canAct } = useInvestigation();
   const [historyId, setHistoryId] = useState(null);
+  const exits = state.snapshot.rooms.find(room => room.id === state.snapshot.currentLocationId)?.connections;
   const historyPerson = state.snapshot.suspects.find(({ id }) => id === historyId);
   return <section className="suspects-page"><header className="section-heading"><p className="eyebrow">INVESTIGATION OVERVIEW</p><h1 tabIndex="-1">{state.case?.mode === 'preview' ? 'People in the preview' : 'People of the manor'}</h1><p>Public dossiers and received testimony. Current whereabouts do not establish an alibi.</p></header>
     {state.case?.mode === 'preview' && <p role="note">Final accusation unavailable: the full murder cannot be solved in this preview. Continue exploring or start another case.</p>}
@@ -14,8 +15,8 @@ export default function SuspectOverview({ onAccuse }) {
       const room = state.snapshot.rooms.find(({ id }) => id === suspect.locationId);
       const present = suspect.locationId === state.snapshot.currentLocationId;
       return <article className="suspect-card" key={suspect.id}><div className="portrait-mount"><Portrait suspect={suspect} /><span className="portrait-number">0{i + 1}</span></div><div className="suspect-copy"><p className="eyebrow">{room.name}</p><h2>{suspect.name}</h2><PublicDossier suspect={suspect} />
-        <div className="card-actions">{!state.endedKnown && <button disabled={state.expired || (!present && !canAct)} onClick={() => present ? dispatch({ type: 'SUSPECT', id: suspect.id }) : client.travel(room.id)}>{present ? 'Speak with ' + suspect.name : 'Travel to ' + room.name} <span aria-hidden="true">→</span></button>}
-        <button onClick={() => setHistoryId(suspect.id)}>Read conversation</button>{state.case?.mode !== 'preview' && <button className="subtle" disabled={!canAct} onClick={() => onAccuse(suspect.id)}>Accuse</button>}</div></div></article>;
+        <div className="card-actions">{!state.endedKnown && (present || !exits || exits.includes(room.id)) && <button disabled={state.expired || (!present && !canAct)} onClick={() => present ? dispatch({ type: 'SUSPECT', id: suspect.id }) : client.travel(room.id)}>{present ? 'Speak with ' + suspect.name : 'Travel to ' + room.name} <span aria-hidden="true">→</span></button>}
+        <button onClick={() => setHistoryId(suspect.id)}>Read conversation</button>{state.case?.mode !== 'preview' && suspect.accusationEligible !== false && <button className="subtle" disabled={!canAct} onClick={() => onAccuse(suspect.id)}>Accuse</button>}</div></div></article>;
     })}</div>
     {historyPerson && <ReadingDialog title={'Conversation history — ' + historyPerson.name} onClose={() => setHistoryId(null)}><ConversationHistory records={state.transcripts[historyId] ?? []} suspect={historyPerson} /></ReadingDialog>}
   </section>;

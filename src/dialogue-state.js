@@ -11,7 +11,7 @@ export const demeanor = (v) => v[1] >= 3 ? 'irritated' : v[2] >= 2 ? 'uneasy' : 
 
 export function initialDialogueState(catalog) {
   return { turnId: 0, inspected: new Set(), ...(catalog.schemaVersion === 2 ? { policy: initialPolicyState(catalog) } : {}), npcs: new Map(catalog.profiles.map((p) => [p.suspectId, {
-    emotion: [...p.baseline], turns: [], discussed: new Set(), presented: new Set(), repeats: new Map(), lastCore: null,
+    emotion: [...p.baseline], turns: [], statements: new Map(), discussed: new Set(), presented: new Set(), repeats: new Map(), lastCore: null,
     gestures: [], gestureFamilies: [], gestureCursor: 0, recentDeliveries: [], speechOnly: 0, comparisonReacted: false, deliveries: 0, cache: new Map(),
   }])) };
 }
@@ -50,7 +50,7 @@ export function dialogueOptions(catalog, state, suspectId) {
   const rotated = answered.slice(npc.deliveries % (answered.length || 1)).concat(answered.slice(0, npc.deliveries % (answered.length || 1)));
   for (const c of [...unanswered, ...rotated]) options.push({ id: `ask-${c.topic.replaceAll('_', '-')}`, label: topicQuestions[c.topic], kind: npc.discussed.has(c.id) ? 'revisit' : 'topic', intent: npc.discussed.has(c.id) ? 'revisit' : 'topic', coreId: c.id });
   const allowed = options.filter((o) => coreAllowed(catalog, state, suspectId, o.coreId, o.ruleId));
-  return catalog.policy?.facets ? prioritizeFacetOptions(catalog, state, suspectId, allowed) : allowed.slice(0, 6);
+  return catalog.policy?.facets ? prioritizeFacetOptions(catalog, state, suspectId, allowed) : allowed;
 }
 
 export function resolveDialogue(catalog, state, data, suspectId, input) {
@@ -155,10 +155,29 @@ export function publicDialogue(catalog, state, data, status, locationId) {
     inspectedEvidenceIds: data.evidence.filter((e) => state.inspected.has(e.id)).map((e) => e.id),
     conversations: catalog.profiles.map((p) => {
       const npc = state.npcs.get(p.suspectId);
+      const available = status === 'active' && data.suspects.find(s => s.id === p.suspectId)?.locationId === locationId
+        ? dialogueOptions(catalog, state, p.suspectId) : [];
+      const choices = available.map(({ id, label, kind }) => ({ id, label, kind }));
+      const facetsById = new Map((catalog.policy?.facets ?? []).map(facet => [facet.id, facet]));
+      const followUpsByStatement = new Map();
+      for (const option of available) {
+        const facet = facetsById.get(option.ruleId);
+        if (!facet) continue;
+        const ids = followUpsByStatement.get(facet.primaryStatement) ?? [];
+        ids.push(option.id);
+        followUpsByStatement.set(facet.primaryStatement, ids);
+      }
+      const statements = Array.from(npc.statements, ([coreId, record]) => {
+        const receipt = state.policy?.receipts.get(coreId);
+        const accountStatus = receipt?.accountKey
+          ? state.policy.accounts.get(receipt.accountKey) === receipt.accountVersion ? 'current' : 'historical'
+          : 'received';
+        const followUps = followUpsByStatement.get(coreId) ?? [];
+        return { turnId: record.turnId, dialogue: record.dialogue, accountStatus, followUps };
+      });
       return { suspectId: p.suspectId, demeanor: demeanor(npc.emotion),
         recentTurns: npc.turns.map((t) => ({ turnId: t.turnId, question: t.question, kind: t.kind, topic: t.topic, narration: t.narration, dialogue: t.dialogue })),
-        options: status === 'active' && data.suspects.find((s) => s.id === p.suspectId)?.locationId === locationId
-          ? dialogueOptions(catalog, state, p.suspectId).map((o) => ({ id: o.id, label: o.label, kind: o.kind })) : [],
+        options: choices.slice(0, 6), moreOptions: choices.slice(6), statements,
       };
     }),
   };

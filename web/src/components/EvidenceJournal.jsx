@@ -6,16 +6,18 @@ import ReadingDialog from './ReadingDialog.jsx';
 export default function EvidenceJournal() {
   const { state, client, canAct, dispatch } = useInvestigation();
   const [selected, setSelected] = useState(null);
+  const exits = state.snapshot.rooms.find(room => room.id === state.snapshot.currentLocationId)?.connections;
   return <section className="journal-page"><header className="section-heading"><p className="eyebrow">YOUR OBSERVATIONS</p><h1 tabIndex="-1">The evidence journal</h1><p>Visit a clue's room to inspect it. Received observations can be read anywhere in this browser investigation.</p></header>
     <div className="journal-grid">{state.snapshot.evidence.map((clue, i) => {
       const received = state.inspected[clue.id];
       const inspected = state.snapshot.dialogue.inspectedEvidenceIds.includes(clue.id);
       const room = state.snapshot.rooms.find(({ id }) => id === clue.locationId);
       const present = state.snapshot.currentLocationId === clue.locationId;
+      const reachable = present || !exits || exits.includes(room.id);
       return <article className="evidence-card" data-reviewed={selected === clue.id} key={clue.id}><div className="clue-top"><span className="catalog-number">EXHIBIT / 0{i + 1} · {room.name}</span><span className="clue-status">{received ? 'Inspected in this browser session' : inspected ? 'Inspected in this investigation; description not received here' : 'Available in ' + room.name}</span></div>
         <Artwork asset={evidenceFor(clue.id)} fallback={genericEvidence} decorative /><h2>{clue.name}</h2>
         {received ? <p className="evidence-description">{received.description}</p> : <p className="empty-description">Examine this clue in {room.name} to add its description to your notes.</p>}
-        <button className="ink-button" disabled={!received && !canAct} onClick={async () => { if (received) setSelected(clue.id); else if (present) await client.inspect(clue.id); else await client.travel(room.id); }}>{received ? 'Review observation' : present ? 'Inspect evidence' : 'Travel to ' + room.name} <span aria-hidden="true">→</span></button>
+        <button className="ink-button" disabled={!received && (!canAct || !reachable)} onClick={async () => { if (received) setSelected(clue.id); else if (present) await client.inspect(clue.id); else await client.travel(room.id); }}>{received ? 'Review observation' : present ? 'Inspect evidence' : reachable ? 'Travel to ' + room.name : 'Reach via a connecting room'} <span aria-hidden="true">→</span></button>
       </article>;
     })}</div><button className="back-button" onClick={() => dispatch({ type: 'NAVIGATE', screen: state.endedKnown ? 'conclusion' : 'room' })}>← {state.endedKnown ? 'Case conclusion' : 'Return to current room'}</button>
     {selected && state.inspected[selected] && <ReadingDialog title={'Observation — ' + state.inspected[selected].name} onClose={() => setSelected(null)}><p>{state.inspected[selected].description}</p></ReadingDialog>}

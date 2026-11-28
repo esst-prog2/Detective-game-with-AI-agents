@@ -17,7 +17,11 @@ function expectedDialogue(room = 'study', inspected = []) {
     ['alice-mercer', 'study'], ['ben-carter', 'garden'], ['clara-voss', 'library'],
   ].map(([suspectId, location]) => {
     const ordered = suspectId === 'ben-carter' ? [topicOptions[0], ...topicOptions.slice(2, 5), topicOptions[1], topicOptions[5]] : topicOptions;
-    return { suspectId, demeanor: 'neutral', recentTurns: [],
+    const crime = { id: 'ask-crime-details', label: 'What happened when the victim died?', kind: 'topic' };
+    const local = location === room;
+    const hasFootprints = suspectId === 'ben-carter' && inspected.includes('muddy-footprints');
+    return { suspectId, demeanor: 'neutral', recentTurns: [], statements: [],
+      moreOptions: local ? [...(hasFootprints ? [topicOptions[5]] : []), crime] : [],
       options: location !== room ? [] : suspectId === 'ben-carter' && inspected.includes('muddy-footprints')
         ? [{ id: 'present-footprints', label: 'Present the inspected muddy footprints.', kind: 'evidence' }, ...ordered].slice(0, 6) : structuredClone(ordered),
     };

@@ -3,7 +3,8 @@ import { useInvestigation } from '../state/InvestigationProvider.jsx';
 import Portrait from './Portrait.jsx';
 export default function AccusationDialog({ initialId, onClose }) {
   const { state, client, canAct } = useInvestigation();
-  const [id, setId] = useState(initialId ?? state.snapshot.suspects[0]?.id);
+  const eligible = state.snapshot.suspects.filter(person => person.accusationEligible !== false);
+  const [id, setId] = useState(eligible.find(person => person.id === initialId)?.id ?? eligible[0]?.id);
   const dialog = useRef(null);
   const cancel = useRef(null);
   const suspect = state.snapshot.suspects.find((suspect) => suspect.id === id);
@@ -29,7 +30,7 @@ export default function AccusationDialog({ initialId, onClose }) {
   }
   return <dialog ref={dialog} tabIndex="-1" className="accusation-dialog" aria-labelledby="accusation-title" onKeyDown={trapFocus} onCancel={(event) => { event.preventDefault(); void decide(false); }}>
     <div className="dialog-seal" aria-hidden="true">◆</div><p className="eyebrow">THE FINAL ACCUSATION</p><h2 id="accusation-title">Name your suspect.</h2><p>Confirming ends this investigation. Be certain you are ready to close the case.</p>
-    <label htmlFor="accused">Selected suspect</label><select id="accused" value={id} disabled={!canAct} onChange={(event) => setId(event.target.value)}>{state.snapshot.suspects.map((suspect) => <option key={suspect.id} value={suspect.id}>{suspect.name}</option>)}</select>
+    <label htmlFor="accused">Selected suspect</label><select id="accused" value={id} disabled={!canAct} onChange={(event) => setId(event.target.value)}>{eligible.map((suspect) => <option key={suspect.id} value={suspect.id}>{suspect.name}</option>)}</select>
     {suspect && <div className="accused-preview"><Portrait suspect={suspect} /><span>{suspect.name}<small>Suspect</small></span></div>}
     {state.pending && <p role="status">{state.pending.label}</p>}{state.error && <div role="alert"><p>{state.error.message}</p><button disabled={!!state.pending} onClick={() => client.refresh()}>Refresh investigation</button></div>}
     <div className="dialog-actions"><button ref={cancel} disabled={!!state.pending} onClick={() => decide(false)}>{canAct ? 'Cancel accusation' : 'Close dialog'}</button><button className="danger" disabled={!canAct} onClick={() => decide(true)}>Confirm accusation</button></div>

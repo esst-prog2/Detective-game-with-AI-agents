@@ -289,7 +289,7 @@ test('nested public views are detached and private catalogs/counters/prompts nev
   const g = createInvestigation({ dialogueCatalog: catalog }); await ask(g, 'alibi');
   const view = g.getPublicView(); const stable = structuredClone(view);
   assert.deepEqual(Object.keys(view.dialogue).sort(), ['conversations', 'inspectedEvidenceIds']);
-  assert.deepEqual(Object.keys(conversation(g)).sort(), ['demeanor', 'options', 'recentTurns', 'suspectId']);
+  assert.deepEqual(Object.keys(conversation(g)).sort(), ['demeanor', 'moreOptions', 'options', 'recentTurns', 'statements', 'suspectId']);
   assert.doesNotMatch(JSON.stringify(view), /PRIVATE_DIALOGUE_CANARY|cooperation|tension|truthfulness|source|approvedContent|privateFacts/);
   view.dialogue.conversations[0].recentTurns[0].dialogue = 'forged'; view.dialogue.conversations[0].options[0].label = 'forged';
   view.dialogue.inspectedEvidenceIds.push('forged');
